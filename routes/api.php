@@ -10,7 +10,5 @@ Route::get('/user', function (Request $request) {
 
 // route group
 Route::prefix('v1')->group(function () {
-    Route::get('users/', [UserController::class, 'index']);
-    Route::get('users/{user}', [UserController::class, 'specifiedUser']);
 
     });
