@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('role')->default('admin');
-            $table->string('photo_profile')->nullable();
             $table->timestamps();
         });
     }

@@ -9,4 +9,13 @@ class Major extends Model
 {
     /** @use HasFactory<\Database\Factories\MajorFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+    ];
+
+    public function alumnis()
+    {
+        return $this->hasMany(Alumni::class);
+    }
 }

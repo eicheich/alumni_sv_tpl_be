@@ -9,4 +9,20 @@ class EducationalBackground extends Model
 {
     /** @use HasFactory<\Database\Factories\EducationalBackgroundFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'alumni_id',
+        'institution_name',
+        'degree',
+        'field_of_study',
+        'start_year',
+        'end_year',
+    ];
+
+    public function alumni()
+    {
+        return $this->belongsTo(Alumni::class);
+    }
+
+    
 }

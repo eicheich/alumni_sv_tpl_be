@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('alumnis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('photo_profile')->nullable();
             $table->date('birthdate')->nullable();
             $table->string('nim')->unique();
             $table->foreignId('major_id')->constrained('majors')->onDelete('cascade');

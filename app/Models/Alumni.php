@@ -9,4 +9,21 @@ class Alumni extends Model
 {
     /** @use HasFactory<\Database\Factories\AlumniFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'birthdate',
+        'nim',
+        'major_id',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function major()
+    {
+        return $this->belongsTo(Major::class);
+    }
 }
