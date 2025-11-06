@@ -12,7 +12,7 @@ Route::get('/user', function (Request $request) {
 // route group
 Route::prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
-        Route::post('/login', [AuthController::class, 'login']);
+        // Route::post('/login', [AuthController::class, 'login']);
     });
 
 });
