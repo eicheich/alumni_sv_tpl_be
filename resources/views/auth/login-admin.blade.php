@@ -1,27 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin</title>
-</head>
+@section('title', 'Login Admin')
 
-<body>
-    <h1>Login Admin</h1>
+@section('content')
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Login sebagai Admin</h1>
+    </div>
 
+    <p>Login sebagai Admin</p>
     <form action="{{ route('admin.login') }}" method="POST">
         @csrf
-        <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" required>
         </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" class="btn btn-primary">Login</button>
     </form>
-</body>
 
-</html>
+@endsection

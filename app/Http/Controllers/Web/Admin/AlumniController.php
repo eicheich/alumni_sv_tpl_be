@@ -18,10 +18,12 @@ class AlumniController extends Controller
     public function index()
     {
         // Eager-load related user model (requires Alumni::user() relationship)
-        $alumni = Alumni::with('user')->get();
+        // alumni with user and major
         $major = Major::all();
+        $alumni = Alumni::with('user')->get();
         return view('admin.alumni', compact('alumni', 'major'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -32,7 +34,6 @@ class AlumniController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'major_id' => 'required|exists:majors,id',
-            'birth_date' => 'required|date',
             'nim' => 'required|string|max:50|unique:alumnis',
             'photo_profile' => 'nullable|image|max:2048',
             'generation' => 'nullable|integer',
@@ -55,7 +56,6 @@ class AlumniController extends Controller
               ]);
             Alumni::create([
                'user_id' => $user->id,
-               'birthdate' => $request->birth_date,
                'nim' => $request->nim,
                'major_id' => $request->major_id,
                'is_active' => false,
@@ -64,14 +64,14 @@ class AlumniController extends Controller
                'alumni_id' => $user->alumni->id,
                'generation' => $request->generation,
                'institution_name' => 'IPB University',
+               'major' => 'Teknologi Rekayasa Perangkat Lunak',
                'degree' => 'Diploma 4',
                'faculty' => 'Sekolah Vokasi',
-               'major' => 'Teknologi Rekayasa Perangkat Lunak',
            ]);
            DB::commit();
        } catch (\Exception $e) {
            DB::rollBack();
-           return back()->withErrors(['error' => 'Failed to add alumni. Please try again.'])->withInput();
+           return back()->withErrors(['error' => 'Failed to add alumni: ' . $e->getMessage()])->withInput();
        }
          return redirect()->route('admin.alumni.index')->with('success', 'Alumni added successfully.');
     }

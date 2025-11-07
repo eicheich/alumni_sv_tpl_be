@@ -32,4 +32,5 @@ Route::prefix('auth')->group(function () {
 });
 Route::prefix('alumni')->group(function () {
     Route::get('/', [AlumniController::class, 'index'])->name('admin.alumni.index');
+    Route::post('/store-alumni', [AlumniController::class, 'addAlumni'])->name('admin.alumni.store');
 });

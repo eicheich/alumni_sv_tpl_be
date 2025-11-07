@@ -34,14 +34,14 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="major" class="form-label">Major</label>
+                            <label for="major" class="form-label">Program Studi</label>
                             @if (isset($major) &&
                                     (is_array($major) ||
                                         $major instanceof \Illuminate\Contracts\Support\Arrayable ||
                                         (is_object($major) && count((array) $major) > 0)))
-                                <select id="major" name="major"
+                                <select id="major" name="major_id"
                                     class="form-control @error('major') is-invalid @enderror">
-                                    <option value="">-- Select Major --</option>
+                                    <option value="">-- Pilih Program Studi --</option>
                                     @foreach ($major as $m)
                                         @php
                                             $val = is_object($m) ? $m->id ?? $m : $m;
@@ -73,9 +73,9 @@
 
                         <div class="col-12">
                             <label for="photo" class="form-label">Photo</label>
-                            <input id="photo" name="photo" type="file"
-                                class="form-control @error('photo') is-invalid @enderror">
-                            @error('photo')
+                            <input id="photo" name="photo_profile" type="file"
+                                class="form-control @error('photo_profile') is-invalid @enderror">
+                            @error('photo_profile')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

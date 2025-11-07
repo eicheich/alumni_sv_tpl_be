@@ -17,6 +17,8 @@ class EducationalBackground extends Model
         'field_of_study',
         'start_year',
         'end_year',
+        'major',
+        'faculty',
     ];
 
     public function alumni()
@@ -24,5 +26,5 @@ class EducationalBackground extends Model
         return $this->belongsTo(Alumni::class);
     }
 
-    
+
 }

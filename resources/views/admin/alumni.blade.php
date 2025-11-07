@@ -24,13 +24,13 @@
         <tbody>
             @foreach ($alumni as $alumnus)
                 <tr>
-                    <td>{{ $alumnus->name }}</td>
-                    <td>{{ $alumnus->email }}</td>
-                    <td>{{ $alumnus->major }}</td>
+                    <td>{{ $alumnus->user->name }}</td>
+                    <td>{{ $alumnus->user->email }}</td>
+                    <td>{{ $alumnus->major->name }}</td>
                     <td>{{ $alumnus->nim }}</td>
                     <td>
                         @if ($alumnus->photo_url)
-                            <img src="{{ $alumnus->photo_url }}" alt="Photo of {{ $alumnus->name }}" width="50">
+                            <img src="{{ $alumnus->photo_profile }}" alt="Photo of {{ $alumnus->name }}" width="50">
                         @else
                             N/A
                         @endif
