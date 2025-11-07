@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Alumni;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class AlumniController extends Controller
      */
     public function index()
     {
-        //
+        // Eager-load related user model (requires Alumni::user() relationship)
+        $alumni = Alumni::with('user')->get();
+        return view('admin.alumni', compact('alumni'));
     }
 
     /**

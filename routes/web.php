@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Web\Admin\DashboardController;
+use App\Http\Controllers\Web\Admin\AlumniController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
+use Phiki\Phast\Root;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,5 +16,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/register', [AuthController::class, 'registerAdmin'])->name('admin.register');
         Route::get('/login', [AuthController::class, 'loginAdminView'])->name('admin.login.view');
         Route::post('/login', [AuthController::class, 'loginAdmin'])->name('admin.login');
+    });
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard.index');
+    Route::prefix('alumni')->group(function () {
+        Route::get('/', [AlumniController::class, 'index'])->name('admin.alumni.index');
     });
 });
