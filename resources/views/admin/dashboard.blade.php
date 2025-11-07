@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard</title>
-</head>
-<body>
-    <h1>Admin Dashboard</h1>
-    @if (session('success'))
-        <div style="color: green;">
-            {{ session('success') }}
-        </div>
-    @endif
-    <p>Welcome to the admin dashboard!</p>
+@extends('layouts.main')
 
-</body>
-</html>
+@section('title', 'Dashboard Admin')
+
+@section('content')
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Dashboard Admin</h1>
+        <a href="#" class="btn btn-primary">Add Alumni</a>
+    </div>
+
+    <p>Welcome to the admin dashboard!</p>
+    {{-- TODO: replace with a real table listing alumni (name, email, major, nim, photo) --}}
+
+@endsection

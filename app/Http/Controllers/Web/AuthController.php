@@ -65,4 +65,15 @@ class AuthController extends Controller
 
         return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
     }
+
+    public function logoutAdmin(Request $request)
+    {
+        Auth::logout();
+        return redirect()->route('admin.login.view')->with('success', 'Logged out successfully.');
+    }
+
+    public function AlumniRegisterValidateEmailNimView()
+    {
+        return view('auth.register-alumni-validate-emailnim');
+    }
 }
