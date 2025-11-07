@@ -60,6 +60,59 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6V9E+0U5y5L2e3z6Z6b6Y5m1Yk2Kf0b6tQZ6f5Q5m9ct" crossorigin="anonymous">
     </script>
 
+    <script>
+        // Global handler: make data-bs-dismiss="modal" work even if Bootstrap JS didn't initialize
+        document.addEventListener('click', function(e) {
+            const dismiss = e.target.closest('[data-bs-dismiss="modal"]');
+            if (!dismiss) return;
+            const modalEl = dismiss.closest('.modal');
+            if (!modalEl) return;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                try {
+                    bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                    return;
+                } catch (err) {
+                    console.error('bootstrap hide failed', err);
+                }
+            }
+            // Fallback hide
+            try {
+                modalEl.classList.remove('show');
+                modalEl.style.display = 'none';
+                modalEl.setAttribute('aria-hidden', 'true');
+                modalEl.removeAttribute('aria-modal');
+                document.body.classList.remove('modal-open');
+                // remove backdrops
+                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+            } catch (err) {
+                console.error('fallback hide failed', err);
+            }
+        });
+
+        // Also allow clicking on backdrop to close when using fallback
+        document.addEventListener('click', function(e) {
+            const backdrop = e.target.closest('.modal-backdrop');
+            if (!backdrop) return;
+            // close any open modal
+            document.querySelectorAll('.modal.show').forEach(modalEl => {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    try {
+                        bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                    } catch (err) {
+                        console.error(err);
+                    }
+                } else {
+                    modalEl.classList.remove('show');
+                    modalEl.style.display = 'none';
+                    modalEl.setAttribute('aria-hidden', 'true');
+                    modalEl.removeAttribute('aria-modal');
+                    document.body.classList.remove('modal-open');
+                }
+            });
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        });
+    </script>
+
     @stack('scripts')
 </body>
 

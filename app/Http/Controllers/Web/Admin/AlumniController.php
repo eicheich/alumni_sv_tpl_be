@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Alumni;
+use App\Models\Major;
 use Illuminate\Http\Request;
 
 class AlumniController extends Controller
@@ -15,7 +16,8 @@ class AlumniController extends Controller
     {
         // Eager-load related user model (requires Alumni::user() relationship)
         $alumni = Alumni::with('user')->get();
-        return view('admin.alumni', compact('alumni'));
+        $major = Major::all();
+        return view('admin.alumni', compact('alumni', 'major'));
     }
 
     /**
