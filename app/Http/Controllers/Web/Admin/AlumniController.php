@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Alumni;
+use App\Models\EducationalBackground;
 use App\Models\Major;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AlumniController extends Controller
 {
@@ -23,9 +26,54 @@ class AlumniController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function addAlumni(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'major_id' => 'required|exists:majors,id',
+            'birth_date' => 'required|date',
+            'nim' => 'required|string|max:50|unique:alumnis',
+            'photo_profile' => 'nullable|image|max:2048',
+            'generation' => 'nullable|integer',
+        ]);
+        if (!$validate) {
+            return back()->withErrors($validate)->withInput();
+        }
+        // prsess image
+        $photoPath = null;
+        if ($request->hasFile('photo_profile')) {
+            $photoPath = $request->file('photo_profile')->store('photo_profiles', 'public');
+        }
+       DB::beginTransaction();
+       try {
+           $user = User::create([
+               'name' => $request->name,
+               'email' => $request->email,
+               'photo_profile' => $photoPath,
+               'password' => bcrypt('temporarypassword'),
+              ]);
+            Alumni::create([
+               'user_id' => $user->id,
+               'birthdate' => $request->birth_date,
+               'nim' => $request->nim,
+               'major_id' => $request->major_id,
+               'is_active' => false,
+           ]);
+           EducationalBackground::create([
+               'alumni_id' => $user->alumni->id,
+               'generation' => $request->generation,
+               'institution_name' => 'IPB University',
+               'degree' => 'Diploma 4',
+               'faculty' => 'Sekolah Vokasi',
+               'major' => 'Teknologi Rekayasa Perangkat Lunak',
+           ]);
+           DB::commit();
+       } catch (\Exception $e) {
+           DB::rollBack();
+           return back()->withErrors(['error' => 'Failed to add alumni. Please try again.'])->withInput();
+       }
+         return redirect()->route('admin.alumni.index')->with('success', 'Alumni added successfully.');
     }
 
     /**

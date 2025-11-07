@@ -16,8 +16,10 @@ return new class extends Migration
             $table->foreignId('alumni_id')->constrained('alumnis')->onDelete('cascade');
             $table->string('institution_name');
             $table->string('degree');
-            $table->year('entry_year');
-            $table->year('graduation_year');
+            $table->year('entry_year')->nullable();
+            $table->year('graduation_year')->nullable();
+            $table->string('major');
+            $table->string('faculty');
             $table->timestamps();
         });
     }
