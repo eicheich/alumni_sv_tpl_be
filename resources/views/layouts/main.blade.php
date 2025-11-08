@@ -23,16 +23,27 @@
     <header class="bg-light border-bottom mb-3">
         <div class="container d-flex justify-content-between align-items-center py-2">
             <a class="navbar-brand mb-0 h1" href="{{ url('/') }}">Alumni SV</a>
-            <nav>
-                @if (Route::has('admin.alumni.index'))
-                    <a class="me-3" href="{{ route('admin.alumni.index') }}">Alumni</a>
-                @else
-                    <a class="me-3" href="{{ url('/admin/alumni') }}">Alumni</a>
-                @endif
-                @if (Route::has('admin.dashboard.index'))
-                    <a class="me-3" href="{{ route('admin.dashboard.index') }}">Dashboard</a>
-                @endif
-            </nav>
+            @if (auth()->check())
+                <nav>
+                    @if (Route::has('admin.alumni.index'))
+                        <a class="me-3" href="{{ route('admin.alumni.index') }}">Alumni</a>
+                    @else
+                        <a class="me-3" href="{{ url('/admin/alumni') }}">Alumni</a>
+                    @endif
+                    @if (Route::has('admin.dashboard.index'))
+                        <a class="me-3" href="{{ route('admin.dashboard.index') }}">Informasi</a>
+                    @endif
+                    @if (Route::has('admin.dashboard.index'))
+                        <a class="me-3" href="{{ route('admin.dashboard.index') }}">Dashboard</a>
+                    @endif
+                    <span class="text-muted">Logged in as {{ auth()->user()->name }}</span>
+                    <span class="text-muted"> | </span>
+                    <form class="d-inline" action="{{ route('admin.logout') }}" method="POST">
+                        @csrf
+                        <button class="btn btn-outline-danger btn-sm" type="submit">Logout</button>
+                    </form>
+                </nav>
+            @endif
         </div>
     </header>
 

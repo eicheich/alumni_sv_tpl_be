@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Admin;
 
-use App\Models\GeneralInformation;
+use App\Http\Controllers\Controller;
+use App\Models\InformationCategory;
 use Illuminate\Http\Request;
 
-class GeneralInformationController extends Controller
+class InformationCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class GeneralInformationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(GeneralInformation $generalInformation)
+    public function show(InformationCategory $informationCategory)
     {
         //
     }
@@ -42,7 +43,7 @@ class GeneralInformationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(GeneralInformation $generalInformation)
+    public function edit(InformationCategory $informationCategory)
     {
         //
     }
@@ -50,7 +51,7 @@ class GeneralInformationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, GeneralInformation $generalInformation)
+    public function update(Request $request, InformationCategory $informationCategory)
     {
         //
     }
@@ -58,7 +59,7 @@ class GeneralInformationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(GeneralInformation $generalInformation)
+    public function destroy(InformationCategory $informationCategory)
     {
         //
     }

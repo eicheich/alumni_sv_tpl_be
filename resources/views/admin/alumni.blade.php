@@ -19,6 +19,7 @@
                 <th>Major</th>
                 <th>NIM</th>
                 <th>Photo</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +35,12 @@
                         @else
                             N/A
                         @endif
+                    </td>
+                    <td>
+                        {{-- Action buttons (Edit, Delete) can be added here --}}
+                        <button class="btn btn-sm btn-info">View</button>
+                        <button class="btn btn-sm btn-warning">Edit</button>
+                        <button class="btn btn-sm btn-danger">Delete</button>
                     </td>
                 </tr>
             @endforeach

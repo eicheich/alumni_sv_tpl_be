@@ -66,14 +66,42 @@ class AuthController extends Controller
         return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
     }
 
-    public function logoutAdmin(Request $request)
+    public function logout(Request $request)
     {
         Auth::logout();
         return redirect()->route('admin.login.view')->with('success', 'Logged out successfully.');
     }
 
-    public function AlumniRegisterValidateEmailNimView()
+    public function alumniValidateDataView()
     {
-        return view('auth.register-alumni-validate-emailnim');
+        return view('auth.register-alumni-validate-data');
+    }
+
+    public function alumniValidateData(Request $request)
+    {
+        $credentials = $request->only('email', 'nim');
+        if (!$credentials['email'] || !$credentials['nim']) {
+            return back()->withErrors(['error' => 'Email and NIM are required.'])->withInput();
+        }
+        $user = User::where('email', $credentials['email'])
+            ->whereHas('alumni', function($q) use ($credentials) {
+                $q->where('nim', $credentials['nim'])->where('is_active', 0);
+            })->first();
+        if ($user) {
+            return redirect()->route('alumni.register.view')->with('user_id', $user->id);
+        }
+        $activeUser = User::where('email', $credentials['email'])
+            ->whereHas('alumni', function($q) {
+                $q->where('is_active', 1);
+            })->first();
+        if ($activeUser) {
+            return back()->withErrors(['error' => 'This account is already active. Please login.'])->withInput();
+        }
+        return back()->withErrors(['email' => 'Invalid email or NIM.'])->withInput();
+    }
+
+    public function alumniRegisterView1()
+    {
+        return view('auth.register-alumni');
     }
 }
