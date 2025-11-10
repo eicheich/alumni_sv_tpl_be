@@ -8,59 +8,50 @@ use Illuminate\Http\Request;
 
 class InformationCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function storeCategory(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255|unique:information_categories,name',
+        ]);
+
+        try {
+            InformationCategory::create([
+                'name' => $request->name,
+            ]);
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Category creation failed. Please try again.'])->withInput();
+        }
+
+        return redirect()->route('admin.information.index')->with('success', 'Category created successfully.');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function updateCategory(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255|unique:information_categories,name,' . $id,
+        ]);
+
+        $category = InformationCategory::findOrFail($id);
+        try {
+            $category->update([
+                'name' => $request->name,
+            ]);
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Category update failed. Please try again.'])->withInput();
+        }
+
+        return redirect()->route('admin.information.index')->with('success', 'Category updated successfully.');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function destroyCategory($id)
     {
-        //
-    }
+        $category = InformationCategory::findOrFail($id);
+        try {
+            $category->delete();
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Category deletion failed. Please try again.']);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(InformationCategory $informationCategory)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(InformationCategory $informationCategory)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, InformationCategory $informationCategory)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(InformationCategory $informationCategory)
-    {
-        //
+        return redirect()->route('admin.information.index')->with('success', 'Category deleted successfully.');
     }
 }

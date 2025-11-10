@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Informasi</h1>
+        <h6 class="mb-0">Informasi</h6>
     </div>
 
     <div class="row">
@@ -12,9 +12,10 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Daftar Informasi</h5>
+                    <h6 class="card-title mb-0">Daftar Informasi</h6>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#addInformationModal">Tambah Informasi</button>
+                        data-bs-target="#addInformationModal" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;">Tambah
+                        Informasi</button>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped">
@@ -79,9 +80,9 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Daftar Kategori Informasi</h5>
+                    <h6 class="card-title mb-0">Daftar Kategori Informasi</h6>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#addCategoryModal">Tambah
+                        data-bs-target="#addCategoryModal" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;">Tambah
                         Kategori</button>
                 </div>
                 <div class="card-body">
@@ -102,15 +103,26 @@
                                         <button type="button" class="btn btn-outline-primary btn-sm"
                                             style="font-size: 0.75rem; padding: 0.125rem 0.25rem;" data-bs-toggle="modal"
                                             data-bs-target="#editCategoryModal"
-                                            onclick="setEditData({{ $category->id }}, '{{ $category->name }}')">Edit</button>
-                                        <form action="{{ url('/admin/information-category/' . $category->id) }}"
-                                            method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">Hapus</button>
-                                        </form>
+                                            onclick="document.getElementById('editCategoryForm').action='{{ route('admin.information.category.update', ':id') }}'.replace(':id', {{ $category->id }}); document.getElementById('edit_name').value='{{ $category->name }}';">Edit</button>
+                                        @if (Route::has('admin.information.category.destroy'))
+                                            <form action="{{ route('admin.information.category.destroy', $category->id) }}"
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                    style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">Hapus</button>
+                                            </form>
+                                        @else
+                                            <form action="{{ url('/admin/information-category/' . $category->id) }}"
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                    style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">Hapus</button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -161,7 +173,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editCategoryForm" method="POST">
+                    <form action="{{ route('admin.information.category.update', ':id') }}" id="editCategoryForm"
+                        method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -238,7 +251,7 @@
     <script>
         function setEditData(id, name) {
             const form = document.getElementById('editCategoryForm');
-            form.action = '{{ url('/admin/information-category') }}/' + id;
+            form.action = '{{ route('admin.information.category.update', ':id') }}'.replace(':id', id);
             document.getElementById('edit_name').value = name;
         }
     </script>

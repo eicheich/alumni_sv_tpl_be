@@ -3,6 +3,8 @@
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\AlumniController;
 use App\Http\Controllers\Web\Admin\GeneralInformationController;
+use App\Http\Controllers\Web\Admin\InformationCategoryController;
+use App\Http\Controllers\Web\Admin\InformationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
 use Phiki\Phast\Root;
@@ -28,14 +30,14 @@ Route::prefix('admin')->group(function () {
         Route::post('/store-alumni', [AlumniController::class, 'addAlumni'])->name('admin.alumni.store');
     });
     Route::prefix('informasi')->group(function () {
-        Route::get('/', [GeneralInformationController::class, 'index'])->name('admin.information.index');
-        Route::post('/store-information', [GeneralInformationController::class, 'storeInformation'])->name('admin.information.store');
-        Route::get('/{id}/edit', [GeneralInformationController::class, 'editInformation'])->name('admin.information.edit');
-        Route::post('/{id}/update', [GeneralInformationController::class, 'updateInformation'])->name('admin.information.update');
-        Route::post('/{id}/delete', [GeneralInformationController::class, 'deleteInformation'])->name('admin.information.delete');
-        Route::post('category/store', [GeneralInformationController::class, 'storeCategory'])->name('admin.information.category.store');
-        Route::put('information-category/{id}/update', [GeneralInformationController::class, 'updateCategory'])->name('admin.information.category.update');
-        Route::delete('information-category/{id}/destroy', [GeneralInformationController::class, 'destroyCategory'])->name('admin.information.category.destroy');
+        Route::get('/', [InformationController::class, 'index'])->name('admin.information.index');
+        Route::post('/store-information', [InformationController::class, 'storeInformation'])->name('admin.information.store');
+        Route::get('/{id}/edit', [InformationController::class, 'editInformation'])->name('admin.information.edit');
+        Route::post('/{id}/update', [InformationController::class, 'updateInformation'])->name('admin.information.update');
+        Route::post('/{id}/delete', [InformationController::class, 'deleteInformation'])->name('admin.information.delete');
+        Route::post('category/store', [InformationCategoryController::class, 'storeCategory'])->name('admin.information.category.store');
+        Route::put('information-category/{id}/update', [InformationCategoryController::class, 'updateCategory'])->name('admin.information.category.update');
+        Route::delete('information-category/{id}/destroy', [InformationCategoryController::class, 'destroyCategory'])->name('admin.information.category.destroy');
 
     });
 });
