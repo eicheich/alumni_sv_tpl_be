@@ -14,8 +14,8 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="card-title mb-0">Daftar Informasi</h6>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#addInformationModal" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;">Tambah
-                        Informasi</button>
+                        data-bs-target="#addInformationModal" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
+                            data-feather="plus"></i></button>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped">
@@ -38,11 +38,13 @@
                                         @if (Route::has('admin.information.edit'))
                                             <a href="{{ route('admin.information.edit', $info->id) }}"
                                                 class="btn btn-outline-primary btn-sm"
-                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;">Edit</a>
+                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
+                                                    data-feather="edit"></i></a>
                                         @else
                                             <a href="{{ url('/admin/information/' . $info->id . '/edit') }}"
                                                 class="btn btn-outline-primary btn-sm"
-                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;">Edit</a>
+                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
+                                                    data-feather="edit"></i></a>
                                         @endif
                                         @if (Route::has('admin.information.destroy'))
                                             <form action="{{ route('admin.information.destroy', $info->id) }}"
@@ -51,7 +53,8 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm"
                                                     style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')">Hapus</button>
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')"><i
+                                                        data-feather="trash-2"></i></button>
                                             </form>
                                         @else
                                             <form action="{{ url('/admin/information/' . $info->id) }}" method="POST"
@@ -60,7 +63,8 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm"
                                                     style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')">Hapus</button>
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')"><i
+                                                        data-feather="trash-2"></i></button>
                                             </form>
                                         @endif
                                     </td>
@@ -82,8 +86,8 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="card-title mb-0">Daftar Kategori Informasi</h6>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#addCategoryModal" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;">Tambah
-                        Kategori</button>
+                        data-bs-target="#addCategoryModal" style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
+                            data-feather="plus"></i></button>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped table-sm">
@@ -103,7 +107,8 @@
                                         <button type="button" class="btn btn-outline-primary btn-sm"
                                             style="font-size: 0.75rem; padding: 0.125rem 0.25rem;" data-bs-toggle="modal"
                                             data-bs-target="#editCategoryModal"
-                                            onclick="document.getElementById('editCategoryForm').action='{{ route('admin.information.category.update', ':id') }}'.replace(':id', {{ $category->id }}); document.getElementById('edit_name').value='{{ $category->name }}';">Edit</button>
+                                            onclick="document.getElementById('editCategoryForm').action='{{ route('admin.information.category.update', ':id') }}'.replace(':id', {{ $category->id }}); document.getElementById('edit_name').value='{{ $category->name }}';"><i
+                                                data-feather="edit"></i></button>
                                         @if (Route::has('admin.information.category.destroy'))
                                             <form action="{{ route('admin.information.category.destroy', $category->id) }}"
                                                 method="POST" class="d-inline">
@@ -111,7 +116,8 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm"
                                                     style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">Hapus</button>
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')"><i
+                                                        data-feather="trash-2"></i></button>
                                             </form>
                                         @else
                                             <form action="{{ url('/admin/information-category/' . $category->id) }}"
@@ -120,7 +126,8 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm"
                                                     style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">Hapus</button>
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')"><i
+                                                        data-feather="trash-2"></i></button>
                                             </form>
                                         @endif
                                     </td>
