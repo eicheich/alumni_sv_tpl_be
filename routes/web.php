@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\AlumniController;
+use App\Http\Controllers\Web\Admin\GeneralInformationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
 use Phiki\Phast\Root;
@@ -22,19 +23,20 @@ Route::prefix('admin')->group(function () {
     Route::prefix('alumni')->group(function () {
         Route::get('/', [AlumniController::class, 'index'])->name('admin.alumni.index');
     });
-    Route::prefix('auth')->group(function () {
-        Route::get('/register', [AuthController::class, 'registerAlumniView'])->name('admin.register.view');
-        Route::post('/register', [AuthController::class, 'registerAlumni'])->name('admin.register');
-        Route::get('/login', [AuthController::class, 'loginAlumniView'])->name('admin.login.view');
-        Route::post('/login', [AuthController::class, 'loginAlumni'])->name('admin.login');
-        Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
-    });
     Route::prefix('alumni')->group(function () {
         Route::get('/', [AlumniController::class, 'index'])->name('admin.alumni.index');
         Route::post('/store-alumni', [AlumniController::class, 'addAlumni'])->name('admin.alumni.store');
     });
     Route::prefix('informasi')->group(function () {
-        Route::get('/', [Root::class, 'index'])->name('phast.index');
+        Route::get('/', [GeneralInformationController::class, 'index'])->name('admin.information.index');
+        Route::post('/store-information', [GeneralInformationController::class, 'storeInformation'])->name('admin.information.store');
+        Route::get('/{id}/edit', [GeneralInformationController::class, 'editInformation'])->name('admin.information.edit');
+        Route::post('/{id}/update', [GeneralInformationController::class, 'updateInformation'])->name('admin.information.update');
+        Route::post('/{id}/delete', [GeneralInformationController::class, 'deleteInformation'])->name('admin.information.delete');
+        Route::post('category/store', [GeneralInformationController::class, 'storeCategory'])->name('admin.information.category.store');
+        Route::put('information-category/{id}/update', [GeneralInformationController::class, 'updateCategory'])->name('admin.information.category.update');
+        Route::delete('information-category/{id}/destroy', [GeneralInformationController::class, 'destroyCategory'])->name('admin.information.category.destroy');
+
     });
 });
 Route::prefix('auth')->group(function () {

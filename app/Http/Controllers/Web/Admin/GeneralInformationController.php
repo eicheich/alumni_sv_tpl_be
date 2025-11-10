@@ -20,6 +20,23 @@ class GeneralInformationController extends Controller
         return view('admin.information.index', compact('informationCategories', 'information'));
     }
 
+    public function storeCategory(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:information_categories,name',
+        ]);
+
+        try {
+            InformationCategory::create([
+                'name' => $request->name,
+            ]);
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Failed to create category. Please try again.'])->withInput();
+        }
+
+        return redirect()->route('admin.information.index')->with('success', 'Category created successfully.');
+    }
+
     /**
      * Show the form for creating a new resource.
      */

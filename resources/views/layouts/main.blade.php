@@ -30,8 +30,8 @@
                     @else
                         <a class="me-3" href="{{ url('/admin/alumni') }}">Alumni</a>
                     @endif
-                    @if (Route::has('admin.dashboard.index'))
-                        <a class="me-3" href="{{ route('admin.dashboard.index') }}">Informasi</a>
+                    @if (Route::has('admin.information.index'))
+                        <a class="me-3" href="{{ route('admin.information.index') }}">Informasi</a>
                     @endif
                     @if (Route::has('admin.dashboard.index'))
                         <a class="me-3" href="{{ route('admin.dashboard.index') }}">Dashboard</a>
@@ -72,8 +72,43 @@
     </script>
 
     <script>
-        // Global handler: make data-bs-dismiss="modal" work even if Bootstrap JS didn't initialize
+        // Global handler: make data-bs-toggle="modal" work even if Bootstrap JS didn't initialize
         document.addEventListener('click', function(e) {
+            const toggle = e.target.closest('[data-bs-toggle="modal"]');
+            if (toggle) {
+                e.preventDefault();
+                const target = toggle.getAttribute('data-bs-target');
+                const modalEl = document.querySelector(target);
+                if (!modalEl) return;
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    try {
+                        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                        return;
+                    } catch (err) {
+                        console.error('bootstrap show failed', err);
+                    }
+                }
+                // Fallback show
+                try {
+                    modalEl.classList.add('show');
+                    modalEl.style.display = 'block';
+                    modalEl.setAttribute('aria-modal', 'true');
+                    modalEl.removeAttribute('aria-hidden');
+                    document.body.classList.add('modal-open');
+                    // add backdrop
+                    let backdrop = document.querySelector('.modal-backdrop');
+                    if (!backdrop) {
+                        backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        document.body.appendChild(backdrop);
+                    }
+                } catch (err) {
+                    console.error('fallback show failed', err);
+                }
+                return;
+            }
+
+            // Global handler: make data-bs-dismiss="modal" work even if Bootstrap JS didn't initialize
             const dismiss = e.target.closest('[data-bs-dismiss="modal"]');
             if (!dismiss) return;
             const modalEl = dismiss.closest('.modal');
