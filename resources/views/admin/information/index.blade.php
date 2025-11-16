@@ -33,40 +33,25 @@
                                     <td>{{ $info->id }}</td>
                                     <td class="text-truncate" style="max-width: 200px;" title="{{ $info->title }}">
                                         {{ $info->title }}</td>
-                                    <td>{{ $info->category->name ?? 'N/A' }}</td>
+                                    <td>{{ $info->informationCategory->name ?? 'N/A' }}</td>
                                     <td>
-                                        @if (Route::has('admin.information.edit'))
-                                            <a href="{{ route('admin.information.edit', $info->id) }}"
-                                                class="btn btn-outline-primary btn-sm"
-                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
-                                                    data-feather="edit"></i></a>
-                                        @else
-                                            <a href="{{ url('/admin/information/' . $info->id . '/edit') }}"
-                                                class="btn btn-outline-primary btn-sm"
-                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
-                                                    data-feather="edit"></i></a>
-                                        @endif
-                                        @if (Route::has('admin.information.destroy'))
-                                            <form action="{{ route('admin.information.destroy', $info->id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')"><i
-                                                        data-feather="trash-2"></i></button>
-                                            </form>
-                                        @else
-                                            <form action="{{ url('/admin/information/' . $info->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')"><i
-                                                        data-feather="trash-2"></i></button>
-                                            </form>
-                                        @endif
+                                        <a href="{{ route('admin.information.show', $info->id) }}"
+                                            class="btn btn-outline-info btn-sm"
+                                            style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
+                                                data-feather="eye"></i></a>
+                                        <a href="{{ route('admin.information.edit', $info->id) }}"
+                                            class="btn btn-outline-primary btn-sm"
+                                            style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"><i
+                                                data-feather="edit"></i></a>
+                                        <form action="{{ route('admin.information.destroy', $info->id) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus informasi ini?')"><i
+                                                    data-feather="trash-2"></i></button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
@@ -107,29 +92,17 @@
                                         <button type="button" class="btn btn-outline-primary btn-sm"
                                             style="font-size: 0.75rem; padding: 0.125rem 0.25rem;" data-bs-toggle="modal"
                                             data-bs-target="#editCategoryModal"
-                                            onclick="document.getElementById('editCategoryForm').action='{{ route('admin.information.category.update', ':id') }}'.replace(':id', {{ $category->id }}); document.getElementById('edit_name').value='{{ $category->name }}';"><i
+                                            onclick="setEditData({{ $category->id }}, '{{ $category->name }}');"><i
                                                 data-feather="edit"></i></button>
-                                        @if (Route::has('admin.information.category.destroy'))
-                                            <form action="{{ route('admin.information.category.destroy', $category->id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')"><i
-                                                        data-feather="trash-2"></i></button>
-                                            </form>
-                                        @else
-                                            <form action="{{ url('/admin/information-category/' . $category->id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                    style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')"><i
-                                                        data-feather="trash-2"></i></button>
-                                            </form>
-                                        @endif
+                                        <form action="{{ route('admin.information.category.destroy', $category->id) }}"
+                                            method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                style="font-size: 0.75rem; padding: 0.125rem 0.25rem;"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')"><i
+                                                    data-feather="trash-2"></i></button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
@@ -180,7 +153,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('admin.information.category.update', ':id') }}" id="editCategoryForm"
+                    <form action="{{ route('admin.information.category.update', $category->id) }}" id="editCategoryForm"
                         method="POST">
                         @csrf
                         @method('PUT')
@@ -205,9 +178,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form
-                        action="{{ Route::has('admin.information.store') ? route('admin.information.store') : url('/admin/information') }}"
-                        method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.information.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="title" class="form-label">Judul</label>
@@ -222,7 +193,7 @@
                             <select class="form-control @error('information_category_id') is-invalid @enderror"
                                 id="information_category_id" name="information_category_id" required>
                                 <option value="">-- Pilih Kategori --</option>
-                                @foreach ($categories ?? [] as $cat)
+                                @foreach ($informationCategories ?? [] as $cat)
                                     <option value="{{ $cat->id }}"
                                         {{ old('information_category_id') == $cat->id ? 'selected' : '' }}>
                                         {{ $cat->name }}</option>

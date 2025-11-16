@@ -31,14 +31,14 @@ Route::prefix('admin')->group(function () {
     });
     Route::prefix('informasi')->group(function () {
         Route::get('/', [InformationController::class, 'index'])->name('admin.information.index');
+        Route::get('/show/{id}', [InformationController::class, 'show'])->name('admin.information.show');
         Route::post('/store-information', [InformationController::class, 'storeInformation'])->name('admin.information.store');
         Route::get('/{id}/edit', [InformationController::class, 'editInformation'])->name('admin.information.edit');
         Route::post('/{id}/update', [InformationController::class, 'updateInformation'])->name('admin.information.update');
-        Route::post('/{id}/delete', [InformationController::class, 'deleteInformation'])->name('admin.information.delete');
+        Route::delete('/{id}', [InformationController::class, 'deleteInformation'])->name('admin.information.destroy');
         Route::post('category/store', [InformationCategoryController::class, 'storeCategory'])->name('admin.information.category.store');
         Route::put('information-category/{id}/update', [InformationCategoryController::class, 'updateCategory'])->name('admin.information.category.update');
         Route::delete('information-category/{id}/destroy', [InformationCategoryController::class, 'destroyCategory'])->name('admin.information.category.destroy');
-
     });
 });
 Route::prefix('auth')->group(function () {

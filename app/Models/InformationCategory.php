@@ -14,10 +14,10 @@ class InformationCategory extends Model
         'name',
     ];
 
-    public function generalInformation()
+    public function information()
     {
-        return $this->hasMany(GeneralInformation::class, 'category_id');
+        return $this->hasMany(Information::class, 'category_id');
     }
-    
+
 
 }
