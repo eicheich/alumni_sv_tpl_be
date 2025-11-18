@@ -33,7 +33,7 @@
                                     <td>{{ $info->id }}</td>
                                     <td class="text-truncate" style="max-width: 200px;" title="{{ $info->title }}">
                                         {{ $info->title }}</td>
-                                    <td>{{ $info->informationCategory->name ?? 'N/A' }}</td>
+                                    <td>{{ $info->category->name ?? 'N/A' }}</td>
                                     <td>
                                         <a href="{{ route('admin.information.show', $info->id) }}"
                                             class="btn btn-outline-info btn-sm"

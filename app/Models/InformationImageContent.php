@@ -11,11 +11,11 @@ class InformationImageContent extends Model
     use HasFactory;
 
     protected $fillable = [
-        'general_information_id',
+        'information_id',
         'image_path',
     ];
 
-    public function Information()
+    public function information()
     {
         return $this->belongsTo(Information::class);
     }

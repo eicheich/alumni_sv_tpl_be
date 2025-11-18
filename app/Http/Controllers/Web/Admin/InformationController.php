@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Information;
 use App\Models\InformationCategory;
+use App\Models\InformationImageContent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class InformationController extends Controller
 {
@@ -16,7 +18,7 @@ class InformationController extends Controller
     public function index()
     {
         $informationCategories = InformationCategory::all();
-        $informations = Information::with('informationCategory')->get();
+        $informations = Information::with('category')->get();
         return view('admin.information.index', compact('informationCategories', 'informations'));
     }
 
@@ -27,6 +29,7 @@ class InformationController extends Controller
             'information_category_id' => 'required|exists:information_categories,id',
             'content' => 'required|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = [
@@ -46,7 +49,18 @@ class InformationController extends Controller
         }
 
         try {
-            Information::create($data);
+            $information = Information::create($data);
+
+            // Handle gallery images
+            if ($request->hasFile('gallery_images')) {
+                foreach ($request->file('gallery_images') as $file) {
+                    $imagePath = $file->store('information/gallery', 'public');
+                    InformationImageContent::create([
+                        'information_id' => $information->id,
+                        'image_path' => $imagePath,
+                    ]);
+                }
+            }
         } catch (\Exception $e) {
             Log::error('Failed to create information: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to add information. Please try again.'])->withInput();
@@ -60,7 +74,7 @@ class InformationController extends Controller
      */
     public function show($id)
     {
-        $information = Information::with('informationCategory')->findOrFail($id);
+        $information = Information::with(['category', 'imageContents'])->findOrFail($id);
         return view('admin.information.show', compact('information'));
     }
 
@@ -69,7 +83,7 @@ class InformationController extends Controller
      */
     public function editInformation($id)
     {
-        $information = Information::findOrFail($id);
+        $information = Information::with('imageContents')->findOrFail($id);
         $informationCategories = InformationCategory::all();
         return view('admin.information.edit', compact('information', 'informationCategories'));
     }
@@ -84,6 +98,7 @@ class InformationController extends Controller
             'information_category_id' => 'required|exists:information_categories,id',
             'content' => 'required|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $information = Information::findOrFail($id);
@@ -101,6 +116,21 @@ class InformationController extends Controller
             } catch (\Exception $e) {
                 Log::error('File upload failed: ' . $e->getMessage());
                 return back()->withErrors(['photo' => 'Failed to upload photo.'])->withInput();
+            }
+        }
+
+        if ($request->hasFile('gallery_images')) {
+            try {
+                foreach ($request->file('gallery_images') as $file) {
+                    $imagePath = $file->store('information/gallery', 'public');
+                    InformationImageContent::create([
+                        'information_id' => $information->id,
+                        'image_path' => $imagePath,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error('Gallery images upload failed: ' . $e->getMessage());
+                return back()->withErrors(['gallery_images' => 'Failed to upload gallery images.'])->withInput();
             }
         }
 
@@ -120,12 +150,77 @@ class InformationController extends Controller
     public function deleteInformation($id)
     {
         try {
-            $information = Information::findOrFail($id);
+            $information = Information::with('imageContents')->findOrFail($id);
+
+            // Delete associated gallery images
+            foreach ($information->imageContents as $image) {
+                // Delete file from storage
+                if (Storage::disk('public')->exists($image->image_path)) {
+                    Storage::disk('public')->delete($image->image_path);
+                }
+                $image->delete();
+            }
+
+            // Delete cover image if exists
+            if ($information->cover_image && Storage::disk('public')->exists($information->cover_image)) {
+                Storage::disk('public')->delete($information->cover_image);
+            }
+
             $information->delete();
             return redirect()->route('admin.information.index')->with('success', 'Informasi berhasil dihapus.');
         } catch (\Exception $e) {
             Log::error('Failed to delete information: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to delete information. Please try again.']);
+        }
+    }
+
+    /**
+     * Store gallery images for information.
+     */
+    public function storeGallery(Request $request)
+    {
+        $request->validate([
+            'information_id' => 'required|exists:information,id',
+            'gallery_images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $uploaded = 0;
+            foreach ($request->file('gallery_images') as $file) {
+                $imagePath = $file->store('information/gallery', 'public');
+                InformationImageContent::create([
+                    'information_id' => $request->information_id,
+                    'image_path' => $imagePath,
+                ]);
+                $uploaded++;
+            }
+
+            return redirect()->back()->with('success', "{$uploaded} gambar berhasil diupload.");
+        } catch (\Exception $e) {
+            Log::error('Gallery upload failed: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Gagal mengupload gambar.']);
+        }
+    }
+
+    /**
+     * Delete gallery image.
+     */
+    public function deleteGallery($id)
+    {
+        try {
+            $image = InformationImageContent::findOrFail($id);
+
+            // Delete file from storage
+            if (Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+
+            $image->delete();
+
+            return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+        } catch (\Exception $e) {
+            Log::error('Gallery delete failed: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus gambar.']);
         }
     }
 }

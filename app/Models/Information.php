@@ -18,8 +18,13 @@ class Information extends Model
         'category_id',
     ];
 
-    public function informationCategory()
+    public function category()
     {
         return $this->belongsTo(InformationCategory::class, 'category_id');
+    }
+
+    public function imageContents()
+    {
+        return $this->hasMany(InformationImageContent::class);
     }
 }
