@@ -9,17 +9,41 @@ use App\Models\Major;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class AlumniController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $major = Major::all();
-        $alumni = Alumni::with('user')->get();
-        return view('admin.alumni.index', compact('alumni', 'major'));
+        $query = Alumni::with('user', 'major');
+
+        // Search by name, email, or NIM
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            })->orWhere('nim', 'like', "%{$search}%");
+        }
+
+        // Filter by major
+        if ($request->has('major_id') && $request->major_id) {
+            $query->where('major_id', $request->major_id);
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('is_active', (bool)$request->status);
+        }
+
+        $alumni = $query->paginate(10);
+        $majors = Major::all();
+
+        return view('admin.alumni.index', compact('alumni', 'majors'));
     }
 
 
@@ -41,34 +65,34 @@ class AlumniController extends Controller
         if ($request->hasFile('photo_profile')) {
             $photoPath = $request->file('photo_profile')->store('photo_profiles', 'public');
         }
-       DB::beginTransaction();
-       try {
-           $user = User::create([
-               'name' => $request->name,
-               'email' => $request->email,
-               'photo_profile' => $photoPath,
-               'password' => bcrypt('temporarypassword'),
-              ]);
+        DB::beginTransaction();
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'photo_profile' => $photoPath,
+                'password' => bcrypt('temporarypassword'),
+            ]);
             Alumni::create([
-               'user_id' => $user->id,
-               'nim' => $request->nim,
-               'major_id' => $request->major_id,
-               'is_active' => false,
-           ]);
-           EducationalBackground::create([
-               'alumni_id' => $user->alumni->id,
-               'generation' => $request->generation,
-               'institution_name' => 'IPB University',
-               'major' => 'Teknologi Rekayasa Perangkat Lunak',
-               'degree' => 'Diploma 4',
-               'faculty' => 'Sekolah Vokasi',
-           ]);
-           DB::commit();
-       } catch (\Exception $e) {
-           DB::rollBack();
-           return back()->withErrors(['error' => 'Failed to add alumni: ' . $e->getMessage()])->withInput();
-       }
-         return redirect()->route('admin.alumni.index')->with('success', 'Alumni added successfully.');
+                'user_id' => $user->id,
+                'nim' => $request->nim,
+                'major_id' => $request->major_id,
+                'is_active' => false,
+            ]);
+            EducationalBackground::create([
+                'alumni_id' => $user->alumni->id,
+                'generation' => $request->generation,
+                'institution_name' => 'IPB University',
+                'major' => 'Teknologi Rekayasa Perangkat Lunak',
+                'degree' => 'Diploma 4',
+                'faculty' => 'Sekolah Vokasi',
+            ]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Failed to add alumni: ' . $e->getMessage()])->withInput();
+        }
+        return redirect()->route('admin.alumni.index')->with('success', 'Alumni added successfully.');
     }
 
     /**
@@ -82,32 +106,146 @@ class AlumniController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Alumni $alumni)
+    public function show($id)
     {
-        //
+        $alumni = Alumni::with(['user', 'major', 'career', 'educationalBackgrounds'])->findOrFail($id);
+        return view('admin.alumni.show', compact('alumni'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Alumni $alumni)
+    public function edit($id)
     {
-        //
+        $alumni = Alumni::with(['user', 'major'])->findOrFail($id);
+        $majors = Major::all();
+        return view('admin.alumni.edit', compact('alumni', 'majors'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Alumni $alumni)
+    public function update(Request $request, $id)
     {
-        //
+        // Get alumni record
+        $alumni = Alumni::findOrFail($id);
+
+        // Get current user data
+        $user = User::find($alumni->user_id);
+
+        // Build base rules with NO unique constraints
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'nim' => 'required|string|max:50',
+            'birthdate' => 'nullable|date',
+            'major_id' => 'required|exists:majors,id',
+            'photo_profile' => 'nullable|image|max:2048',
+        ];
+
+        // Validate without uniqueness first
+        $validated = $request->validate($rules);
+
+        // NOW check uniqueness manually if values changed
+        $requestNim = (string)$request->nim;
+        $currentNim = (string)($alumni->nim ?? '');
+
+        $requestEmail = (string)$request->email;
+        $currentEmail = (string)($user?->email ?? '');
+
+        // Check if NIM changed and already exists elsewhere
+        if ($requestNim !== $currentNim) {
+            $nimExists = Alumni::where('nim', $requestNim)->where('id', '!=', $alumni->id)->exists();
+            if ($nimExists) {
+                return back()->withErrors(['nim' => 'The nim has already been taken.'])->withInput();
+            }
+        }
+
+        // Check if Email changed and already exists elsewhere
+        if ($requestEmail !== $currentEmail && $user) {
+            $emailExists = User::where('email', $requestEmail)->where('id', '!=', $user->id)->exists();
+            if ($emailExists) {
+                return back()->withErrors(['email' => 'The email has already been taken.'])->withInput();
+            }
+        }
+
+        DB::beginTransaction();
+        try {
+            // Update or create user if it doesn't exist
+            if (!$user) {
+                $user = new User();
+                $user->id = $alumni->user_id;
+            }
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+
+            // Handle photo upload
+            if ($request->hasFile('photo_profile')) {
+                // Delete old photo if exists
+                if ($user->photo_profile) {
+                    Storage::disk('public')->delete($user->photo_profile);
+                }
+                $user->photo_profile = $request->file('photo_profile')->store('photo_profiles', 'public');
+            }
+            $user->save();
+
+            $alumni->nim = $request->nim;
+            $alumni->birthdate = $request->birthdate;
+            $alumni->major_id = $request->major_id;
+            $alumni->save();
+            DB::commit();
+            return redirect()->route('admin.alumni.show', $alumni->id)->with('success', 'Alumni berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal memperbarui alumni: ' . $e->getMessage()])->withInput();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Alumni $alumni)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            // Get alumni record
+            $alumni = Alumni::findOrFail($id);
+
+            // Get user associated with alumni
+            $user = $alumni->user;
+
+            // Delete photo if user exists and has photo
+            if ($user && $user->photo_profile) {
+                Storage::disk('public')->delete($user->photo_profile);
+            }
+
+            // Delete all related records from alumni
+            if ($alumni->career) {
+                $alumni->career()->delete();
+            }
+            if ($alumni->educationalBackgrounds) {
+                $alumni->educationalBackgrounds()->delete();
+            }
+
+            // Delete alumni record
+            $alumni->delete();
+
+            // Delete admin record if exists
+            if ($user && $user->admin) {
+                $user->admin()->delete();
+            }
+
+            // Delete user record
+            if ($user) {
+                $user->delete();
+            }
+
+            DB::commit();
+            return redirect()->route('admin.alumni.index')->with('success', 'Alumni berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Gagal menghapus alumni: ' . $e->getMessage()]);
+        }
     }
 }

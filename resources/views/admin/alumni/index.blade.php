@@ -6,32 +6,79 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3 mb-0">Data Alumni</h1>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAlumniModal">
+            <i data-feather="plus" style="width: 16px; height: 16px; margin-right: 5px;"></i>
             Add Alumni
         </button>
     </div>
-    <p>Welcome to the alumni data page!</p>
-    {{-- table --}}
+
+    {{-- Search & Filter Section --}}
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <form method="GET" action="{{ route('admin.alumni.index') }}" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="search" placeholder="Cari nama, email, atau NIM..."
+                        value="{{ request('search') }}">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="major_id">
+                        <option value="">Semua Jurusan</option>
+                        @foreach ($majors as $major)
+                            <option value="{{ $major->id }}" {{ request('major_id') == $major->id ? 'selected' : '' }}>
+                                {{ $major->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="status">
+                        <option value="">Semua Status</option>
+                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
+                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Tidak Aktif</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i data-feather="search" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+                        Filter
+                    </button>
+                </div>
+                @if (request('search') || request('major_id') || request('status') !== null)
+                    <div class="col-12">
+                        <a href="{{ route('admin.alumni.index') }}" class="btn btn-secondary btn-sm">
+                            <i data-feather="x" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+                            Reset Filter
+                        </a>
+                    </div>
+                @endif
+            </form>
+        </div>
+    </div>
+
+    {{-- Results Info --}}
+    <div class="mb-2">
+        <small class="text-muted">
+            Menampilkan {{ $alumni->firstItem() ?? 0 }} sampai {{ $alumni->lastItem() ?? 0 }} dari {{ $alumni->total() }}
+            alumni
+        </small>
+    </div>
+
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th style="width: 50px;">No</th>
+                <th style="width: 80px;">Foto</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Major</th>
                 <th>NIM</th>
-                <th>Photo</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($alumni as $key => $alumnus)
+            @forelse ($alumni as $key => $alumnus)
                 <tr>
-                    <td class="text-center">{{ $key + 1 }}</td>
-                    <td>{{ $alumnus->user->name }}</td>
-                    <td>{{ $alumnus->user->email }}</td>
-                    <td>{{ $alumnus->major->name }}</td>
-                    <td>{{ $alumnus->nim }}</td>
-                    <td>
+                    <td class="text-center">{{ $alumni->firstItem() + $key }}</td>
+                    <td class="text-center">
                         @if ($alumnus->user->photo_profile)
                             <img src="{{ asset('storage/' . $alumnus->user->photo_profile) }}"
                                 alt="Photo of {{ $alumnus->user->name }}" width="50" class="rounded">
@@ -39,22 +86,45 @@
                             N/A
                         @endif
                     </td>
+                    <td>{{ $alumnus->user->name }}</td>
+                    <td>{{ $alumnus->user->email }}</td>
+                    <td>{{ $alumnus->major->name }}</td>
+                    <td>{{ $alumnus->nim }}</td>
                     <td>
-                        {{-- Action buttons (Edit, Delete) can be added here --}}
-                        <button class="btn btn-outline-info btn-sm" title="View">
+                        <a href="{{ route('admin.alumni.show', $alumnus->id) }}" class="btn btn-outline-info btn-sm"
+                            title="View">
                             <i data-feather="eye"></i>
-                        </button>
-                        <button class="btn btn-outline-warning btn-sm" title="Edit">
-                            <i data-feather="edit"></i>
-                        </button>
-                        <button class="btn btn-outline-danger btn-sm" title="Delete">
-                            <i data-feather="trash-2"></i>
-                        </button>
+                        </a>
+                        <a href="{{ route('admin.alumni.edit', $alumnus->id) }}" class="btn btn-outline-warning btn-sm"
+                            title="Edit">
+                            <i data-feather="edit-2"></i>
+                        </a>
+                        <form action="{{ route('admin.alumni.destroy', $alumnus->id) }}" method="POST"
+                            style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete"
+                                onclick="return confirm('Apakah Anda yakin?');">
+                                <i data-feather="trash-2"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                        <i data-feather="inbox" style="width: 32px; height: 32px; margin-bottom: 10px;"></i>
+                        <p class="mb-0">Tidak ada alumni ditemukan</p>
+                    </td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+
+    {{-- Pagination --}}
+    <div class="d-flex justify-content-center mt-4">
+        {{ $alumni->links() }}
+    </div>
 
     {{-- include reusable add alumni modal --}}
     @include('components.modals.admin-alumni')

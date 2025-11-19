@@ -89,6 +89,15 @@ body {
     min-height: 100vh;
 }
 
+/* When sidebar is not present (not authenticated) */
+body:has(> main.w-100) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+}
+
 header {
     grid-area: header;
 }

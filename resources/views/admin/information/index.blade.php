@@ -18,19 +18,60 @@
                             data-feather="plus"></i></button>
                 </div>
                 <div class="card-body">
+                    <!-- Search and Filter Form -->
+                    <form method="GET" action="{{ route('admin.information.index') }}" class="mb-3">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <input type="text" name="search" class="form-control form-control-sm"
+                                    placeholder="Cari judul atau konten..." value="{{ request('search') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <select name="category_id" class="form-select form-select-sm">
+                                    <option value="">Semua Kategori</option>
+                                    @foreach ($informationCategories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">
+                                    <i data-feather="search" style="width: 14px; height: 14px;"></i> Filter
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-12">
+                                <a href="{{ route('admin.information.index') }}" class="btn btn-secondary btn-sm">
+                                    <i data-feather="x" style="width: 14px; height: 14px;"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Results Info -->
+                    @if ($informations->total() > 0)
+                        <small class="text-muted d-block mb-2">
+                            Menampilkan {{ $informations->firstItem() }} sampai {{ $informations->lastItem() }} dari
+                            {{ $informations->total() }} informasi
+                        </small>
+                    @endif
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>No</th>
                                 <th>Judul</th>
                                 <th>Kategori</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($informations ?? [] as $info)
+                            @forelse($informations as $key => $info)
                                 <tr>
-                                    <td>{{ $info->id }}</td>
+                                    <td>{{ $informations->firstItem() + $key }}</td>
                                     <td class="text-truncate" style="max-width: 200px;" title="{{ $info->title }}">
                                         {{ $info->title }}</td>
                                     <td>{{ $info->category->name ?? 'N/A' }}</td>
@@ -61,6 +102,13 @@
                             @endforelse
                         </tbody>
                     </table>
+
+                    <!-- Pagination -->
+                    @if ($informations->hasPages())
+                        <div class="d-flex justify-content-center mt-3">
+                            {{ $informations->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

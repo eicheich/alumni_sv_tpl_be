@@ -15,6 +15,8 @@ class Alumni extends Model
         'birthdate',
         'nim',
         'major_id',
+        'graduation_year',
+        'is_active',
     ];
 
     public function user()
@@ -25,5 +27,15 @@ class Alumni extends Model
     public function major()
     {
         return $this->belongsTo(Major::class);
+    }
+
+    public function career()
+    {
+        return $this->hasOne(Career::class);
+    }
+
+    public function educationalBackgrounds()
+    {
+        return $this->hasMany(EducationalBackground::class);
     }
 }

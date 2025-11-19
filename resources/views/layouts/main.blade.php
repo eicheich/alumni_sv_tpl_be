@@ -23,7 +23,9 @@
 
 <body>
     @include('layouts.header')
-    @include('layouts.sidebar')
+    @if (auth()->check())
+        @include('layouts.sidebar')
+    @endif
 
     <main class="@if (!auth()->check()) w-100 @endif">
         {{-- centralized session / validation messages --}}

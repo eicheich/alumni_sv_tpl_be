@@ -23,5 +23,5 @@ class Career extends Model
         return $this->belongsTo(Alumni::class);
     }
 
-    
+
 }

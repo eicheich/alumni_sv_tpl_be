@@ -15,10 +15,24 @@ class InformationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Information::with('category');
+
+        // Search by title or content
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('title', 'like', "%{$search}%")
+                ->orWhere('content', 'like', "%{$search}%");
+        }
+
+        // Filter by category
+        if ($request->has('category_id') && $request->category_id) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $informations = $query->paginate(10);
         $informationCategories = InformationCategory::all();
-        $informations = Information::with('category')->get();
         return view('admin.information.index', compact('informationCategories', 'informations'));
     }
 
