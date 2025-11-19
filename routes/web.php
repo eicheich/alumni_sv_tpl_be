@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\Admin\AlumniController;
 use App\Http\Controllers\Web\Admin\GeneralInformationController;
 use App\Http\Controllers\Web\Admin\InformationCategoryController;
 use App\Http\Controllers\Web\Admin\InformationController;
+use App\Http\Controllers\Web\Admin\OutstandingAlumniController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
 use Phiki\Phast\Root;
@@ -44,6 +45,13 @@ Route::prefix('admin')->group(function () {
             Route::post('category/store', [InformationCategoryController::class, 'storeCategory'])->name('admin.information.category.store');
             Route::put('information-category/{id}/update', [InformationCategoryController::class, 'updateCategory'])->name('admin.information.category.update');
             Route::delete('information-category/{id}/destroy', [InformationCategoryController::class, 'destroyCategory'])->name('admin.information.category.destroy');
+        });
+        Route::prefix('alumni-berprestasi')->group(function () {
+            Route::get('/', [OutstandingAlumniController::class, 'index'])->name('admin.outstanding-alumni.index');
+            Route::post('/store', [OutstandingAlumniController::class, 'store'])->name('admin.outstanding-alumni.store');
+            Route::get('/{id}/edit', [OutstandingAlumniController::class, 'edit'])->name('admin.outstanding-alumni.edit');
+            Route::put('/{id}', [OutstandingAlumniController::class, 'update'])->name('admin.outstanding-alumni.update');
+            Route::delete('/{id}', [OutstandingAlumniController::class, 'destroy'])->name('admin.outstanding-alumni.destroy');
         });
     });
 });

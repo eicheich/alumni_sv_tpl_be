@@ -12,7 +12,7 @@ class OutstandingAlumni extends Model
 
     protected $fillable = [
         'alumni_id',
-        'reward_title',
+        'award_title',
     ];
 
     public function alumni()

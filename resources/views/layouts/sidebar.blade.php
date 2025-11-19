@@ -32,6 +32,14 @@
                     <span>Informasi</span>
                 </a>
             @endif
+
+            @if (Route::has('admin.outstanding-alumni.index'))
+                <a class="nav-link {{ request()->routeIs('admin.outstanding-alumni.*') ? 'active' : '' }}"
+                    href="{{ route('admin.outstanding-alumni.index') }}">
+                    <i data-feather="award"></i>
+                    <span>Alumni Berprestasi</span>
+                </a>
+            @endif
         </nav>
 
         <nav class="nav flex-column sidebar-bottom-menu">
