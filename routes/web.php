@@ -6,13 +6,13 @@ use App\Http\Controllers\Web\Admin\GeneralInformationController;
 use App\Http\Controllers\Web\Admin\InformationCategoryController;
 use App\Http\Controllers\Web\Admin\InformationController;
 use App\Http\Controllers\Web\Admin\OutstandingAlumniController;
+use App\Http\Controllers\Web\Alumni\DashboardController as AlumniDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\UserGuest\LandingController;
 use Phiki\Phast\Root;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [LandingController::class, 'index'])->name('index');
 // prefix admin
 Route::prefix('admin')->group(function () {
     Route::prefix('auth')->group(function () {
@@ -56,10 +56,27 @@ Route::prefix('admin')->group(function () {
     });
 });
 Route::prefix('auth')->group(function () {
-    Route::get('/register', [AuthController::class, 'alumniValidateDataView'])->name('alumni.validate.view');
-    Route::post('/register', [AuthController::class, 'alumniValidateData'])->name('alumni.validate');
-    Route::post('/register', [AuthController::class, 'alumniRegister'])->name('alumni.register');
+    Route::get('/register', [AuthController::class, 'alumniValidateDataView'])->name('alumni.validate-data.view');
+    Route::post('/register', [AuthController::class, 'alumniValidateData'])->name('alumni.validate-data');
+    Route::get('/verify-otp', [AuthController::class, 'alumniVerifyOtpView'])->name('alumni.verify-otp.view');
+    Route::post('/verify-otp', [AuthController::class, 'alumniVerifyOtp'])->name('alumni.verify-otp');
+    Route::get('/complete-profile', [AuthController::class, 'alumniCompleteProfileView'])->name('alumni.complete-profile.view');
+    Route::post('/complete-profile', [AuthController::class, 'alumniCompleteProfile'])->name('alumni.complete-profile');
+    Route::get('/registration-success', [AuthController::class, 'alumniRegistrationSuccess'])->name('alumni.registration-success');
     Route::get('/login', [AuthController::class, 'alumniLoginView'])->name('alumni.login.view');
     Route::post('/login', [AuthController::class, 'alumniLogin'])->name('alumni.login');
+    Route::get('/forgot-password', [AuthController::class, 'alumniForgetPasswordView'])->name('alumni.forgot-password-view');
+    Route::post('/forgot-password', [AuthController::class, 'alumniForgetPassword'])->name('alumni.forgot-password');
+    Route::get('/verify-forgot-password-otp', [AuthController::class, 'alumniVerifyForgotPasswordOtpView'])->name('alumni.verify-forgot-password-otp-view');
+    Route::post('/verify-forgot-password-otp', [AuthController::class, 'alumniVerifyForgotPasswordOtp'])->name('alumni.verify-forgot-password-otp');
+    Route::get('/reset-password', [AuthController::class, 'alumniResetPasswordView'])->name('alumni.reset-password-view');
+    Route::post('/reset-password', [AuthController::class, 'alumniResetPassword'])->name('alumni.reset-password');
     Route::post('/logout', [AuthController::class, 'logout'])->name('alumni.logout');
+});
+
+Route::prefix('alumni')->middleware('alumni')->group(function () {
+    Route::get('/', [AlumniDashboardController::class, 'index'])->name('alumni.dashboard.index');
+    Route::get('/profile', [AlumniDashboardController::class, 'profile'])->name('alumni.profile');
+    Route::get('/change-password', [AlumniDashboardController::class, 'changePasswordView'])->name('alumni.change-password-view');
+    Route::post('/change-password', [AlumniDashboardController::class, 'changePassword'])->name('alumni.change-password');
 });
