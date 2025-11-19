@@ -32,8 +32,10 @@
                 <div class="col-md-3">
                     <select class="form-select" name="status">
                         <option value="">Semua Status</option>
-                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
-                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Tidak Aktif</option>
+                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Sudah Aktivasi Akun
+                        </option>
+                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Belum Aktivasi Akun
+                        </option>
                     </select>
                 </div>
                 <div class="col-md-2">

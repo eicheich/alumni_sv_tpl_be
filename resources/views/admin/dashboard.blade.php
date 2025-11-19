@@ -9,7 +9,7 @@
 
     <!-- Statistics Cards Row -->
     <div class="row mb-4">
-        <div class="col-md-6 col-lg-3 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -26,12 +26,12 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-1">Alumni Aktif</h6>
+                            <h6 class="text-muted mb-1">Sudah Aktivasi</h6>
                             <h3 class="mb-0 text-success">{{ $activeAlumni }}</h3>
                         </div>
                         <div class="bg-success text-white rounded-circle p-3"
@@ -43,12 +43,12 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-muted mb-1">Alumni Tidak Aktif</h6>
+                            <h6 class="text-muted mb-1">Belum Aktivasi</h6>
                             <h3 class="mb-0 text-warning">{{ $inactiveAlumni }}</h3>
                         </div>
                         <div class="bg-warning text-white rounded-circle p-3"
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -80,7 +80,7 @@
 
     <!-- Chart Row -->
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-light border-0">
                     <h5 class="mb-0">
@@ -91,52 +91,6 @@
                 </div>
                 <div class="card-body">
                     <canvas id="alumniChart" height="100"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light border-0">
-                    <h5 class="mb-0">
-                        <i data-feather="info"
-                            style="width: 18px; height: 18px; margin-right: 8px; vertical-align: middle;"></i>
-                        Statistik Cepat
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Alumni Aktif</span>
-                            <strong>{{ round(($activeAlumni / max($totalAlumni, 1)) * 100) }}%</strong>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                style="width: {{ ($activeAlumni / max($totalAlumni, 1)) * 100 }}%"></div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Alumni Tidak Aktif</span>
-                            <strong>{{ round(($inactiveAlumni / max($totalAlumni, 1)) * 100) }}%</strong>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-warning" role="progressbar"
-                                style="width: {{ ($inactiveAlumni / max($totalAlumni, 1)) * 100 }}%"></div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Alumni Berkarir</span>
-                            <strong>{{ round(($alumniWithCareer / max($totalAlumni, 1)) * 100) }}%</strong>
-                        </div>
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-info" role="progressbar"
-                                style="width: {{ ($alumniWithCareer / max($totalAlumni, 1)) * 100 }}%"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

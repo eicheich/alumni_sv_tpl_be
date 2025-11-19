@@ -31,7 +31,7 @@
                     <h2 class="mb-1">{{ $alumni->user->name }}</h2>
                     <p class="text-muted mb-3">
                         <span class="badge {{ $alumni->is_active ? 'bg-success' : 'bg-secondary' }} me-2">
-                            {{ $alumni->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                            {{ $alumni->is_active ? 'Sudah Aktivasi Akun' : 'Belum Aktivasi Akun' }}
                         </span>
                         <span class="badge bg-info">{{ $alumni->major->name }}</span>
                     </p>
