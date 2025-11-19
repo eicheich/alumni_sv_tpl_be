@@ -17,17 +17,12 @@ class AlumniController extends Controller
      */
     public function index()
     {
-        // Eager-load related user model (requires Alumni::user() relationship)
-        // alumni with user and major
         $major = Major::all();
         $alumni = Alumni::with('user')->get();
-        return view('admin.alumni', compact('alumni', 'major'));
+        return view('admin.alumni.index', compact('alumni', 'major'));
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function addAlumni(Request $request)
     {
         $validate = $request->validate([

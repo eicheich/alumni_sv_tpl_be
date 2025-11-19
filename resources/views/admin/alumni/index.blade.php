@@ -14,6 +14,7 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
+                <th style="width: 50px;">No</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Major</th>
@@ -23,24 +24,32 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($alumni as $alumnus)
+            @foreach ($alumni as $key => $alumnus)
                 <tr>
+                    <td class="text-center">{{ $key + 1 }}</td>
                     <td>{{ $alumnus->user->name }}</td>
                     <td>{{ $alumnus->user->email }}</td>
                     <td>{{ $alumnus->major->name }}</td>
                     <td>{{ $alumnus->nim }}</td>
                     <td>
-                        @if ($alumnus->photo_url)
-                            <img src="{{ $alumnus->photo_profile }}" alt="Photo of {{ $alumnus->name }}" width="50">
+                        @if ($alumnus->user->photo_profile)
+                            <img src="{{ asset('storage/' . $alumnus->user->photo_profile) }}"
+                                alt="Photo of {{ $alumnus->user->name }}" width="50" class="rounded">
                         @else
                             N/A
                         @endif
                     </td>
                     <td>
                         {{-- Action buttons (Edit, Delete) can be added here --}}
-                        <button class="btn btn-sm btn-info">View</button>
-                        <button class="btn btn-sm btn-warning">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
+                        <button class="btn btn-outline-info btn-sm" title="View">
+                            <i data-feather="eye"></i>
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm" title="Edit">
+                            <i data-feather="edit"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" title="Delete">
+                            <i data-feather="trash-2"></i>
+                        </button>
                     </td>
                 </tr>
             @endforeach

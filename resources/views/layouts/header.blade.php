@@ -1,65 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('title', 'Alumni')</title>
-    {{-- Optional app CSS (uncomment if exists) --}}
-    @if (file_exists(public_path('css/app.css')))
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @endif
-    {{-- bootstrap --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-
-</head>
-
-<body>
-    <header style="padding:1rem;background:#f5f5f5;border-bottom:1px solid #ddd;">
-        <div style="max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
-            <h2 style="margin:0;font-size:1.25rem"><a href="{{ url('/') }}">My Alumni App</a></h2>
-            <nav>
-                <a href="{{ route('admin.alumni.index') ?? url('/admin/alumni') }}">Alumni</a>
-                {{-- add other links as needed --}}
-            </nav>
-        </div>
-    </header>
-    <main style="max-width:1100px;margin:1.5rem auto;padding:0 1rem;min-height:60vh;">
-        {{-- header and call css js from bootstrap --}}
-        <!DOCTYPE html>
-        <html lang="en">
-
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-            <title>@yield('title', 'Dashboard')</title>
-            <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-            <script src="{{ asset('js/app.js') }}" defer></script>
-        </head>
-
-        <body>
-            <header>
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <a class="navbar-brand" href="{{ route('admin.dashboard.index') }}">Alumni SV</a>
-                    <div class="collapse navbar-collapse">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.alumni.index') }}">Alumni</a>
-                            </li>
-                        </ul>
-                        <form class="form-inline my-2 my-lg-0" action="{{ route('admin.logout') }}" method="POST">
-                            @csrf
-                            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
-                        </form>
+<header class="navbar-top">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <a class="navbar-brand mb-0" href="{{ url('/') }}">Alumni SV</a>
+        @if (auth()->check())
+            <div class="user-header-info d-flex align-items-center gap-2">
+                @if (auth()->user()->photo_profile)
+                    <img src="{{ asset('storage/' . auth()->user()->photo_profile) }}" alt="{{ auth()->user()->name }}"
+                        class="user-header-photo rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                @else
+                    <div class="user-header-photo rounded-circle bg-light d-flex align-items-center justify-content-center"
+                        style="width: 40px; height: 40px;">
+                        <i data-feather="user" style="width: 20px; height: 20px; color: #95a3b3;"></i>
                     </div>
-                </nav>
-            </header>
-            <main class="container mt-4">
-                @yield('content')
-            </main>
-        </body>
-
-        </html>
+                @endif
+                <div class="user-header-text">
+                    <div class="user-header-name">{{ auth()->user()->name }}</div>
+                    <div class="user-header-role">Admin</div>
+                </div>
+            </div>
+        @endif
+    </div>
+</header>

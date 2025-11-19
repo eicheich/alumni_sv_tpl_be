@@ -9,47 +9,23 @@
     <title>@yield('title', 'Alumni')</title>
 
     {{-- Optional app CSS --}}
-    @if (file_exists(public_path('css/app.css')))
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    @endif
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {{-- Layout CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
 
     {{-- Bootstrap CDN as fallback / quick styling --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://unpkg.com/feather-icons"></script>
-    @stack('head')
 
+    @stack('head')
 </head>
 
 <body>
-    <header class="bg-light border-bottom mb-3">
-        <div class="container d-flex justify-content-between align-items-center py-2">
-            <a class="navbar-brand mb-0 h1" href="{{ url('/') }}">Alumni SV</a>
-            @if (auth()->check())
-                <nav>
-                    @if (Route::has('admin.alumni.index'))
-                        <a class="me-3" href="{{ route('admin.alumni.index') }}">Alumni</a>
-                    @else
-                        <a class="me-3" href="{{ url('/admin/alumni') }}">Alumni</a>
-                    @endif
-                    @if (Route::has('admin.information.index'))
-                        <a class="me-3" href="{{ route('admin.information.index') }}">Informasi</a>
-                    @endif
-                    @if (Route::has('admin.dashboard.index'))
-                        <a class="me-3" href="{{ route('admin.dashboard.index') }}">Dashboard</a>
-                    @endif
-                    <span class="text-muted">Logged in as {{ auth()->user()->name }}</span>
-                    <span class="text-muted"> | </span>
-                    <form class="d-inline" action="{{ route('admin.logout') }}" method="POST">
-                        @csrf
-                        <button class="btn btn-outline-danger btn-sm" type="submit">Logout</button>
-                    </form>
-                </nav>
-            @endif
-        </div>
-    </header>
+    @include('layouts.header')
+    @include('layouts.sidebar')
 
-    <main class="container">
+    <main class="@if (!auth()->check()) w-100 @endif">
         {{-- centralized session / validation messages --}}
         @include('layouts.session-status')
 
@@ -57,11 +33,7 @@
         @yield('content')
     </main>
 
-    <footer class="bg-white border-top mt-5 py-3">
-        <div class="container text-center text-muted">
-            &copy; {{ date('Y') }} Alumni SV TPL
-        </div>
-    </footer>
+    @include('layouts.footer')
 
     {{-- Optional app JS --}}
     @if (file_exists(public_path('js/app.js')))

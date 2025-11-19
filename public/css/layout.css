@@ -1,0 +1,312 @@
+/* ==============================================
+   Layout Styles - Header, Sidebar, Footer
+   ============================================== */
+
+/* Reset */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: inherit;
+    background: #f5f7fa;
+}
+
+/* ==================== Header ==================== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+}
+
+.navbar-top {
+    background: white;
+    color: #2c3e50;
+    padding: 1rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #e8eef5;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-top .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-top .navbar-brand {
+    color: #2c3e50 !important;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none;
+    margin-bottom: 0 !important;
+}
+
+/* User Header Info */
+.user-header-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.user-header-name {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.user-header-role {
+    font-size: 0.75rem;
+    color: #95a3b3;
+}
+
+.user-header-photo {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+/* ==================== Layout Container ==================== */
+body {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+    min-height: 100vh;
+}
+
+header {
+    grid-area: header;
+}
+
+/* ==================== Sidebar ==================== */
+aside {
+    grid-area: sidebar;
+    background: white;
+    border-right: 1px solid #e8eef5;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.sidebar {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+/* Sidebar Main Menu */
+.sidebar-main-menu {
+    flex: 1;
+    overflow-y: auto;
+    padding-top: 1rem;
+}
+
+.sidebar-main-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-main-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-main-menu::-webkit-scrollbar-thumb {
+    background: #d1d9e0;
+    border-radius: 3px;
+}
+
+.sidebar-main-menu::-webkit-scrollbar-thumb:hover {
+    background: #b3bcc7;
+}
+
+/* Sidebar Bottom Menu */
+.sidebar-bottom-menu {
+    flex-shrink: 0;
+    border-top: 1px solid #e8eef5;
+    padding: 0.5rem 0;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: #2c3e50;
+    padding: 0.75rem 1.5rem;
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+}
+
+.sidebar .nav-link:hover {
+    background: #f8fafc;
+    border-left-color: #667eea;
+    color: #667eea;
+}
+
+.sidebar .nav-link.active {
+    background: #f0f4ff;
+    border-left-color: #667eea;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.sidebar .nav-link i {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.sidebar .nav-link span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Section Titles */
+.sidebar .nav-section-title {
+    color: #95a3b3;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 1rem 1.5rem 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+/* User Profile */
+.user-profile {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e8eef5;
+    color: #2c3e50;
+    overflow: hidden;
+}
+
+.user-profile .user-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-profile .user-email {
+    font-size: 0.875rem;
+    color: #95a3b3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==================== Main Content ==================== */
+main {
+    grid-area: main;
+    padding: 2rem;
+    overflow-y: auto;
+    background: #f5f7fa;
+}
+
+/* Override Bootstrap container for main content area */
+main .container,
+main .container-fluid {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* ==================== Footer ==================== */
+footer {
+    grid-area: footer;
+    background: white;
+    border-top: 1px solid #e8eef5;
+    text-align: center;
+    color: #95a3b3;
+    font-size: 0.875rem;
+}
+
+footer .container {
+    padding: 1.5rem 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+}
+
+/* ==================== Responsive Design ==================== */
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 200px 1fr;
+    }
+
+    main {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        grid-template-columns: 180px 1fr;
+    }
+
+    main {
+        padding: 0.75rem;
+    }
+
+    .navbar-top {
+        padding: 0 1rem;
+    }
+
+    .navbar-top .navbar-brand {
+        font-size: 1.25rem;
+    }
+
+    .user-header-text {
+        display: none;
+    }
+
+    .user-header-photo {
+        width: 35px !important;
+        height: 35px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "main"
+            "footer";
+    }
+
+    aside {
+        display: none;
+    }
+
+    main {
+        padding: 1rem;
+    }
+}
