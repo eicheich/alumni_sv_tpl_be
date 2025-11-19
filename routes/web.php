@@ -79,4 +79,20 @@ Route::prefix('alumni')->middleware('alumni')->group(function () {
     Route::get('/profile', [AlumniDashboardController::class, 'profile'])->name('alumni.profile');
     Route::get('/change-password', [AlumniDashboardController::class, 'changePasswordView'])->name('alumni.change-password-view');
     Route::post('/change-password', [AlumniDashboardController::class, 'changePassword'])->name('alumni.change-password');
+
+    // Educational Backgrounds
+    Route::get('/educational-backgrounds', [AlumniDashboardController::class, 'educationalBackgrounds'])->name('alumni.educational-backgrounds');
+    Route::get('/educational-backgrounds/create', [AlumniDashboardController::class, 'createEducationalBackground'])->name('alumni.educational-backgrounds.create');
+    Route::post('/educational-backgrounds', [AlumniDashboardController::class, 'storeEducationalBackground'])->name('alumni.educational-backgrounds.store');
+    Route::get('/educational-backgrounds/{id}/edit', [AlumniDashboardController::class, 'editEducationalBackground'])->name('alumni.educational-backgrounds.edit');
+    Route::put('/educational-backgrounds/{id}', [AlumniDashboardController::class, 'updateEducationalBackground'])->name('alumni.educational-backgrounds.update');
+    Route::delete('/educational-backgrounds/{id}', [AlumniDashboardController::class, 'destroyEducationalBackground'])->name('alumni.educational-backgrounds.destroy');
+
+    // Careers
+    Route::get('/careers', [AlumniDashboardController::class, 'careers'])->name('alumni.careers');
+    Route::get('/careers/create', [AlumniDashboardController::class, 'createCareer'])->name('alumni.careers.create');
+    Route::post('/careers', [AlumniDashboardController::class, 'storeCareer'])->name('alumni.careers.store');
+    Route::get('/careers/{id}/edit', [AlumniDashboardController::class, 'editCareer'])->name('alumni.careers.edit');
+    Route::put('/careers/{id}', [AlumniDashboardController::class, 'updateCareer'])->name('alumni.careers.update');
+    Route::delete('/careers/{id}', [AlumniDashboardController::class, 'destroyCareer'])->name('alumni.careers.destroy');
 });

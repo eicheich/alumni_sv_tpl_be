@@ -1,12 +1,10 @@
-@extends('layouts.main')
-
-@section('title', 'Profile Alumni')
+@extends('layouts.guest')
 
 @section('content')
-    <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3">Profile Saya</h1>
-        </div>
+    @include('components.profile-header')
+
+    <div class="container mt-5 mb-5">
+        <h1 class="h3 mb-4">Profile Saya</h1>
 
         <div class="row">
             <div class="col-md-4 mb-4">
@@ -88,6 +86,61 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Latar Belakang Pendidikan</h5>
+                            <a href="{{ route('alumni.educational-backgrounds') }}" class="btn btn-sm btn-primary">
+                                <i data-feather="arrow-right" style="width: 14px; height: 14px;"></i>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            @if (auth('alumni')->user()->alumni->educationalBackgrounds->count() > 0)
+                                <div class="list-group list-group-flush">
+                                    @foreach (auth('alumni')->user()->alumni->educationalBackgrounds->take(2) as $background)
+                                        <div class="list-group-item px-0 py-2 border-0">
+                                            <p class="fw-bold mb-1">{{ $background->institution_name }}</p>
+                                            <small class="text-muted">{{ $background->degree }} •
+                                                {{ $background->entry_year }} - {{ $background->graduation_year }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @if (auth('alumni')->user()->alumni->educationalBackgrounds->count() > 2)
+                                    <p class="text-muted small mt-2">
+                                        +{{ auth('alumni')->user()->alumni->educationalBackgrounds->count() - 2 }} lainnya
+                                    </p>
+                                @endif
+                            @else
+                                <p class="text-muted mb-0">Belum ada data latar belakang pendidikan</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Data Karir</h5>
+                            <a href="{{ route('alumni.careers') }}" class="btn btn-sm btn-primary">
+                                <i data-feather="arrow-right" style="width: 14px; height: 14px;"></i>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            @if (auth('alumni')->user()->alumni->career)
+                                <p class="fw-bold mb-1">{{ auth('alumni')->user()->alumni->career->position }}</p>
+                                <p class="text-muted mb-2">{{ auth('alumni')->user()->alumni->career->company_name }}</p>
+                                <small class="text-secondary">
+                                    {{ \Carbon\Carbon::parse(auth('alumni')->user()->alumni->career->start_date)->format('M Y') }}
+                                    -
+                                    @if (auth('alumni')->user()->alumni->career->end_date)
+                                        {{ \Carbon\Carbon::parse(auth('alumni')->user()->alumni->career->end_date)->format('M Y') }}
+                                    @else
+                                        <span class="badge bg-success">Sekarang</span>
+                                    @endif
+                                </small>
+                            @else
+                                <p class="text-muted mb-0">Belum ada data karir</p>
+                            @endif
+                        </div>
+                    </div>
                 @endif
 
                 <div class="card">
@@ -105,4 +158,9 @@
             </div>
         </div>
     </div>
+    </div>
 @endsection
+
+<script>
+    feather.replace();
+</script>
