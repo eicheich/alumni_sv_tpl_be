@@ -116,6 +116,23 @@
     </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- Standard Bootstrap modal (no blade component) -->
 {{-- <div class="modal fade" id="addAlumniModal" tabindex="-1" aria-labelledby="addAlumniModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

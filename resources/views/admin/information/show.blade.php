@@ -139,6 +139,11 @@
     </div>
 
 
+
+
+
+
+    {{-- modal --}}
     <div id="addGalleryModal" tabindex="-1" aria-hidden="true"
         class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
         <div class="relative w-full max-w-3xl max-h-full mx-auto p-4">
@@ -172,6 +177,9 @@
         </div>
     </div>
 
+
+
+
     <div id="viewImageModal" tabindex="-1" aria-hidden="true"
         class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
         <div class="relative w-full max-w-5xl max-h-full mx-auto p-4">
@@ -189,6 +197,9 @@
             </div>
         </div>
     </div>
+
+
+
 
     <div id="deleteConfirmationModal" tabindex="-1" aria-hidden="true"
         class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">

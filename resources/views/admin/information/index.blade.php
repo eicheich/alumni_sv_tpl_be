@@ -326,6 +326,8 @@
     
 
 
+
+
     <!-- Modal Tambah Informasi -->
     <div id="addInformationModal" tabindex="-1" aria-hidden="true" 
     class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900 overflow-y-auto bg-opacity-50 transition-opacity duration-300">
@@ -382,6 +384,7 @@
                             @enderror
                         </div>
 
+
                         
                         <div>
                             <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Judul</label>
@@ -419,18 +422,6 @@
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
-                        
-
-                        {{-- Ini buat konten --}}
-                        {{-- <div>
-                            <label for="photo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Konten Foto (Opsional) [masi blm bisa]</label>
-                            <input type="file" 
-                                class="block w-full text-sm text-gray-900 border @error('photo') border-red-500 @else border-gray-300 @enderror rounded-lg cursor-pointer bg-gray-50 p-2.5"
-                                id="photo" name="photo">
-                            @error('photo')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div> --}}
 
                         
 

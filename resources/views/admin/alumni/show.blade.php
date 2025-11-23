@@ -184,6 +184,17 @@
     </section>
 
 
+
+
+
+
+
+
+
+
+
+
+    {{-- delete modal --}}
      <div id="delete-modal"
             class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99 
                     flex items-center justify-center pointer-events transition duration-300">

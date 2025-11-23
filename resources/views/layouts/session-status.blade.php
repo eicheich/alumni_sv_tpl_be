@@ -41,15 +41,6 @@
 @endforeach
 
 @if (isset($errors) && $errors->any())
-    {{-- <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>There were some problems with your input:</strong>
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div> --}}
 
     <!-- Checkbox untuk toggle (disembunyikan) -->
     <input type="checkbox" id="close-alert" class="peer hidden" />

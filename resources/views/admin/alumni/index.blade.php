@@ -52,7 +52,7 @@
                 
                 <select class="w-full md:w-2/3 border border-gray-300 rounded-lg py-2 px-2 text-sm focus:ring-2 focus:ring-purple-300 focus:outline-none" name="year">
                     <option value="">Semua Angkatan</option>
-                    {{-- Asumsikan Anda memiliki list angkatan/tahun $years --}}
+                    {{-- Asumsikan list angkatan/tahun $years --}}
                     {{-- @foreach ($years as $year) 
                         <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                     @endforeach --}}
@@ -193,6 +193,17 @@
 
         </div>
 
+
+
+
+
+
+
+
+
+
+
+        {{-- modal delete --}}
         <!-- Tambahkan spacer bawah agar konten tidak mentok ke footer layar -->
         <div class="h-12"></div>
 
@@ -310,6 +321,20 @@
         
     </script>
 @endpush
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
