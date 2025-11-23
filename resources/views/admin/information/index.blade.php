@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <div>-</div>
+                                    <div>Tidak Ada Informasi</div>
                                 @endforelse
                             </div>
                             
@@ -296,7 +296,7 @@
             </div>
 
             <div class="flex justify-between space-x-4">
-                <button data-modal-hide="deleteCategoryModal"
+                <button id="close-delete-btn" onclick="closeModal('deleteCategoryModal')"
                         class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
                     Batal
                 </button>
@@ -490,7 +490,6 @@
 
 
 
-
         // modal tambah informasi
         document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('addInformationModal');
@@ -537,24 +536,24 @@
     // modal hapus info
     let deleteFormId = null;
 
-        function openDeleteModal(id) {
-            deleteFormId = id;
-            document.getElementById('delete-modal').classList.remove('hidden');
-        }
+    function openDeleteModal(id) {
+        deleteFormId = id;
+        document.getElementById('delete-modal').classList.remove('hidden');
+    }
 
-        function closeDeleteModal() {
-            document.getElementById('delete-modal').classList.add('hidden');
-            deleteFormId = null; // clear
-        }
+    function closeDeleteModal() {
+        document.getElementById('delete-modal').classList.add('hidden');
+        deleteFormId = null; // clear
+    }
 
-        function submitDeleteForm() {
-            if (!deleteFormId) return;
+    function submitDeleteForm() {
+        if (!deleteFormId) return;
 
-            const form = document.getElementById(`delete-form-${deleteFormId}`);
-            if (form) {
-                form.submit(); // <-- INI YANG MENJAMIN SUBMIT
-            }
+        const form = document.getElementById(`delete-form-${deleteFormId}`);
+        if (form) {
+            form.submit(); // <-- INI YANG MENJAMIN SUBMIT
         }
+    }
 
 
 

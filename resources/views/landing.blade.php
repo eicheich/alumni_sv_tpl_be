@@ -117,8 +117,8 @@
                 </div>
 
             @empty
-                <div class="col-span-3 text-center py-12 text-gray-500">
-                    <i data-feather="inbox" class="w-12 h-12 mx-auto mb-3 text-gray-400"></i>
+                <div class="col-span-3 text-center py-12 text-white">
+                    <i data-feather="inbox" class="w-12 h-12 mx-auto mb-3"></i>
                     Belum ada informasi
                 </div>
             @endforelse
