@@ -22,7 +22,7 @@
         <input type="checkbox" id="close-alert" class="peer hidden" />
 
         <!-- Alert -->
-        <div class="peer-checked:hidden bg-{{ $bs }} text-white px-4 my-4 py-3 rounded relative" role="alert">
+        <div class="peer-checked:hidden bg-{{ $bs }} text-white m-4 px-4 my-4 py-3 rounded relative" role="alert">
             <strong class="font-bold">{!! session($key) !!}!</strong>
             {{-- <span class="block sm:inline">Anda berhasil login.</span> --}}
 

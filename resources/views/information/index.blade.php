@@ -1,103 +1,110 @@
 @extends('layouts.guest')
 
 @section('content')
-    @include('components.profile-header')
 
-    <div class="py-5" style="background-color: #f8f9fa;">
-        <div class="container">
-            <div class="row mb-4">
-                <div class="col-12">
-                    <h1 class="display-5 fw-bold mb-2">Informasi Umum</h1>
-                    <p class="text-muted">Berita, info loker, dan survey SV IPB</p>
-                </div>
+    <section id="informasi" class="bg-gray-100 py-16 pb-28">
+        <div class="mx-12">
+
+            <!-- Subtitle -->
+            <p class="text-sm text-purple-600">Berita, info loker, dan survey SV IPB</p>
+
+            <!-- Header + Search -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <h1 class="text-xl md:text-2xl font-semibold">Informasi Umum</h1>
+
+                <!-- Search Form -->
+                <form method="GET" action="{{ route('information.index') }}"
+                    class="flex items-center gap-2 mt-3 sm:mt-0">
+
+                    <select name="category"
+                        onchange="this.form.submit()"
+                        class="w-56 text-sm rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-purple-600 focus:outline-none bg-white">
+                        <option value="">Semua Kategori</option>
+
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ request('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <input type="text" name="search" placeholder="Cari informasi umum"
+                        value="{{ request('search') }}"
+                        class="w-72 rounded-lg border bg-white border-gray-200 px-4 py-2 text-sm focus:ring-2 focus:ring-purple-600 focus:outline-none">
+
+                    <button type="submit"
+                        class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">
+                        <i class="fa fa-search"></i> Cari
+                    </button>
+                </form>
             </div>
 
-            <!-- Search and Filter -->
-            <div class="row mb-4">
-                <div class="col-md-8">
-                    <form method="GET" action="{{ route('information.index') }}" class="d-flex gap-2">
-                        <input type="text" name="search" class="form-control" placeholder="Cari informasi umum"
-                            value="{{ request('search') }}">
-                        <button type="submit" class="btn btn-primary">
-                            <i data-feather="search" style="width: 16px; height: 16px;"></i>
-                        </button>
-                    </form>
-                </div>
-                <div class="col-md-4">
-                    <form method="GET" action="{{ route('information.index') }}">
-                        <select name="category" class="form-select" onchange="this.form.submit()">
-                            <option value="">Semua Kategori</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ request('category') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Information Grid -->
-            <div class="row g-4">
-                @forelse ($informations as $information)
-                    <div class="col-md-4">
-                        <div class="card h-100 shadow-sm">
-                            @if ($information->cover_image)
-                                <img src="{{ asset('storage/' . $information->cover_image) }}" class="card-img-top"
-                                    alt="{{ $information->title }}" style="height: 200px; object-fit: cover;">
-                            @elseif ($information->imageContents->first())
-                                <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
-                                    class="card-img-top" alt="{{ $information->title }}"
-                                    style="height: 200px; object-fit: cover;">
-                            @else
-                                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
-                                    style="height: 200px;">
-                                    <i data-feather="image" style="width: 48px; height: 48px; color: white;"></i>
-                                </div>
-                            @endif
-                            <div class="card-body d-flex flex-column">
-                                <span class="badge bg-primary mb-2 align-self-start">
-                                    {{ $information->category->name ?? 'Umum' }}
-                                </span>
-                                <h5 class="card-title">{{ Str::limit($information->title, 60) }}</h5>
-                                <p class="card-text text-muted flex-grow-1">
-                                    {{ Str::limit(strip_tags($information->content), 100) }}
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <small class="text-muted">
-                                        {{ \Carbon\Carbon::parse($information->created_at)->diffForHumans() }}
-                                    </small>
-                                    <a href="{{ route('information.show', $information->id) }}"
-                                        class="btn btn-sm btn-outline-primary">
-                                        Baca Selengkapnya
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-12">
-                        <div class="text-center py-5">
-                            <i data-feather="inbox" style="width: 64px; height: 64px; color: #6c757d;"></i>
-                            <p class="text-muted mt-3">Belum ada informasi</p>
-                        </div>
-                    </div>
-                @endforelse
-            </div>
-
-            <!-- Pagination -->
-            @if ($informations->hasPages())
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <nav>
-                            {{ $informations->links() }}
-                        </nav>
-                    </div>
-                </div>
-            @endif
+            
         </div>
-    </div>
+
+        <!-- Cards -->
+        <div class="mx-12 grid sm:grid-cols-2 md:grid-cols-3 gap-8 mt-4">
+
+            @forelse ($informations as $information)
+                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+
+                    {{-- Gambar cover --}}
+                    @if ($information->cover_image)
+                        <img src="{{ asset('storage/' . $information->cover_image) }}"
+                            class="w-full h-48 object-cover" alt="{{ $information->title }}">
+                    @elseif ($information->imageContents->first())
+                        <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
+                            class="w-full h-48 object-cover" alt="{{ $information->title }}">
+                    @else
+                        <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                            <i data-feather="image" class="w-12 h-12 text-gray-500"></i>
+                        </div>
+                    @endif
+
+                    <div class="p-4 flex flex-col flex-grow">
+                        <span class="bg-purple-600 text-white text-xs px-3 py-1 rounded-full self-start mb-2">
+                            {{ $information->category->name ?? 'Umum' }}
+                        </span>
+
+                        <h3 class="font-semibold text-sm mb-2">
+                            {{ Str::limit($information->title, 60) }}
+                        </h3>
+
+                        <p class="text-xs text-gray-600 flex-grow">
+                            {{ Str::limit(strip_tags($information->content), 100) }}
+                        </p>
+
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-xs text-gray-500">
+                                {{ $information->created_at->diffForHumans() }}
+                            </span>
+
+                            <a href="{{ route('information.show', $information->id) }}"
+                                class="text-purple-600 text-xs font-medium hover:underline relative z-99">
+                                Baca Selengkapnya
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            @empty
+                <div class="col-span-3 text-center py-12 text-gray-500">
+                    <i data-feather="inbox" class="w-12 h-12 mx-auto mb-3 text-gray-400"></i>
+                    Belum ada informasi
+                </div>
+            @endforelse
+
+        </div>
+
+        <!-- Pagination -->
+        @if ($informations->hasPages())
+            <div class="mt-10 flex justify-center">
+                {{ $informations->links('pagination::tailwind') }}
+            </div>
+        @endif
+    </section>
+
 
     @include('components.landing-footer')
 

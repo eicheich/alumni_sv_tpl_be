@@ -26,7 +26,13 @@
 </head>
 
 <body>
-    <main>
+    @if(auth('alumni')->check())
+        @include('components.profile-header')
+    @else
+        @include('components.landing-header')
+    @endif
+    
+    <main class="bg-gray-100">
         {{-- centralized session / validation messages --}}
         @include('layouts.session-status')
 

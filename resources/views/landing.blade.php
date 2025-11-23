@@ -3,11 +3,152 @@
 @section('title', 'Alumni TPL - Home')
 
 @section('content')
-    <!-- Header -->
-    @include('components.landing-header')
+
+
+    <!-- Hero Section -->
+    <section id="beranda" class="relative w-full h-[70vh] flex items-center justify-center text-center text-white">
+        <img src="{{asset('storage/asset/hero.png')}}" alt="Hero" class="absolute inset-0 w-full h-full object-cover">
+        <div class="relative z-10 px-4">
+        <h1 class="text-2xl md:text-4xl font-bold mb-3">Selamat datang di Web Alumni TPL</h1>
+        <p class="max-w-2xl mx-auto text-sm md:text-base">
+            Website Alumni TPL IPB dirancang sebagai pusat informasi untuk memperbarui data alumni,
+            mendukung kebutuhan akademik, dan menampilkan prestasi alumni.
+        </p>
+        </div>
+    </section>
+
+    <!-- Alumni Berprestasi -->
+    
+    <section id="prestasi" class="py-16 bg-white">
+        <h2 class="text-xl text-center mt-10 md:text-2xl font-semibold">Alumni Berprestasi</h2>
+        <div class="max-w-6xl mx-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+
+            <!-- Card-->
+            @forelse($outstandingAlumni as $alumni)
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="h-28 overflow-hidden">
+                        <img src="{{asset('storage/asset/wave.svg')}}" class="h-40 w-full object-cover" alt="">
+                    </div>
+                    <div class="-mt-20 flex justify-center">
+                        @if ($alumni->alumni->user->photo_profile)
+                            <img src="{{ asset('storage/' . $alumni->alumni->user->photo_profile) }}" alt="Alumni" class="rounded-full border-4 border-white w-24 h-24 object-cover">
+                        @else
+                            <div class="w-full h-64 bg-gray-400 flex items-center justify-center">
+                                <i data-feather="user" class="w-16 h-16 text-white/50"></i>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="px-6 pb-6 pt-2">
+                        <p class="text-xs text-purple-600 font-medium">{{ $alumni->award_title }}</p>
+                        <h3 class="text-lg font-semibold mt-1">{{ $alumni->alumni->user->name ?? 'Nama Alumni' }}</h3>
+                        <p class="text-sm text-gray-600 mb-2">{{ $alumni->alumni->major->name ?? 'Program Studi' }}</p>
+                        <p class="text-sm font-medium text-gray-800 mb-4"><i class="fa-solid me-1 fa-briefcase text-purple-600"></i>
+                            @if ($alumni->alumni->educationalBackgrounds->isNotEmpty())
+                                Tahun Lulus:
+                                {{ $alumni->alumni->educationalBackgrounds->first()->graduation_year ?? '-' }}
+                            @else
+                                -
+                            @endif
+                        </p>
+                        <a href="{{ route('outstanding-alumni.show', $alumni->id) }}"
+                            class="bg-purple-600 text-white px-4 py-2 rounded-md text-sm hover:bg-purple-700">
+                            Lihat Profil
+                        </a>
+                    </div>
+                </div>
+            @empty
+                <div class="flex">
+                    <p class="text-center text-muted">Belum ada alumni berprestasi</p>
+                </div>
+            @endforelse
+
+
+
+           
+        </div>
+    </section>
+
+
+    <!-- Informasi Terkini -->
+    <section id="informasi" class="bg-purple-700 text-white py-16 pb-28">
+        <h2 class="text-center text-xl md:text-2xl font-semibold mb-10">Informasi Terkini</h2>
+
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+            @forelse ($latestInformation as $information)
+                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+
+                    {{-- Gambar cover --}}
+                    @if ($information->cover_image)
+                        <img src="{{ asset('storage/' . $information->cover_image) }}"
+                            class="w-full h-48 object-cover" alt="{{ $information->title }}">
+                    @elseif ($information->imageContents->first())
+                        <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
+                            class="w-full h-48 object-cover" alt="{{ $information->title }}">
+                    @else
+                        <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
+                            <i data-feather="image" class="w-12 h-12 text-gray-500"></i>
+                        </div>
+                    @endif
+
+                    <div class="p-4 flex flex-col flex-grow">
+                        <span class="bg-purple-600 text-white text-xs px-3 py-1 rounded-full self-start mb-2">
+                            {{ $information->category->name ?? 'Umum' }}
+                        </span>
+
+                        <h3 class="font-semibold text-sm mb-2">
+                            {{ Str::limit($information->title, 60) }}
+                        </h3>
+
+                        <p class="text-xs text-gray-600 flex-grow">
+                            {{ Str::limit(strip_tags($information->content), 100) }}
+                        </p>
+
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-xs text-gray-500">
+                                {{ $information->created_at->diffForHumans() }}
+                            </span>
+
+                            <a href="{{ route('information.show', $information->id) }}"
+                                class="text-purple-600 text-xs font-medium hover:underline relative z-99">
+                                Baca Selengkapnya
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            @empty
+                <div class="col-span-3 text-center py-12 text-gray-500">
+                    <i data-feather="inbox" class="w-12 h-12 mx-auto mb-3 text-gray-400"></i>
+                    Belum ada informasi
+                </div>
+            @endforelse
+        </div>
+
+        {{-- Button --}}
+        <div class="flex justify-center mt-8">
+            <a href="{{ route('information.index') }}"
+            class="bg-white text-purple-700 font-medium px-5 py-2 rounded-md text-sm hover:bg-gray-100 flex items-center relatice z-99 gap-2">
+                <i data-feather="arrow-right" class="w-4 h-4"></i>
+                Lihat Selengkapnya
+            </a>
+        </div>
+    </section>
+
+
+
+
+    <!-- Footer -->
+    
+
+
+
+
+
+
+
 
     <!-- Section 1: Hero dengan Background Gradient -->
-    <section id="beranda" class="py-5 text-white text-center"
+    {{-- <section id="beranda" class="py-5 text-white text-center"
         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 500px; display: flex; align-items: center; justify-content: center;">
         <div class="container-fluid">
             <div class="row justify-content-center">
@@ -18,10 +159,10 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Section 2: Alumni Berprestasi -->
-    <section id="alumni-berprestasi" class="py-5">
+    {{-- <section id="alumni-berprestasi" class="py-5">
         <div class="container-fluid">
             <h2 class="text-center mb-5 fw-bold">Alumni Berprestasi</h2>
             <div class="row justify-content-center">
@@ -71,10 +212,10 @@
                 @endforelse
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Section 3: Informasi Umum Terbaru -->
-    <section id="informasi" class="py-5 bg-light">
+    {{-- <section id="informasi" class="py-5 bg-light">
         <div class="container-fluid">
             <h2 class="text-center mb-5 fw-bold">Informasi Umum Terbaru</h2>
             <div class="row justify-content-center">
@@ -114,7 +255,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Footer -->
     @include('components.landing-footer')

@@ -1,172 +1,151 @@
 @extends('layouts.guest')
 
 @section('content')
-    @include('components.profile-header')
 
-    <div class="py-5" style="background-color: #f8f9fa;">
-        <div class="container">
+    <section id="informasi" class="bg-gray-100 py-16 pb-28">
+
+        <div class="mx-12">
+
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('index') }}">Beranda</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('information.index') }}">Informasi Umum</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($information->title, 50) }}</li>
+            <nav class="text-sm text-gray-600 mb-4">
+                <ol class="flex items-center space-x-2">
+                    <li><a href="{{ route('index') }}" class="hover:underline">Beranda</a></li>
+                    <li>/</li>
+                    <li><a href="{{ route('information.index') }}" class="hover:underline">Informasi Umum</a></li>
+                    <li>/</li>
+                    <li class="text-gray-800 font-medium">{{ Str::limit($information->title, 50) }}</li>
                 </ol>
             </nav>
 
-            <div class="row">
-                <!-- Main Content -->
-                <div class="col-lg-8">
-                    <div class="card shadow-sm">
-                        <div class="card-body p-4">
-                            <!-- Category Badge -->
-                            <span class="badge bg-primary mb-3">
-                                {{ $information->category->name ?? 'Umum' }}
-                            </span>
+            <!-- HERO IMAGE + TITLE -->
+            <div class="relative w-full">
+                @if ($information->cover_image)
+                    <img src="{{ asset('storage/' . $information->cover_image) }}"
+                        class="w-full h-56 sm:h-72 md:h-80 lg:h-96 object-cover rounded-lg">
+                @elseif ($information->imageContents->first())
+                    <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
+                        class="w-full h-56 sm:h-72 md:h-80 lg:h-96 object-cover rounded-lg">
+                @else
+                    <div class="w-full h-56 sm:h-72 md:h-80 lg:h-96 bg-gray-300 rounded-lg flex items-center justify-center">
+                        <i data-feather="image" class="w-16 h-16 text-gray-500"></i>
+                    </div>
+                @endif
 
-                            <!-- Title -->
-                            <h1 class="display-6 fw-bold mb-3">{{ $information->title }}</h1>
+                <h2 class="absolute bottom-0 left-0 w-full text-sm sm:text-base md:text-2xl 
+                        font-semibold text-white py-2 px-4 bg-gradient-to-t from-black/60 to-transparent rounded-b-lg">
+                    {{ $information->title }}
+                </h2>
+            </div>
 
-                            <!-- Meta Info -->
-                            <div class="d-flex align-items-center text-muted mb-4">
-                                <i data-feather="calendar" style="width: 16px; height: 16px; margin-right: 8px;"></i>
-                                <small>{{ \Carbon\Carbon::parse($information->created_at)->format('d F Y') }}</small>
-                                <span class="mx-2">•</span>
-                                <i data-feather="clock" style="width: 16px; height: 16px; margin-right: 8px;"></i>
-                                <small>{{ \Carbon\Carbon::parse($information->created_at)->diffForHumans() }}</small>
-                            </div>
+            <!-- META INFO -->
+            <div class="mt-4 flex items-center space-x-4 text-gray-600 text-xs sm:text-sm">
+                <div class="flex items-center">
+                    <i data-feather="calendar" class="w-4 h-4 mr-1"></i>
+                    {{ $information->created_at->format('d F Y') }}
+                </div>
 
-                            <!-- Featured Image (Cover Image) -->
-                            @if ($information->cover_image)
-                                <img src="{{ asset('storage/' . $information->cover_image) }}"
-                                    class="img-fluid rounded mb-4 w-100" alt="{{ $information->title }}"
-                                    style="max-height: 500px; object-fit: cover;">
-                            @elseif ($information->imageContents->first())
-                                <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
-                                    class="img-fluid rounded mb-4 w-100" alt="{{ $information->title }}"
-                                    style="max-height: 500px; object-fit: cover;">
-                            @endif
+                <span>•</span>
 
-                            <!-- Content -->
-                            <div class="content" style="line-height: 1.8; font-size: 1.05rem;">
-                                {!! nl2br(e($information->content)) !!}
-                            </div>
+                <div class="flex items-center">
+                    <i data-feather="clock" class="w-4 h-4 mr-1"></i>
+                    {{ $information->created_at->diffForHumans() }}
+                </div>
 
-                            <!-- Image Gallery from information_image_content -->
-                            @if ($information->imageContents->count() > 0)
-                                <div class="mt-5">
-                                    <h5 class="mb-3 fw-bold">Galeri Foto</h5>
-                                    <div class="row g-3">
-                                        @foreach ($information->imageContents as $imageContent)
-                                            <div class="col-md-4">
-                                                <img src="{{ asset('storage/' . $imageContent->image_path) }}"
-                                                    class="img-fluid rounded shadow-sm" alt="Gallery Image"
-                                                    style="height: 200px; width: 100%; object-fit: cover; cursor: pointer;"
-                                                    onclick="openImageModal('{{ asset('storage/' . $imageContent->image_path) }}')">
-                                            </div>
-                                        @endforeach
+                <span>•</span>
+
+                <span class="bg-purple-600 text-white px-3 py-1 text-xs rounded-full">
+                    {{ $information->category->name ?? 'Umum' }}
+                </span>
+            </div>
+
+            <div class="py-6 text-justify leading-relaxed text-gray-700 text-sm sm:text-base lg:text-2xl font-bold">
+                {!! nl2br(e($information->title)) !!}
+            </div>
+            
+            <!-- MAIN CONTENT -->
+            <div class="py-6 text-justify leading-relaxed text-gray-700 text-sm sm:text-base">
+                {!! nl2br(e($information->content)) !!}
+            </div>
+
+            <!-- IMAGE GALLERY -->
+            @if ($information->imageContents->count() > 0)
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold mb-3">Galeri Foto</h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        @foreach ($information->imageContents as $img)
+                            <img src="{{ asset('storage/' . $img->image_path) }}"
+                                onclick="openImageModal('{{ asset('storage/' . $img->image_path) }}')"
+                                class="rounded-lg shadow cursor-pointer h-36 sm:h-48 w-full object-cover">
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- BUTTON KEMBALI -->
+            <div class="mt-6 relative z-99">
+                <a href="{{ route('information.index') }}"
+                    class="inline-flex items-center px-4 py-2 border border-gray-400 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
+                    ← Kembali ke Daftar Informasi
+                </a>
+            </div>
+
+            <!-- RELATED INFORMATION -->
+            @if ($relatedInformations->count() > 0)
+                <div class="mt-10 bg-white shadow p-5 rounded-xl">
+                    <h3 class="font-semibold mb-4">Informasi Terkait</h3>
+
+                    <div class="space-y-4">
+                        @foreach ($relatedInformations as $related)
+                            <a href="{{ route('information.show', $related->id) }}"
+                                class="flex items-start space-x-3 hover:bg-gray-50 p-2 rounded-lg transition">
+
+                                @if ($related->imageContents->first())
+                                    <img src="{{ asset('storage/' . $related->imageContents->first()->image_path) }}"
+                                        class="w-20 h-14 object-cover rounded">
+                                @else
+                                    <div class="w-20 h-14 bg-gray-300 rounded flex items-center justify-center">
+                                        <i data-feather="image" class="w-5 h-5 text-gray-500"></i>
                                     </div>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
+                                @endif
 
-                    <!-- Back Button -->
-                    <div class="mt-3">
-                        <a href="{{ route('information.index') }}" class="btn btn-outline-secondary">
-                            <i data-feather="arrow-left" style="width: 16px; height: 16px; margin-right: 8px;"></i>
-                            Kembali ke Daftar Informasi
-                        </a>
+                                <div>
+                                    <p class="text-sm font-medium">{{ Str::limit($related->title, 60) }}</p>
+                                    <p class="text-xs text-gray-500">{{ $related->created_at->format('d M Y') }}</p>
+                                </div>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
+            @endif
 
-                <!-- Sidebar -->
-                <div class="col-lg-4">
-                    <!-- Related Information -->
-                    @if ($relatedInformations->count() > 0)
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">Informasi Terkait</h5>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="list-group list-group-flush">
-                                    @foreach ($relatedInformations as $related)
-                                        <a href="{{ route('information.show', $related->id) }}"
-                                            class="list-group-item list-group-item-action">
-                                            <div class="d-flex align-items-start">
-                                                @if ($related->imageContents->first())
-                                                    <img src="{{ asset('storage/' . $related->imageContents->first()->image_path) }}"
-                                                        class="rounded me-3" alt="{{ $related->title }}"
-                                                        style="width: 80px; height: 60px; object-fit: cover;">
-                                                @else
-                                                    <div class="bg-secondary rounded me-3 d-flex align-items-center justify-content-center"
-                                                        style="width: 80px; height: 60px; min-width: 80px;">
-                                                        <i data-feather="image"
-                                                            style="width: 24px; height: 24px; color: white;"></i>
-                                                    </div>
-                                                @endif
-                                                <div class="flex-grow-1">
-                                                    <h6 class="mb-1">{{ Str::limit($related->title, 50) }}</h6>
-                                                    <small class="text-muted">
-                                                        {{ \Carbon\Carbon::parse($related->created_at)->format('d M Y') }}
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+        </div>
 
-                    <!-- Category Info -->
-                    <div class="card shadow-sm mt-3">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Kategori</h5>
-                        </div>
-                        <div class="card-body">
-                            <span class="badge bg-primary fs-6">
-                                {{ $information->category->name ?? 'Umum' }}
-                            </span>
-                            <div class="mt-3">
-                                <a href="{{ route('information.index', ['category' => $information->information_category_id]) }}"
-                                    class="btn btn-sm btn-outline-primary">
-                                    Lihat Semua dari Kategori Ini
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- MODAL PREVIEW FOTO -->
+        <div id="imageModal"
+            class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-lg overflow-hidden max-w-4xl w-full relative">
+                <button onclick="closeImageModal()"
+                    class="absolute top-2 right-2 bg-white rounded-full p-1 shadow">
+                    ✕
+                </button>
+                <img id="modalImage" src="" class="w-full object-contain max-h-[90vh]">
             </div>
         </div>
-    </div>
 
-    <!-- Modal for Image Preview -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <img id="modalImage" src="" class="img-fluid w-100" alt="Preview">
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 
-    @include('components.landing-footer')
 
-    <script>
-        // Function to open image in modal
-        function openImageModal(imageSrc) {
-            document.getElementById('modalImage').src = imageSrc;
-            var modal = new bootstrap.Modal(document.getElementById('imageModal'));
-            modal.show();
-        }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            feather.replace();
-        });
-    </script>
+@include('components.landing-footer')
+<script>
+    function openImageModal(src) {
+        document.getElementById('modalImage').src = src;
+        document.getElementById('imageModal').classList.remove('hidden');
+    }
+    function closeImageModal() {
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+</script>
+
 @endsection

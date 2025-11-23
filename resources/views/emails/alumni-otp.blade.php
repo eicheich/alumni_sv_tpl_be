@@ -81,7 +81,7 @@
     <div class="container">
         <div class="header">
             <h1>Alumni TPL</h1>
-            <p style="color: #999; margin: 5px 0;">Portal Alumni Teknik Permesinan Logam</p>
+            <p style="color: #999; margin: 5px 0;">Portal Alumni TPL</p>
         </div>
 
         <div class="content">
