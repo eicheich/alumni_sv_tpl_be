@@ -3,68 +3,102 @@
 @section('title', 'Reset Password')
 
 @section('content')
-    <div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
-        <div class="card shadow" style="width: 100%; max-width: 450px;">
-            <div class="card-body p-5">
-                <h2 class="text-center mb-1">Atur Password Baru</h2>
-                <p class="text-center text-muted mb-4">Buat password baru untuk akun Anda</p>
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
 
-                @if ($errors->any())
-                    <div class="alert alert-danger" role="alert">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+            <!-- Heading -->
+            <h2 class="text-2xl font-semibold text-center mb-1">Atur Password Baru</h2>
+            <p class="text-center text-gray-500 mb-6">Buat password baru untuk akun Anda</p>
 
-                <form action="{{ route('alumni.reset-password') }}" method="POST">
-                    @csrf
+            <!-- Alert Error -->
+            @if ($errors->any())
+                <div class="mb-4 rounded-lg bg-red-100 text-red-700 p-3 text-sm">
+                    <ul class="list-disc ml-5 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-                    <div class="mb-4">
-                        <label for="password" class="form-label">Password Baru <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control form-control-lg @error('password') is-invalid @enderror"
-                            id="password" name="password" placeholder="Minimal 8 karakter" required>
-                        @error('password')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                        <small class="form-text text-muted d-block mt-2">Password harus minimal 8 karakter</small>
-                    </div>
+            <!-- Form -->
+            <form action="{{ route('alumni.reset-password') }}" method="POST">
+                @csrf
 
-                    <div class="mb-4">
-                        <label for="password_confirmation" class="form-label">Konfirmasi Password <span
-                                class="text-danger">*</span></label>
-                        <input type="password"
-                            class="form-control form-control-lg @error('password_confirmation') is-invalid @enderror"
-                            id="password_confirmation" name="password_confirmation" placeholder="Ulangi password" required>
-                        @error('password_confirmation')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
+                <!-- Password -->
+                <div class="mb-5">
+                    <label for="password" class="block font-medium mb-1">
+                        Password Baru <span class="text-red-500">*</span>
+                    </label>
 
-                    <button type="submit" class="btn btn-lg w-100"
-                        style="background-color: #667eea; border-color: #667eea; color: white;">
-                        Reset Password
-                    </button>
-                </form>
+                    <input 
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Minimal 8 karakter"
+                        required
+                        class="w-full px-4 py-3 border rounded-lg 
+                            @error('password') border-red-500 @enderror
+                            focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    >
 
-                <div class="text-center mt-4">
-                    <p class="mb-2">Ingat password?</p>
-                    <a href="{{ route('alumni.login.view') }}" class="text-decoration-none" style="color: #667eea;">
-                        Masuk di sini
-                    </a>
+                    <p class="text-gray-500 text-sm mt-2">
+                        Password harus minimal 8 karakter
+                    </p>
+
+                    @error('password')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <hr class="my-4">
+                <!-- Confirm Password -->
+                <div class="mb-5">
+                    <label for="password_confirmation" class="block font-medium mb-1">
+                        Konfirmasi Password <span class="text-red-500">*</span>
+                    </label>
 
-                <div class="alert alert-info" role="alert">
-                    <small>
-                        <i class="feather icon-info"></i>
-                        <strong>Catatan:</strong> Password Anda akan diubah setelah submit form ini.
-                    </small>
+                    <input 
+                        type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        placeholder="Ulangi password"
+                        required
+                        class="w-full px-4 py-3 border rounded-lg 
+                            @error('password_confirmation') border-red-500 @enderror
+                            focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    >
+
+                    @error('password_confirmation')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
+
+                <!-- Submit Button -->
+                <button
+                    type="submit"
+                    class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-lg transition"
+                >
+                    Reset Password
+                </button>
+            </form>
+
+            <!-- Back Link -->
+            <div class="text-center mt-6">
+                <p class="text-gray-600 mb-1">Ingat password?</p>
+                <a href="{{ route('alumni.login.view') }}"
+                class="text-indigo-500 font-medium hover:underline">
+                    Masuk di sini
+                </a>
             </div>
+
+            <div class="my-6 border-t"></div>
+
+            <!-- Info Box -->
+            <div class="bg-blue-50 text-blue-800 p-4 rounded-lg text-sm">
+                <strong>Catatan:</strong> Password Anda akan diubah setelah submit form ini.
+            </div>
+
         </div>
     </div>
+
 @endsection

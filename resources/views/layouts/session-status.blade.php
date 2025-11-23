@@ -46,7 +46,7 @@
     <input type="checkbox" id="close-alert" class="peer hidden" />
 
     <!-- Alert -->
-    <div class="peer-checked:hidden bg-red-500 text-white px-4 py-3 my-4 rounded relative" role="alert">
+    <div class="peer-checked:hidden bg-red-500 text-white px-4 py-3 m-4 rounded relative" role="alert">
         <strong class="font-bold">There were some problems with your input:</strong>
         <ul class="mb-0">
             @foreach ($errors->all() as $error)

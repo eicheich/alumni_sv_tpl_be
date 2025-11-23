@@ -9,36 +9,24 @@
     <title>@yield('title', 'Alumni TPL')</title>
 
     {{-- Bootstrap CDN --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> --}}
 
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     {{-- Feather Icons --}}
     <script src="https://unpkg.com/feather-icons"></script>
 
     {{-- Optional app CSS --}}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
-    <style>
-        html,
-        body {
-            height: 100%;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1;
-        }
-    </style>
+    {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> --}}
 
     @stack('head')
 </head>
 
 <body>
-    <main class="w-100">
+    <main>
         {{-- centralized session / validation messages --}}
         @include('layouts.session-status')
 

@@ -3,56 +3,78 @@
 @section('title', 'Verifikasi OTP - Reset Password')
 
 @section('content')
-    <div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
-        <div class="card shadow" style="width: 100%; max-width: 450px;">
-            <div class="card-body p-5">
-                <h2 class="text-center mb-1">Verifikasi OTP</h2>
-                <p class="text-center text-muted mb-4">Kami telah mengirimkan kode OTP ke email Anda</p>
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
+            
+            <!-- Heading -->
+            <h2 class="text-2xl font-semibold text-center mb-1">Verifikasi OTP</h2>
+            <p class="text-center text-gray-500 mb-6">Kami telah mengirimkan kode OTP ke email Anda</p>
 
-                @if ($errors->any())
-                    <div class="alert alert-danger" role="alert">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+            <!-- Alert Error -->
+            @if ($errors->any())
+                <div class="mb-4 rounded-lg bg-red-100 text-red-700 p-3 text-sm">
+                    <ul class="list-disc ml-5 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-                <form action="{{ route('alumni.verify-forgot-password-otp') }}" method="POST">
-                    @csrf
-                    <div class="mb-4">
-                        <label for="otp_code" class="form-label">Kode OTP <span class="text-danger">*</span></label>
-                        <input type="text" id="otp_code" name="otp_code"
-                            class="form-control form-control-lg text-center" placeholder="000000" maxlength="6"
-                            pattern="[0-9]{6}" inputmode="numeric" value="{{ old('otp_code') }}" required>
-                        <small class="form-text text-muted d-block mt-2">Masukkan kode 6 digit yang telah dikirim ke email
-                            Anda</small>
-                    </div>
+            <!-- Form -->
+            <form action="{{ route('alumni.verify-forgot-password-otp') }}" method="POST">
+                @csrf
 
-                    <button type="submit" class="btn btn-lg w-100"
-                        style="background-color: #667eea; border-color: #667eea; color: white;">
-                        Verifikasi OTP
-                    </button>
-                </form>
+                <div class="mb-5">
+                    <label for="otp_code" class="block font-medium mb-1">
+                        Kode OTP <span class="text-red-500">*</span>
+                    </label>
 
-                <div class="text-center mt-4">
-                    <p class="mb-2">Belum menerima kode OTP?</p>
-                    <a href="{{ route('alumni.forgot-password-view') }}" class="text-decoration-none"
-                        style="color: #667eea;">
-                        Kembali dan kirim ulang
-                    </a>
+                    <input 
+                        type="text"
+                        id="otp_code"
+                        name="otp_code"
+                        placeholder="000000"
+                        maxlength="6"
+                        pattern="[0-9]{6}"
+                        inputmode="numeric"
+                        value="{{ old('otp_code') }}"
+                        required
+                        class="
+                            w-full px-4 py-3 border rounded-lg text-center text-lg tracking-widest
+                            focus:outline-none focus:ring-2 focus:ring-indigo-400
+                        "
+                    >
+
+                    <p class="text-gray-500 text-sm mt-2">
+                        Masukkan kode 6 digit yang telah dikirim ke email Anda
+                    </p>
                 </div>
 
-                <hr class="my-4">
+                <button
+                    type="submit"
+                    class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-lg transition"
+                >
+                    Verifikasi OTP
+                </button>
+            </form>
 
-                <div class="alert alert-info" role="alert">
-                    <small>
-                        <i class="feather icon-info"></i>
-                        <strong>Tips:</strong> Kode OTP akan berlaku selama 10 menit.
-                    </small>
-                </div>
+            <!-- Resend Link -->
+            <div class="text-center mt-6">
+                <p class="text-gray-600 mb-1">Belum menerima kode OTP?</p>
+                <a href="{{ route('alumni.forgot-password-view') }}" class="text-indigo-500 font-medium hover:underline">
+                    Kembali dan kirim ulang
+                </a>
             </div>
+
+            <div class="my-6 border-t"></div>
+
+            <!-- Info Box -->
+            <div class="bg-blue-50 text-blue-800 p-4 rounded-lg text-sm">
+                <strong>Tips:</strong> Kode OTP akan berlaku selama 10 menit.
+            </div>
+
         </div>
     </div>
+
 @endsection
