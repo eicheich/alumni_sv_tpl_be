@@ -10,13 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-class DashboardController extends Controller
+class ProfileController extends Controller
 {
-    public function index()
-    {
-        return view('alumni.dashboard');
-    }
-
     public function profile()
     {
         return view('alumni.profile');
@@ -56,19 +51,6 @@ class DashboardController extends Controller
         return redirect()->route('alumni.profile')->with('success', 'Password berhasil diubah');
     }
 
-    // Educational Background
-    public function educationalBackgrounds()
-    {
-        $alumni = auth('alumni')->user()->alumni;
-        $educationalBackgrounds = $alumni->educationalBackgrounds;
-        return view('alumni.educational-backgrounds.index', compact('educationalBackgrounds'));
-    }
-
-    public function createEducationalBackground()
-    {
-        return view('alumni.educational-backgrounds.create');
-    }
-
     public function storeEducationalBackground(Request $request)
     {
         $request->validate([
@@ -98,7 +80,7 @@ class DashboardController extends Controller
         ]);
 
         Log::info('Educational background created', ['alumni_id' => $alumni->id]);
-        return redirect()->route('alumni.educational-backgrounds')->with('success', 'Latar belakang pendidikan berhasil ditambahkan');
+        return redirect()->route('alumni.profile')->with('success', 'Latar belakang pendidikan berhasil ditambahkan');
     }
 
     public function editEducationalBackground($id)
@@ -146,7 +128,7 @@ class DashboardController extends Controller
         ]);
 
         Log::info('Educational background updated', ['id' => $id]);
-        return redirect()->route('alumni.educational-backgrounds')->with('success', 'Latar belakang pendidikan berhasil diperbarui');
+        return redirect()->route('alumni.profile')->with('success', 'Latar belakang pendidikan berhasil diperbarui');
     }
 
     public function destroyEducationalBackground($id)
@@ -161,19 +143,6 @@ class DashboardController extends Controller
         $educationalBackground->delete();
         Log::info('Educational background deleted', ['id' => $id]);
         return back()->with('success', 'Latar belakang pendidikan berhasil dihapus');
-    }
-
-    // Career
-    public function careers()
-    {
-        $alumni = auth('alumni')->user()->alumni;
-        $careers = $alumni->career ? collect([$alumni->career]) : collect([]);
-        return view('alumni.careers.index', compact('careers'));
-    }
-
-    public function createCareer()
-    {
-        return view('alumni.careers.create');
     }
 
     public function storeCareer(Request $request)
@@ -191,12 +160,6 @@ class DashboardController extends Controller
         ]);
 
         $alumni = auth('alumni')->user()->alumni;
-
-        // Delete existing career if any
-        if ($alumni->career) {
-            $alumni->career->delete();
-        }
-
         Career::create([
             'alumni_id' => $alumni->id,
             'company_name' => $request->company_name,
@@ -206,7 +169,7 @@ class DashboardController extends Controller
         ]);
 
         Log::info('Career created', ['alumni_id' => $alumni->id]);
-        return redirect()->route('alumni.careers')->with('success', 'Data karir berhasil ditambahkan');
+        return redirect()->route('alumni.profile')->with('success', 'Data karir berhasil ditambahkan');
     }
 
     public function editCareer($id)
@@ -250,7 +213,7 @@ class DashboardController extends Controller
         ]);
 
         Log::info('Career updated', ['id' => $id]);
-        return redirect()->route('alumni.careers')->with('success', 'Data karir berhasil diperbarui');
+        return redirect()->route('alumni.profile')->with('success', 'Data karir berhasil diperbarui');
     }
 
     public function destroyCareer($id)

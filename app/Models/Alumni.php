@@ -34,6 +34,11 @@ class Alumni extends Model
         return $this->hasOne(Career::class);
     }
 
+    public function careers()
+    {
+        return $this->hasMany(Career::class);
+    }
+
     public function educationalBackgrounds()
     {
         return $this->hasMany(EducationalBackground::class);

@@ -56,6 +56,11 @@
                                         -
                                     @endif
                                 </p>
+                                <a href="{{ route('outstanding-alumni.show', $alumni->id) }}"
+                                    class="btn btn-primary btn-sm w-100">
+                                    <i data-feather="eye" style="width: 14px; height: 14px; margin-right: 5px;"></i>
+                                    Lihat Profil
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -102,7 +107,7 @@
             </div>
             <div class="row mt-4">
                 <div class="col-12 text-center">
-                    <a href="#" class="btn btn-primary btn-lg">
+                    <a href="{{ route('information.index') }}" class="btn btn-primary btn-lg">
                         <i data-feather="arrow-right" style="width: 18px; height: 18px; margin-right: 8px;"></i>
                         Lihat Selengkapnya
                     </a>

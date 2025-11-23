@@ -71,8 +71,15 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
-        return redirect()->route('admin.login.view')->with('success', 'Logged out successfully.');
+        // Logout dari semua guard (alumni dan admin)
+        Auth::guard('alumni')->logout();
+        Auth::guard('web')->logout();
+
+        // Invalidate session dan regenerate token untuk keamanan
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('index')->with('success', 'Logged out successfully.');
     }
 
     public function alumniValidateDataView()
@@ -254,7 +261,7 @@ class AuthController extends Controller
 
         // Attempt to authenticate with alumni guard
         if (Auth::guard('alumni')->attempt($credentials)) {
-            return redirect()->route('alumni.dashboard.index')->with('success', 'Login successful.');
+            return redirect()->route('index')->with('success', 'Login successful.');
         }
 
         return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
