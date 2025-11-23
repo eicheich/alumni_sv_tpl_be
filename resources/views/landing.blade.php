@@ -9,8 +9,8 @@
     <section id="beranda" class="relative w-full h-[70vh] flex items-center justify-center text-center text-white">
         <img src="{{asset('storage/asset/hero.png')}}" alt="Hero" class="absolute inset-0 w-full h-full object-cover">
         <div class="relative z-10 px-4">
-        <h1 class="text-2xl md:text-4xl font-bold mb-3">Selamat datang di Web Alumni TPL</h1>
-        <p class="max-w-2xl mx-auto text-sm md:text-base">
+        <h1 data-aos="fade-up" data-aos-duration="1000" class="text-2xl md:text-4xl font-bold mb-3">Selamat datang di Web Alumni TPL</h1>
+        <p data-aos="fade-up" data-aos-duration="2000" class="max-w-2xl mx-auto text-sm md:text-base">
             Website Alumni TPL IPB dirancang sebagai pusat informasi untuk memperbarui data alumni,
             mendukung kebutuhan akademik, dan menampilkan prestasi alumni.
         </p>
@@ -20,12 +20,12 @@
     <!-- Alumni Berprestasi -->
     
     <section id="prestasi" class="py-16 bg-white">
-        <h2 class="text-xl text-center mt-10 md:text-2xl font-semibold">Alumni Berprestasi</h2>
+        <h2 data-aos="fade-up" data-aos-duration="1000" class="text-xl mb-4 text-center mt-10 md:text-2xl font-semibold">Alumni Berprestasi</h2>
         <div class="max-w-6xl mx-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
 
             <!-- Card-->
             @forelse($outstandingAlumni as $alumni)
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div data-aos="zoom-in-up" data-aos-duration="1000" class="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <div class="h-28 overflow-hidden">
                         <img src="{{asset('storage/asset/wave.svg')}}" class="h-40 w-full object-cover" alt="">
                     </div>
@@ -71,11 +71,11 @@
 
     <!-- Informasi Terkini -->
     <section id="informasi" class="bg-purple-700 text-white py-16 pb-28">
-        <h2 class="text-center text-xl md:text-2xl font-semibold mb-10">Informasi Terkini</h2>
+        <h2 data-aos="fade-up" data-aos-duration="1000" class="text-center text-xl md:text-2xl font-semibold mb-10">Informasi Terkini</h2>
 
         <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
             @forelse ($latestInformation as $information)
-                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+                <div data-aos="zoom-in" data-aos-duration="1000" class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
 
                     {{-- Gambar cover --}}
                     @if ($information->cover_image)

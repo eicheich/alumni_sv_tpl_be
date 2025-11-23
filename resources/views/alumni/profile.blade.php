@@ -245,6 +245,8 @@
         </div>
     </section>
 
+    @include('components.landing-footer')
+
 
 
 

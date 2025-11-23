@@ -1,14 +1,14 @@
 <nav class="flex items-center justify-between px-12 py-4 bg-white shadow-sm">
     <!-- Logo -->
     <a href="{{ route('index') }}" class="font-semibold text-lg flex items-center">
-        <img src="{{ asset('asset/logo.png') }}" class="h-8 mr-2" alt="">
+        <img src="{{ asset('storage/asset/logo.png')}}" class="h-8 mr-2" alt="">
         Web Alumni TPL
     </a>
 
     <!-- Menu (Desktop) -->
     <ul class="hidden md:flex space-x-6 text-sm font-medium">
-        <li><a href="{{route('index')}}" class="hover:text-purple-600">Beranda</a></li>
-        <li><a href="{{route('information.index')}}" class="hover:text-purple-600">Informasi Umum</a></li>
+        <li><a href="{{route('index')}}" class="{{ request()->routeIs('index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">Beranda</a></li>
+        <li><a href="{{route('information.index')}}" class="{{ request()->routeIs('information.index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">Informasi Umum</a></li>
     </ul>
 
     <!-- Profil + Logout -->
@@ -47,9 +47,8 @@
 <!-- MENU MOBILE -->
 <div id="mobileNav" class="hidden md:hidden bg-white px-12 pb-4 shadow-sm">
     <ul class="flex flex-col space-y-3 text-sm font-medium mt-3">
-        <li><a href="#beranda" class="hover:text-purple-600">Beranda</a></li>
-        <li><a href="#tentang" class="hover:text-purple-600">Tentang</a></li>
-        <li><a href="#informasi" class="hover:text-purple-600">Informasi Umum</a></li>
+        <li><a href="{{ route('index')}}" class="{{ request()->routeIs('index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">Beranda</a></li>
+        <li><a href="{{ route('information.index')}}" class="{{ request()->routeIs('information.index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">Informasi Umum</a></li>
 
         <!-- Mobile Profile -->
         <a href="{{ route('alumni.profile') }}" class="flex items-center space-x-3 mt-3">

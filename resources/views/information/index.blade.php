@@ -9,16 +9,20 @@
             <p class="text-sm text-purple-600">Berita, info loker, dan survey SV IPB</p>
 
             <!-- Header + Search -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                <h1 class="text-xl md:text-2xl font-semibold">Informasi Umum</h1>
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+                <h1 class="text-xl md:text-2xl font-semibold">
+                    Informasi Umum
+                </h1>
 
                 <!-- Search Form -->
                 <form method="GET" action="{{ route('information.index') }}"
-                    class="flex items-center gap-2 mt-3 sm:mt-0">
+                    class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
 
+                    <!-- Kategori -->
                     <select name="category"
                         onchange="this.form.submit()"
-                        class="w-56 text-sm rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-purple-600 focus:outline-none bg-white">
+                        class="w-full sm:w-56 text-sm rounded-lg border border-gray-300 px-3 py-2 
+                            focus:ring-2 focus:ring-purple-600 bg-white">
                         <option value="">Semua Kategori</option>
 
                         @foreach ($categories as $category)
@@ -29,16 +33,22 @@
                         @endforeach
                     </select>
 
+                    <!-- Input Search -->
                     <input type="text" name="search" placeholder="Cari informasi umum"
                         value="{{ request('search') }}"
-                        class="w-72 rounded-lg border bg-white border-gray-200 px-4 py-2 text-sm focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                        class="w-full sm:w-72 rounded-lg border bg-white border-gray-200 px-4 py-2 text-sm 
+                            focus:ring-2 focus:ring-purple-600">
 
+                    <!-- Button -->
                     <button type="submit"
-                        class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">
-                        <i class="fa fa-search"></i> Cari
+                        class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm w-full sm:w-auto 
+                            hover:bg-purple-700 transition flex justify-center items-center gap-2">
+                        <i class="fa fa-search"></i> <span>Cari</span>
                     </button>
+
                 </form>
             </div>
+
 
             
         </div>
@@ -47,7 +57,7 @@
         <div class="mx-12 grid sm:grid-cols-2 md:grid-cols-3 gap-8 mt-4">
 
             @forelse ($informations as $information)
-                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+                <div data-aos="zoom-in" data-aos-duration="1000" class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
 
                     {{-- Gambar cover --}}
                     @if ($information->cover_image)

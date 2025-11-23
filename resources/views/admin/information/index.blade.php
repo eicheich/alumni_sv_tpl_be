@@ -69,17 +69,17 @@
                                                 {{ $info->title }}
                                             </h2>
                             
-                                            <p class="text-gray-500 text-sm mb-4">
+                                            <p class="text-gray-500 text-sm mb-4 line-clamp-3">
                                                 {{ $info->content }}
                                             </p>
                         
 
                                             <div class="flex gap-2">
-                                                <a href="{{ route('admin.information.show', $info->id) }}" class=" bg-purple-600 text-white py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center justify-center" title="Edit">
-                                                    <i data-feather="eyes" class=""></i> Edit
+                                                <a href="{{ route('admin.information.show', $info->id) }}" class=" bg-blue-600 text-white py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center justify-center" title="Edit">
+                                                    <i data-feather="eye" class="w-4 mr-1"></i> Lihat
                                                 </a>
                                                 <a href="{{ route('admin.information.edit', $info->id) }}" class=" bg-purple-600 text-white py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center justify-center" title="Edit">
-                                                    <i data-feather="edit-2" class=""></i> Edit
+                                                    <i data-feather="edit-2" class="w-4 mr-1"></i> Edit
                                                 </a>
     
     
@@ -87,7 +87,7 @@
                                                         onclick="openDeleteModal({{$info->id}})"
                                                         class=" bg-red-600 text-white py-2 rounded-md text-sm hover:bg-red-700 flex w-full items-center justify-center"
                                                         title="Delete"> 
-                                                    <i data-feather="trash-2" class="text-red-300"></i>Hapus
+                                                    <i data-feather="trash-2" class="w-4 mr-1"></i>Hapus
                                                 </button>
     
                                                 <form id="delete-form-{{$info->id}}"

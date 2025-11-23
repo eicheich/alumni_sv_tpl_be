@@ -120,7 +120,7 @@
         </div>
 
         <!-- Bagian Kanan: Gambar -->
-        <div class="w-full relative">
+        <div class="w-full hidden lg:relative">
             <img src="{{ asset('storage/asset/cover.png')}}" alt="Kampus IPB"
                 class="object-cover w-full h-48 lg:h-full">
             <div class="absolute inset-0 bg-gradient-to-t from-purple-700/40 to-purple-400/30"></div>

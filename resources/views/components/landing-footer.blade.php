@@ -4,12 +4,12 @@
 </div>
 
 
-<footer class="bg-purple-900 text-white pb-10">
+<footer class="bg-purple-900 text-white pb-10 text-center lg:text-start">
     <div class="max-w-6xl mx-12 grid md:grid-cols-3 gap-8">
     <!-- Kiri -->
-    <div>
+    <div class="mx-auto lg:mx-0">
         <h3 class="font-semibold text-lg mb-4">Web Alumni TPL</h3>
-        <div class="flex flex-col space-y-2">
+        <div class="flex flex-col space-y-2 items-center lg:items-start">
         <a href="#" class="bg-purple-700 text-white px-4 py-2 rounded-md w-fit hover:bg-purple-600"><i class="fa-brands fa-twitter me-1"></i>Twitter</a>
         <a href="#" class="bg-purple-700 text-white px-4 py-2 rounded-md w-fit hover:bg-purple-600"><i class="fa-brands fa-instagram me-1"></i>Instagram</a>
         </div>
