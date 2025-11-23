@@ -1,64 +1,60 @@
+<!-- Sidebar -->
+        
+
 @if (auth()->check())
-    <aside class="sidebar">
-        <nav class="nav flex-column sidebar-main-menu">
-            <div class="nav-section-title">Main Menu</div>
+    <aside class="w-64 min-h-full bg-white border-r hidden md:flex flex-col">
+        <div class="">
+            <div class="p-6 font-bold text-xl text-purple-600">AlumniTPL</div>
+    
+            <nav class="mt-4">
+                @if (Route::has('admin.dashboard.index'))
+                    <a href="{{ route('admin.dashboard.index') }}" class="block flex py-3 px-6 hover:bg-gray-100 {{ request()->routeIs('admin.dashboard.*') ? 'bg-purple-600 text-white rounded-r-md hover:bg-purple-800' : '' }}">
+                        <i data-feather="users" class="mr-2"></i>
+                        Dasbor
+                    </a>
+                @endif
+                
+                @if (Route::has('admin.alumni.index'))                
+                    <a href="{{ route('admin.alumni.index') }}" class="block flex py-3 px-6 hover:bg-gray-100 {{ request()->routeIs('admin.alumni.*') ? 'bg-purple-600 text-white rounded-r-md hover:bg-purple-800' : '' }}">
+                        <i data-feather="users" class="mr-2"></i>
+                        Data Alumni</a>
+                @else
+                    <a href="{{ route('admin.alumni.index') }}" class="block flex py-3 px-6 hover:bg-gray-100 {{ request()->is('admin/alumni*') ? 'bg-purple-600 text-white rounded-r-md hover:bg-purple-800' : '' }}">
+                        <i data-feather="users" class="mr-2"></i>
+                        Data Alumni</a>
+                @endif
+    
+                @if (Route::has('admin.information.index'))
+                    <a href="{{ route('admin.information.index') }}" class="block flex py-3 px-6 hover:bg-gray-100 {{ request()->routeIs('admin.information.*') ? 'bg-purple-600 text-white rounded-r-md hover:bg-purple-800' : '' }}">
+                        <i data-feather="info" class="mr-2"></i>
+                        Informasi Umum</a>
+                @endif
+    
+    
+                @if (Route::has('admin.outstanding-alumni.index'))
+                    <a href="{{ route('admin.outstanding-alumni.index') }}" class="block flex py-3 px-6 hover:bg-gray-100 {{ request()->routeIs('admin.outstanding-alumni.*') ? 'bg-purple-600 text-white rounded-r-md hover:bg-purple-800' : '' }}">
+                        <i data-feather="award" class="mr-2"></i>
+                        Alumni Berprestasi</a>
+                @endif
+    
+    
+    
+            </nav>
+        </div>
 
-            @if (Route::has('admin.dashboard.index'))
-                <a class="nav-link {{ request()->routeIs('admin.dashboard.*') ? 'active' : '' }}"
-                    href="{{ route('admin.dashboard.index') }}">
-                    <i data-feather="home"></i>
-                    <span>Dashboard</span>
-                </a>
-            @endif
+        <div class="mt-auto">
+            <a href="#" onclick="event.preventDefault();" class="block flex py-3 px-6 hover:bg-gray-100">
+                <i data-feather="settings" class="mr-2"></i>
+                Settings</a>
 
-            @if (Route::has('admin.alumni.index'))
-                <a class="nav-link {{ request()->routeIs('admin.alumni.*') ? 'active' : '' }}"
-                    href="{{ route('admin.alumni.index') }}">
-                    <i data-feather="users"></i>
-                    <span>Alumni</span>
-                </a>
-            @else
-                <a class="nav-link {{ request()->is('admin/alumni*') ? 'active' : '' }}"
-                    href="{{ url('/admin/alumni') }}">
-                    <i data-feather="users"></i>
-                    <span>Alumni</span>
-                </a>
-            @endif
 
-            @if (Route::has('admin.information.index'))
-                <a class="nav-link {{ request()->routeIs('admin.information.*') ? 'active' : '' }}"
-                    href="{{ route('admin.information.index') }}">
-                    <i data-feather="info"></i>
-                    <span>Informasi</span>
-                </a>
-            @endif
-
-            @if (Route::has('admin.outstanding-alumni.index'))
-                <a class="nav-link {{ request()->routeIs('admin.outstanding-alumni.*') ? 'active' : '' }}"
-                    href="{{ route('admin.outstanding-alumni.index') }}">
-                    <i data-feather="award"></i>
-                    <span>Alumni Berprestasi</span>
-                </a>
-            @endif
-        </nav>
-
-        <nav class="nav flex-column sidebar-bottom-menu">
-            <div class="nav-section-title">Settings</div>
-
-            <a class="nav-link" href="#" onclick="event.preventDefault();">
-                <i data-feather="settings"></i>
-                <span>Pengaturan</span>
-            </a>
-
-            <form class="nav-link p-0 m-0 border-0" action="{{ route('admin.logout') }}" method="POST"
-                style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem !important;">
+            <form action="{{ route('admin.logout') }}" method="POST">
                 @csrf
-                <button type="submit"
-                    style="background: none; border: none; padding: 0; color: #2c3e50; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; width: 100%; transition: all 0.3s ease;">
-                    <i data-feather="log-out" style="width: 18px; height: 18px;"></i>
+                <button type="submit" class="flex w-full py-3 px-6 hover:bg-gray-100">
+                    <i data-feather="log-out" class="mr-2"></i>
                     <span>Logout</span>
                 </button>
             </form>
-        </nav>
+        </div>
     </aside>
 @endif

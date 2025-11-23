@@ -9,33 +9,54 @@
     <title>@yield('title', 'Alumni')</title>
 
     {{-- Optional app CSS --}}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> --}}
     {{-- Layout CSS --}}
-    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/layout.css') }}"> --}}
 
     {{-- Bootstrap CDN as fallback / quick styling --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> --}}
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/feather-icons"></script>
-
+    
     @stack('head')
 </head>
 
-<body>
-    @include('layouts.header')
-    @if (auth()->check())
-        @include('layouts.sidebar')
-    @endif
+<body class="font-sans text-gray-800">
 
-    <main class="@if (!auth()->check()) w-100 @endif">
-        {{-- centralized session / validation messages --}}
-        @include('layouts.session-status')
+    <div class="bg-gray-100 flex">
 
-        {{-- Page content goes here --}}
-        @yield('content')
-    </main>
+        @if (auth()->check())
+            @include('layouts.sidebar')
+        @endif
 
+        
+
+        <!-- Content -->
+        <div class="flex-1">
+            <!-- Navbar -->
+            @if (auth()->check())
+                @include('layouts.header')
+            @endif
+
+            <!-- Main Content -->
+            <main class="p-6 flex-1 overflow-y-auto">
+
+                {{-- centralized session / validation messages --}}
+                @include('layouts.session-status')
+
+                {{-- Page content goes here --}}
+                @yield('content')
+
+            </main>
+        </div>
+    </div>
     @include('layouts.footer')
+    
+
 
     {{-- Optional app JS --}}
     @if (file_exists(public_path('js/app.js')))
@@ -43,12 +64,10 @@
     @endif
 
     {{-- Bootstrap JS bundle --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6V9E+0U5y5L2e3z6Z6b6Y5m1Yk2Kf0b6tQZ6f5Q5m9ct" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6V9E+0U5y5L2e3z6Z6b6Y5m1Yk2Kf0b6tQZ6f5Q5m9ct" crossorigin="anonymous">
     </script>
 
     <script>
-        // Global handler: make data-bs-toggle="modal" work even if Bootstrap JS didn't initialize
         document.addEventListener('click', function(e) {
             const toggle = e.target.closest('[data-bs-toggle="modal"]');
             if (toggle) {
@@ -84,7 +103,6 @@
                 return;
             }
 
-            // Global handler: make data-bs-dismiss="modal" work even if Bootstrap JS didn't initialize
             const dismiss = e.target.closest('[data-bs-dismiss="modal"]');
             if (!dismiss) return;
             const modalEl = dismiss.closest('.modal');
@@ -97,7 +115,6 @@
                     console.error('bootstrap hide failed', err);
                 }
             }
-            // Fallback hide
             try {
                 modalEl.classList.remove('show');
                 modalEl.style.display = 'none';
@@ -111,7 +128,6 @@
             }
         });
 
-        // Also allow clicking on backdrop to close when using fallback
         document.addEventListener('click', function(e) {
             const backdrop = e.target.closest('.modal-backdrop');
             if (!backdrop) return;
@@ -137,8 +153,11 @@
 
     @stack('scripts')
 </body>
+
+
 <script>
     feather.replace();
 </script>
+
 
 </html>

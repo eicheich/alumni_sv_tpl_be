@@ -3,12 +3,50 @@
 @section('title', 'Dashboard Admin')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Dashboard Admin</h1>
+<!-- Chart Card -->
+    <h2 class="text-2xl font-semibold">Dashboard</h2>
+    <div class="bg-white rounded-2xl shadow p-6 my-6">
+        <div class="flex justify-between">
+            <p class="font-semibold text-lg">Jumlah alumni</p>
+
+            <select class="border rounded px-3 py-1 text-sm">
+                <option>2024</option>
+                <option>2023</option>
+                <option>2022</option>
+            </select>
+        </div>
+
+        <!-- Chart placeholder -->
+        <div class="h-64 bg-purple-100 rounded-xl mt-4 flex items-center justify-center text-purple-600">
+            Chart Area
+        </div>
     </div>
 
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+        <div class="bg-white rounded-xl shadow p-5 flex justify-between items-center">
+            <div>
+                <p class="text-sm text-gray-500">Total Alumni</p>
+                <p class="text-3xl font-bold">5.000</p>
+
+                <p class="text-sm text-green-500 mt-2 flex items-center gap-1">
+                <span>📈</span> 8.5% meningkat dalam setahun
+                </p>
+            </div>
+
+            <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-2xl">
+                👥
+            </div>
+        </div>
+    </div>
+
+    {{-- <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Dashboard Admin</h1>
+                        
+    </div> --}}
+
     <!-- Statistics Cards Row -->
-    <div class="row mb-4">
+    {{-- <div class="row mb-4">
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
@@ -76,10 +114,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Chart Row -->
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-lg-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-light border-0">
@@ -94,7 +132,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection
 
