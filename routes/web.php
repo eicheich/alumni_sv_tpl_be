@@ -6,10 +6,12 @@ use App\Http\Controllers\Web\Admin\GeneralInformationController;
 use App\Http\Controllers\Web\Admin\InformationCategoryController;
 use App\Http\Controllers\Web\Admin\InformationController;
 use App\Http\Controllers\Web\Admin\OutstandingAlumniController;
-use App\Http\Controllers\Web\Alumni\DashboardController as AlumniDashboardController;
+use App\Http\Controllers\Web\Alumni\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\UserGuest\LandingController;
+use App\Http\Controllers\Web\UserGuest\InformationController as GuestInformationController;
+use App\Http\Controllers\Web\UserGuest\OutstandingAlumniController as GuestOutstandingAlumniController;
 use Phiki\Phast\Root;
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
@@ -74,25 +76,25 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('alumni.logout');
 });
 
-Route::prefix('alumni')->middleware('alumni')->group(function () {
-    Route::get('/', [AlumniDashboardController::class, 'index'])->name('alumni.dashboard.index');
-    Route::get('/profile', [AlumniDashboardController::class, 'profile'])->name('alumni.profile');
-    Route::get('/change-password', [AlumniDashboardController::class, 'changePasswordView'])->name('alumni.change-password-view');
-    Route::post('/change-password', [AlumniDashboardController::class, 'changePassword'])->name('alumni.change-password');
-
-    // Educational Backgrounds
-    Route::get('/educational-backgrounds', [AlumniDashboardController::class, 'educationalBackgrounds'])->name('alumni.educational-backgrounds');
-    Route::get('/educational-backgrounds/create', [AlumniDashboardController::class, 'createEducationalBackground'])->name('alumni.educational-backgrounds.create');
-    Route::post('/educational-backgrounds', [AlumniDashboardController::class, 'storeEducationalBackground'])->name('alumni.educational-backgrounds.store');
-    Route::get('/educational-backgrounds/{id}/edit', [AlumniDashboardController::class, 'editEducationalBackground'])->name('alumni.educational-backgrounds.edit');
-    Route::put('/educational-backgrounds/{id}', [AlumniDashboardController::class, 'updateEducationalBackground'])->name('alumni.educational-backgrounds.update');
-    Route::delete('/educational-backgrounds/{id}', [AlumniDashboardController::class, 'destroyEducationalBackground'])->name('alumni.educational-backgrounds.destroy');
-
-    // Careers
-    Route::get('/careers', [AlumniDashboardController::class, 'careers'])->name('alumni.careers');
-    Route::get('/careers/create', [AlumniDashboardController::class, 'createCareer'])->name('alumni.careers.create');
-    Route::post('/careers', [AlumniDashboardController::class, 'storeCareer'])->name('alumni.careers.store');
-    Route::get('/careers/{id}/edit', [AlumniDashboardController::class, 'editCareer'])->name('alumni.careers.edit');
-    Route::put('/careers/{id}', [AlumniDashboardController::class, 'updateCareer'])->name('alumni.careers.update');
-    Route::delete('/careers/{id}', [AlumniDashboardController::class, 'destroyCareer'])->name('alumni.careers.destroy');
+Route::middleware('alumni')->group(function () {
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'profile'])->name('alumni.profile');
+        Route::post('/educational-backgrounds', [ProfileController::class, 'storeEducationalBackground'])->name('alumni.educational-backgrounds.store');
+        Route::get('/educational-backgrounds/{id}/edit', [ProfileController::class, 'editEducationalBackground'])->name('alumni.educational-backgrounds.edit');
+        Route::put('/educational-backgrounds/{id}', [ProfileController::class, 'updateEducationalBackground'])->name('alumni.educational-backgrounds.update');
+        Route::delete('/educational-backgrounds/{id}', [ProfileController::class, 'destroyEducationalBackground'])->name('alumni.educational-backgrounds.destroy');
+        Route::post('/careers', [ProfileController::class, 'storeCareer'])->name('alumni.careers.store');
+        Route::get('/careers/{id}/edit', [ProfileController::class, 'editCareer'])->name('alumni.careers.edit');
+        Route::put('/careers/{id}', [ProfileController::class, 'updateCareer'])->name('alumni.careers.update');
+        Route::delete('/careers/{id}', [ProfileController::class, 'destroyCareer'])->name('alumni.careers.destroy');
+    });
+    Route::get('/change-password', [ProfileController::class, 'changePasswordView'])->name('alumni.change-password-view');
+    Route::post('/change-password', [ProfileController::class, 'changePassword'])->name('alumni.change-password');
 });
+
+// Information pages for guest/public
+Route::get('/informasi', [GuestInformationController::class, 'index'])->name('information.index');
+Route::get('/informasi/{id}', [GuestInformationController::class, 'show'])->name('information.show');
+
+// Outstanding Alumni pages for guest/public
+Route::get('/alumni-berprestasi/{id}', [GuestOutstandingAlumniController::class, 'show'])->name('outstanding-alumni.show');

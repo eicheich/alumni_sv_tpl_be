@@ -48,7 +48,7 @@
 
     {{-- Bootstrap JS bundle --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6V9E+0U5y5L2e3z6Z6b6Y5m1Yk2Kf0b6tQZ6f5Q5m9ct" crossorigin="anonymous">
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
     </script>
 
     {{-- Optional app JS --}}
