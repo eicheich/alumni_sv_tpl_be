@@ -44,12 +44,14 @@ class InformationController extends Controller
             'content' => 'required|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_archive' => 'nullable|boolean',
         ]);
 
         $data = [
             'title' => $request->input('title'),
             'category_id' => $request->input('information_category_id'),
             'content' => $request->input('content'),
+            'is_archive' => $request->has('is_archive') ? 1 : 0,
         ];
 
         if ($request->hasFile('photo')) {
@@ -113,6 +115,7 @@ class InformationController extends Controller
             'content' => 'required|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_archive' => 'nullable|boolean',
         ]);
 
         $information = Information::findOrFail($id);
@@ -121,6 +124,7 @@ class InformationController extends Controller
             'title' => $request->input('title'),
             'category_id' => $request->input('information_category_id'),
             'content' => $request->input('content'),
+            'is_archive' => $request->has('is_archive') ? 1 : 0,
         ];
 
         if ($request->hasFile('photo')) {
