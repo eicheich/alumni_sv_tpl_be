@@ -1,22 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tentang Kami - Alumni Teknologi Rekayasa Perangkat Lunak SV IPB</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
+@section('title', 'Alumni TPL - Home')
 
-<body class="bg-gray-50">
-    <!-- Header -->
-    @auth('alumni')
-        <x-profile-header />
-    @else
-        <x-landing-header />
-    @endauth
-
+@section('content')
     <!-- Hero Section -->
     <section class="relative bg-cover bg-center py-32"
         style="background-image: url('{{ Vite::asset('resources/images/hero.png') }}');">
@@ -113,4 +99,11 @@
     </script>
 </body>
 
-</html>
+    @include('components.landing-footer')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+        });
+    </script>
+@endsection
