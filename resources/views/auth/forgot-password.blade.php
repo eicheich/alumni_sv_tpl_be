@@ -30,29 +30,21 @@
                         Email <span class="text-red-500">*</span>
                     </label>
 
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="nama@example.com"
+                    <input type="email" id="email" name="email" placeholder="nama@example.com"
                         class="
                             w-full px-4 py-3 border rounded-lg text-gray-700
                             focus:outline-none focus:ring-2 focus:ring-purple-500
                             @error('email') border-red-500 @enderror
                         "
-                        value="{{ old('email') }}"
-                        required
-                    >
+                        value="{{ old('email') }}" required>
 
                     @error('email')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <button
-                    type="submit"
-                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition"
-                >
+                <button type="submit"
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition">
                     Kirim OTP
                 </button>
             </form>
