@@ -42,8 +42,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Copyright -->
         <div class="border-t border-purple-700 mt-8 pt-6 text-center">
             <p class="text-sm text-purple-200">
                 Copyright © 2025 Web Alumni TPL. All rights reserved.
