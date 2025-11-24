@@ -1,7 +1,6 @@
 <footer class="bg-purple-900 text-white py-12">
     <div class="max-w-6xl mx-auto px-6 lg:px-8">
         <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
-            <!-- Kolom Kiri: Brand & Social Media -->
             <div class="text-center lg:text-left">
                 <h3 class="font-semibold text-lg mb-4">Web Alumni TPL</h3>
                 <div class="flex justify-center lg:justify-start space-x-4">
@@ -16,7 +15,7 @@
                 </div>
             </div>
 
-            <!-- Kolom Tengah: Navigation Links -->
+
             <div class="text-center lg:text-left">
                 <h3 class="font-semibold text-lg mb-4">Tautan</h3>
                 <ul class="space-y-3 text-sm">
@@ -27,8 +26,6 @@
                     <li><a href="{{ route('faq.index') }}" class="hover:text-purple-200 transition-colors">FAQ</a></li>
                 </ul>
             </div>
-
-            <!-- Kolom Kanan: Contact Info -->
             <div class="text-center lg:text-left">
                 <h3 class="font-semibold text-lg mb-4">Alamat & Kontak</h3>
                 <div class="text-sm space-y-2">
