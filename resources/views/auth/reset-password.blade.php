@@ -31,15 +31,15 @@
                         Password Baru <span class="text-red-500">*</span>
                     </label>
 
-                    <input 
+                    <input
                         type="password"
                         id="password"
                         name="password"
                         placeholder="Minimal 8 karakter"
                         required
-                        class="w-full px-4 py-3 border rounded-lg 
+                        class="w-full px-4 py-3 border rounded-lg
                             @error('password') border-red-500 @enderror
-                            focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
 
                     <p class="text-gray-500 text-sm mt-2">
@@ -57,15 +57,15 @@
                         Konfirmasi Password <span class="text-red-500">*</span>
                     </label>
 
-                    <input 
+                    <input
                         type="password"
                         id="password_confirmation"
                         name="password_confirmation"
                         placeholder="Ulangi password"
                         required
-                        class="w-full px-4 py-3 border rounded-lg 
+                        class="w-full px-4 py-3 border rounded-lg
                             @error('password_confirmation') border-red-500 @enderror
-                            focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                            focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
 
                     @error('password_confirmation')
@@ -76,7 +76,7 @@
                 <!-- Submit Button -->
                 <button
                     type="submit"
-                    class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-lg transition"
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition"
                 >
                     Reset Password
                 </button>
@@ -85,8 +85,8 @@
             <!-- Back Link -->
             <div class="text-center mt-6">
                 <p class="text-gray-600 mb-1">Ingat password?</p>
-                <a href="{{ route('alumni.login.view') }}"
-                class="text-indigo-500 font-medium hover:underline">
+                <a href="{{ route('login.view') }}"
+                class="text-purple-600 font-medium hover:underline">
                     Masuk di sini
                 </a>
             </div>

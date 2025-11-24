@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Alumni')</title>
-    <link rel="icon" type="image/png" href="{{ asset('storage/asset/icon.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('resources/images/icon.ico') }}">
 
     {{-- Optional app CSS --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> --}}

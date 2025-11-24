@@ -5,7 +5,7 @@
 @section('content')
     <div class="min-h-screen flex items-center justify-center px-4">
         <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
-            
+
             <!-- Heading -->
             <h2 class="text-2xl font-semibold text-center mb-1">Lupa Password?</h2>
             <p class="text-center text-gray-500 mb-6">Masukkan email Anda untuk mereset password</p>
@@ -30,14 +30,14 @@
                         Email <span class="text-red-500">*</span>
                     </label>
 
-                    <input 
+                    <input
                         type="email"
                         id="email"
                         name="email"
                         placeholder="nama@example.com"
                         class="
-                            w-full px-4 py-3 border rounded-lg text-gray-700 
-                            focus:outline-none focus:ring-2 focus:ring-indigo-400
+                            w-full px-4 py-3 border rounded-lg text-gray-700
+                            focus:outline-none focus:ring-2 focus:ring-purple-500
                             @error('email') border-red-500 @enderror
                         "
                         value="{{ old('email') }}"
@@ -51,7 +51,7 @@
 
                 <button
                     type="submit"
-                    class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-lg transition"
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 rounded-lg transition"
                 >
                     Kirim OTP
                 </button>
@@ -60,7 +60,7 @@
             <!-- Login Link -->
             <div class="text-center mt-6">
                 <p class="text-gray-600 mb-1">Ingat password?</p>
-                <a href="{{ route('alumni.login.view') }}" class="text-indigo-500 font-medium hover:underline">
+                <a href="{{ route('login.view') }}" class="text-purple-600 font-medium hover:underline">
                     Masuk di sini
                 </a>
             </div>

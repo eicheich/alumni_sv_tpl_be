@@ -5,14 +5,13 @@
 @section('content')
 
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="flex w-full max-w-6xl overflow-hidden bg-white shadow-lg rounded-lg">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
 
-            <!-- Bagian Kiri: Form -->
-            <div class="w-full lg:w-1/2 p-12 flex flex-col justify-center">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-2">Verifikasi OTP</h2>
-                <p class="text-sm text-gray-500 mb-8">
-                    Kami telah mengirimkan kode OTP ke email Anda untuk reset password
-                </p>
+            <!-- Heading -->
+            <h2 class="text-2xl font-semibold text-center text-gray-800 mb-2">Verifikasi OTP</h2>
+            <p class="text-center text-sm text-gray-500 mb-8">
+                Kami telah mengirimkan kode OTP ke email Anda untuk reset password
+            </p>
 
                 <!-- Alert Error -->
                 @if ($errors->any())
@@ -33,7 +32,7 @@
                             Kode OTP <span class="text-red-500">*</span>
                         </label>
                         <input type="text" id="otp_code" name="otp_code"
-                            class="w-full text-center px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-lg tracking-widest"
+                            class="w-full text-center px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 text-lg tracking-widest"
                             placeholder="000000" maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
                             value="{{ old('otp_code') }}" required>
                         <p class="text-xs text-gray-500 mt-2">
@@ -42,7 +41,7 @@
                     </div>
 
                     <button type="submit"
-                        class="w-full bg-purple-600 text-white py-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition">
+                        class="w-full bg-purple-700 text-white py-3 rounded-lg text-sm font-medium hover:bg-purple-800 transition">
                         Verifikasi OTP
                     </button>
                 </form>
@@ -50,7 +49,7 @@
                 <div class="text-center mt-6">
                     <p class="text-sm text-gray-600 mb-2">Belum menerima kode OTP?</p>
                     <a href="{{ route('alumni.forgot-password-view') }}"
-                        class="text-purple-600 hover:text-purple-700 font-semibold text-sm">
+                        class="text-purple-700 hover:text-purple-800 font-semibold text-sm">
                         Kembali dan kirim ulang
                     </a>
                 </div>
@@ -61,11 +60,6 @@
                         Kode OTP berlaku selama <strong>10 menit</strong>. Jangan bagikan kode ini kepada siapa pun.
                     </p>
                 </div>
-            </div>
-
-            <!-- Bagian Kanan: Gambar -->
-            <div class="hidden lg:block lg:w-1/2 relative">
-                <img src="{{ asset('resources/images/cover.jpg') }}" alt="Kampus IPB" class="object-cover w-full h-full">
             </div>
         </div>
     </div>
