@@ -9,6 +9,13 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    /**
+     * Accessor untuk mendeteksi apakah user adalah admin
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->admin()->exists();
+    }
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 

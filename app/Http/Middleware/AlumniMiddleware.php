@@ -17,7 +17,7 @@ class AlumniMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::guard('alumni')->check()) {
-            return redirect()->route('alumni.login.view')->with('error', 'Please login first.');
+            return redirect()->route('login.view')->with('error', 'Please login first.');
         }
 
         return $next($request);

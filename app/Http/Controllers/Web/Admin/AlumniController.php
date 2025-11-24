@@ -53,7 +53,7 @@ class AlumniController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Alumni::with('user', 'major');
+        $query = Alumni::with('user', 'major')->whereHas('user')->whereHas('major');
 
         // Search by name, email, or NIM
         if ($request->has('search') && $request->search) {
@@ -74,10 +74,16 @@ class AlumniController extends Controller
             $query->where('is_active', (bool)$request->status);
         }
 
+        // Filter by angkatan
+        if ($request->has('angkatan') && $request->angkatan) {
+            $query->where('angkatan', $request->angkatan);
+        }
+
         $alumni = $query->paginate(10);
         $majors = Major::all();
+        $angkatans = Alumni::distinct()->pluck('angkatan')->sort();
 
-        return view('admin.alumni.index', compact('alumni', 'majors'));
+        return view('admin.alumni.index', compact('alumni', 'majors', 'angkatans'));
     }
 
 

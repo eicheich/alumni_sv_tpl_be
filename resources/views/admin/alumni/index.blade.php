@@ -56,16 +56,11 @@
 
             <select
                 class="w-full md:w-2/3 border border-gray-300 rounded-lg py-2 px-2 text-sm focus:ring-2 focus:ring-purple-300 focus:outline-none"
-                name="year">
+                name="angkatan">
                 <option value="">Semua Angkatan</option>
-                {{-- Asumsikan list angkatan/tahun $years --}}
-                {{-- @foreach ($years as $year)
-                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                    @endforeach --}}
-                {{-- Saya biarkan loop original Anda, tetapi ganti name menjadi 'year' --}}
-                @foreach ($majors as $major)
-                    <option value="{{ $major->id }}" {{ request('major_id') == $major->id ? 'selected' : '' }}>
-                        {{ $major->name }}
+                @foreach ($angkatans as $angkatan)
+                    <option value="{{ $angkatan }}" {{ request('angkatan') == $angkatan ? 'selected' : '' }}>
+                        {{ $angkatan }}
                     </option>
                 @endforeach
             </select>
@@ -84,7 +79,7 @@
                 Filter
             </button>
 
-            @if (request('search') || request('major_id') || request('status') !== null)
+            @if (request('search') || request('major_id') || request('angkatan') || request('status') !== null)
                 <a href="{{ route('admin.alumni.index') }}"
                     class="flex items-center justify-center bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm whitespace-nowrap w-full md:w-auto">
                     <i data-feather="x" class="w-4 h-4 mr-1"></i>
@@ -110,6 +105,7 @@
                         <th class="px-4 py-3 text-left">Foto profil</th>
                         <th class="px-4 py-3 text-left">Nama</th>
                         <th class="px-4 py-3 text-left">NIM</th>
+                        <th class="px-4 py-3 text-left">Angkatan</th>
                         <th class="px-4 py-3 text-left">Email</th>
                         <th class="px-4 py-3 text-left">Jurusan</th>
                         <th class="px-4 py-3 text-left">Aksi</th>
@@ -132,6 +128,7 @@
                             </td>
                             <td class="px-4 py-3">{{ $alumnus->user->name }}</td>
                             <td class="px-4 py-3">{{ $alumnus->nim }}</td>
+                            <td class="px-4 py-3">{{ $alumnus->angkatan }}</td>
                             <td class="px-4 py-3">{{ $alumnus->user->email }}</td>
                             <td class="px-4 py-3">{{ $alumnus->major->name }}</td>
                             <td class="px-4 py-3 flex gap-2">
@@ -166,7 +163,7 @@
 
                     @empty
                         <tr class="w-full">
-                            <td colspan="7" class="py-4 text-muted text-center">
+                            <td colspan="8" class="py-4 text-muted text-center">
 
                                 <div class="inline-flex items-center justify-center">
                                     <i data-feather="inbox" class="mr-2"></i>

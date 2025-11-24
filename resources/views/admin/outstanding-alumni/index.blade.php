@@ -4,52 +4,52 @@
 
 @section('content')
         <div class="flex items-center justify-between mb-6">
-    
+
             <h2 class="text-2xl font-semibold">Data Alumni</h2>
-            
+
             <div class="flex items-center gap-3">
-                
+
                 <button onclick="openOutstandingAlumniModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap" data-modal-target="addAlumniModal">
                     Tambah Alumni
                 </button>
-                
+
             </div>
         </div>
 
-        
 
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 w-full"> 
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 w-full">
             <form method="GET" action="{{ route('admin.outstanding-alumni.index') }}" class="flex flex-col md:flex-row gap-2 w-full items-center justify-between">
-                
+
                 <div class="relative w-full">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
                         </svg>
                     </div>
-                    <input 
-                        type="text" 
-                        placeholder="Cari nama alumni atau penghargaan..." name="search" 
-                        class="w-full border border-gray-300 rounded-lg py-2 pl-9 pr-3 text-sm focus:ring-2 focus:ring-purple-300 focus:outline-none" 
+                    <input
+                        type="text"
+                        placeholder="Cari nama alumni atau penghargaan..." name="search"
+                        class="w-full border border-gray-300 rounded-lg py-2 pl-9 pr-3 text-sm focus:ring-2 focus:ring-purple-300 focus:outline-none"
                         value="{{ request('search') }}"
                     />
                 </div>
-                
-                
+
+
                 <button type="submit" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap w-full md:w-auto">
                     <i data-feather="search" class="h-4 pr-1"></i>
                     Filter
                 </button>
 
                 @if (request('search'))
-                    <a href="{{ route('admin.outstanding-alumni.index') }}" 
+                    <a href="{{ route('admin.outstanding-alumni.index') }}"
                     class="flex items-center justify-center bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm whitespace-nowrap w-full md:w-auto">
                         <i data-feather="x" class="w-4 h-4 mr-1"></i>
                         Reset
                     </a>
                 @endif
             </form>
-            
+
             {{-- Jika Anda memiliki tombol tambah alumni di luar form filter, tambahkan di sini --}}
 
         </div>
@@ -63,7 +63,7 @@
                 @forelse ($outstandingAlumni as $key => $item)
                     <div class="bg-white rounded-2xl shadow-md overflow-hidden">
                         <div class="h-28 overflow-hidden">
-                            <img src="{{ asset('storage/asset/wave.svg') }}" class="h-40 w-full object-cover" alt="">
+                            <img src="{{ Vite::asset('resources/images/wave.svg') }}" class="h-40 w-full object-cover" alt="">
                         </div>
                         <div class="-mt-20 flex justify-center">
                             @if ($item->alumni->user->photo_profile)
@@ -87,7 +87,7 @@
                                     <button type="button"
                                             onclick="openDeleteModal({{ $item->id }})"
                                             class="mt-4 bg-red-600 text-white px-2 py-2 rounded-md text-sm hover:bg-red-700 flex w-full items-center"
-                                            title="Delete"> 
+                                            title="Delete">
                                         <i data-feather="trash-2" class="text-red-300"></i>Hapus
                                     </button>
 
@@ -143,23 +143,23 @@
 
         {{-- modal add alummi --}}
     <div id="addOutstandingAlumniModal"
-     class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 
+     class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50
             flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    
+
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 transform scale-95 transition-transform duration-300">
-            
+
             <div class="px-6 py-4 border-b flex justify-between items-center">
                 <h3 class="text-xl font-bold text-gray-900" id="addOutstandingAlumniModalLabel">
                     Tambah Alumni Berprestasi
                 </h3>
-                <button type="button" onclick="closeOutstandingAlumniModal()" 
+                <button type="button" onclick="closeOutstandingAlumniModal()"
                         class="text-gray-400 hover:text-gray-600 transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-            
+
             <div class="p-6">
                 <div class="mb-4">
                     <input type="text" id="alumniSearch"
@@ -167,16 +167,16 @@
                         class="w-full border border-gray-300 rounded-lg py-2 px-4 text-lg focus:ring-2 focus:ring-purple-500 focus:outline-none">
                 </div>
 
-                <div id="alumniCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6" 
+                <div id="alumniCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6"
                     style="max-height: 400px; overflow-y: auto;">
-                    
+
                     @forelse ($availableAlumni as $alumni)
                         <div class="alumni-card-wrapper" data-alumni-name="{{ strtolower($alumni->user->name) }}">
-                            <div class="p-3 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer alumni-card 
+                            <div class="p-3 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer alumni-card
                                         hover:border-purple-500 hover:shadow-md transition duration-300"
                                 data-alumni-id="{{ $alumni->id }}" data-alumni-name="{{ $alumni->user->name }}"
                                 onclick="selectAlumni({{ $alumni->id }}, '{{ addslashes($alumni->user->name) }}', this)">
-                                
+
                                 <div class="flex items-start">
                                     @if ($alumni->user->photo_profile)
                                         <img src="{{ asset('storage/' . $alumni->user->photo_profile) }}"
@@ -188,7 +188,7 @@
                                             <i data-feather="user" class="w-6 h-6 text-gray-400"></i>
                                         </div>
                                     @endif
-                                    
+
                                     <div>
                                         <h6 class="text-base font-semibold text-gray-900 mb-0">{{ $alumni->user->name }}</h6>
                                         <small class="text-gray-500 block">{{ $alumni->major->name }}</small>
@@ -219,15 +219,15 @@
                         </label>
                         <input type="text" id="award_title" name="award_title" value="{{ old('award_title') }}"
                             placeholder="Masukkan penghargaan atau prestasi..." required
-                            class="w-full border border-gray-300 rounded-lg py-2 px-4 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none 
+                            class="w-full border border-gray-300 rounded-lg py-2 px-4 text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none
                             @error('award_title') border-red-500 @enderror">
                         @error('award_title')
                             <div class="text-red-500 text-xs mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
                     <div class="flex justify-end gap-2">
-                        <button type="button" onclick="closeOutstandingAlumniModal()" 
+                        <button type="button" onclick="closeOutstandingAlumniModal()"
                                 class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition">
                             Batal
                         </button>
@@ -238,22 +238,22 @@
                         </button>
                     </div>
                 </form>
-                
+
             </div>
         </div>
     </div>
 
     <div id="delete-modal"
-        class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99 
+        class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99
                 flex items-center justify-center pointer-events transition duration-300">
-        
+
         <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform scale-95 transition duration-300">
-            
+
             <div class="flex flex-col items-center">
                 <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
                     <i data-feather="alert-triangle" class="w-8 h-8 text-red-600"></i>
                 </div>
-                
+
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Apakah Anda Yakin?</h3>
                 <p class="text-sm text-gray-600 text-center mb-6">
                     Data yang telah dihapus tidak dapat dikembalikan!
@@ -261,17 +261,17 @@
             </div>
 
             <div class="flex justify-between space-x-4">
-                <button onclick="closeDeleteModal()" 
+                <button onclick="closeDeleteModal()"
                         class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
                     Batal
                 </button>
-                
-                <button onclick="submitDeleteForm()" 
+
+                <button onclick="submitDeleteForm()"
                         class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
                     Ya, Hapus!
                 </button>
             </div>
-            
+
         </div>
     </div>
 
@@ -385,7 +385,7 @@
         const selectedAlumniName = document.getElementById('selectedAlumniName');
         const selectedAlumniAlert = document.getElementById('selectedAlumniAlert');
         const submitBtn = document.getElementById('submitBtn');
-        
+
         // Pastikan feather.replace() dipanggil jika Anda menggunakannya
         // feather.replace();
 
@@ -395,7 +395,7 @@
             // Hapus opacity-0 dan pointer-events-none untuk menampilkan modal
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modal.classList.add('opacity-100');
-            resetSelection(); 
+            resetSelection();
         }
 
         function closeOutstandingAlumniModal() {
@@ -425,7 +425,7 @@
             selectedAlumniIdInput.value = id;
             selectedAlumniName.textContent = name;
             selectedAlumniAlert.style.display = 'block';
-            
+
             // 4. Aktifkan tombol submit
             submitBtn.disabled = false;
         }
@@ -448,7 +448,7 @@
 
             cards.forEach(wrapper => {
                 const alumniName = wrapper.getAttribute('data-alumni-name');
-                
+
                 if (alumniName.includes(searchTerm)) {
                     wrapper.style.display = 'block';
                 } else {

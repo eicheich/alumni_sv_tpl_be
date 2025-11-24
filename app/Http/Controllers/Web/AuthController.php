@@ -15,65 +15,13 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    public function registerAdminView()
-    {
-        return view('auth.register-admin');
-    }
-    public function registerAdmin(Request $request)
-    {
-        // validate
-        $validate = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-        if (!$validate) {
-            return back()->withErrors($validate)->withInput();
-        }
-
-        // create user
-        DB::beginTransaction();
-        try {
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-            ]);
-            $admin = Admin::create([
-                'role' => 'admin',
-                'user_id' => $user->id,
-            ]);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Registration failed. Please try again.'])->withInput();
-        }
-
-        // redirect to login
-        return redirect()->route('admin.login.view')->with('success', 'Admin registered successfully. Please login.');
-    }
-    public function loginAdminView()
-    {
-        return view('auth.login-admin');
-    }
-
-    public function loginAdmin(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        $auth = Auth::attempt($credentials);
-        if ($auth) {
-            return redirect()->route('admin.dashboard.index')->with('success', 'Login successful.');
-        }
-
-        return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
-    }
 
     public function logout(Request $request)
     {
         // Logout dari semua guard (alumni dan admin)
         Auth::guard('alumni')->logout();
         Auth::guard('web')->logout();
+        Auth::guard('admin')->logout();
 
         // Invalidate session dan regenerate token untuk keamanan
         $request->session()->invalidate();
@@ -250,21 +198,37 @@ class AuthController extends Controller
         return view('auth.registration-success');
     }
 
-    public function alumniLoginView()
+    public function LoginView()
     {
-        return view('auth.login-alumni');
+        return view('auth.login');
     }
 
-    public function alumniLogin(Request $request)
+    public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
-        // Attempt to authenticate with alumni guard
-        if (Auth::guard('alumni')->attempt($credentials)) {
-            return redirect()->route('index')->with('success', 'Login successful.');
+        $user = User::where('email', $credentials['email'])->first();
+        if (!$user) {
+            return back()->withErrors(['error' => 'Email tidak ditemukan.'])->withInput();
         }
 
-        return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
+        if ($user->alumni && $user->alumni->is_active == 1) {
+            if (Auth::guard('alumni')->attempt($credentials)) {
+                return redirect()->route('index')->with('success', 'Login alumni berhasil.');
+            } else {
+                return back()->withErrors(['error' => 'Password salah.'])->withInput();
+            }
+        }
+
+        if ($user->is_admin) {
+            if (Auth::guard('admin')->attempt($credentials)) {
+                return redirect()->route('admin.dashboard.index')->with('success', 'Login admin berhasil.');
+            } else {
+                return back()->withErrors(['error' => 'Password salah.'])->withInput();
+            }
+        }
+
+        // Jika bukan alumni atau admin
+        return back()->withErrors(['error' => 'Akun tidak valid.'])->withInput();
     }
 
     public function alumniForgetPasswordView()
@@ -404,7 +368,7 @@ class AuthController extends Controller
             // Clear sessions
             session()->forget(['forgot_password_user_id', 'forgot_password_email', 'forgot_password_verified_user_id']);
 
-            return redirect()->route('alumni.login.view')->with('success', 'Password reset successful. Please login with your new password.');
+            return redirect()->route('login.view')->with('success', 'Password reset successful. Please login with your new password.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Reset Password Error: ' . $e->getMessage());

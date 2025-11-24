@@ -14,7 +14,7 @@
                     Masuk dengan menggunakan email IPB
                 </p>
 
-                <form class="space-y-6" action="{{ route('alumni.login') }}" method="POST">
+                <form class="space-y-6" action="{{ route('login') }}" method="POST">
                     @csrf
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>

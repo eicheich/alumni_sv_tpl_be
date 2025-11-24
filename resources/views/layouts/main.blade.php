@@ -34,16 +34,11 @@
 
     <div class="flex min-h-screen">
 
-        @if (auth()->check())
-            @include('layouts.sidebar')
-        @endif
-
+        @include('layouts.sidebar')
         <!-- Content -->
         <div class="flex-1 flex flex-col">
             <!-- Navbar -->
-            @if (auth()->check())
-                @include('layouts.header')
-            @endif
+            @include('layouts.header')
 
             <!-- Main Content -->
             <main class="p-6 flex-1">
@@ -56,9 +51,7 @@
 
             </main>
 
-            @if (auth()->check())
-                @include('layouts.footer')
-            @endif
+            @include('layouts.footer')
         </div>
     </div>
 

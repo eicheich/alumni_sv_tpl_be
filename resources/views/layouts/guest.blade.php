@@ -33,11 +33,7 @@
 
 <body>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    @if (auth('alumni')->check())
-        @include('components.profile-header')
-    @else
-        @include('components.landing-header')
-    @endif
+    @include('components.landing-header')
 
     <main class="bg-gray-100">
         {{-- centralized session / validation messages --}}

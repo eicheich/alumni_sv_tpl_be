@@ -16,14 +16,9 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if user is authenticated
-        if (!Auth::check()) {
-            return redirect()->route('admin.login.view');
-        }
-
-        // Check if user has admin record
-        if (!Auth::user()->admin) {
-            abort(403, 'Unauthorized access. Admin role required.');
+        // Check if user is authenticated with admin guard
+        if (!Auth::guard('admin')->check()) {
+            return redirect()->route('login.view');
         }
 
         return $next($request);

@@ -20,10 +20,7 @@ Route::get('/tentang', [AboutController::class, 'index'])->name('about.index');
 // prefix admin
 Route::prefix('admin')->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::get('/register', [AuthController::class, 'registerAdminView'])->name('admin.register.view');
-        Route::post('/register', [AuthController::class, 'registerAdmin'])->name('admin.register');
-        Route::get('/login', [AuthController::class, 'loginAdminView'])->name('admin.login.view');
-        Route::post('/login', [AuthController::class, 'loginAdmin'])->name('admin.login');
+        // Login admin hanya lewat /auth/login
         Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     });
 
@@ -68,8 +65,8 @@ Route::prefix('auth')->group(function () {
     Route::get('/complete-profile', [AuthController::class, 'alumniCompleteProfileView'])->name('alumni.complete-profile.view');
     Route::post('/complete-profile', [AuthController::class, 'alumniCompleteProfile'])->name('alumni.complete-profile');
     Route::get('/registration-success', [AuthController::class, 'alumniRegistrationSuccess'])->name('alumni.registration-success');
-    Route::get('/login', [AuthController::class, 'alumniLoginView'])->name('alumni.login.view');
-    Route::post('/login', [AuthController::class, 'alumniLogin'])->name('alumni.login');
+    Route::get('/login', [AuthController::class, 'LoginView'])->name('login.view');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::get('/forgot-password', [AuthController::class, 'alumniForgetPasswordView'])->name('alumni.forgot-password-view');
     Route::post('/forgot-password', [AuthController::class, 'alumniForgetPassword'])->name('alumni.forgot-password');
     Route::get('/verify-forgot-password-otp', [AuthController::class, 'alumniVerifyForgotPasswordOtpView'])->name('alumni.verify-forgot-password-otp-view');

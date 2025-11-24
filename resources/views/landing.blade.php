@@ -5,7 +5,6 @@
 @section('content')
 
 
-    <!-- Hero Section -->
     <section id="beranda" class="relative w-full h-[70vh] flex items-center justify-center text-center text-white">
         <img src="{{ Vite::asset('resources/images/hero.png') }}" alt="Hero"
             class="absolute inset-0 w-full h-full object-cover">
@@ -79,9 +78,9 @@
         <h2 class="text-center text-xl md:text-2xl font-semibold mb-10">
             Informasi Terkini</h2>
 
-        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+        <div class="max-w-6xl mx-auto px-6 flex flex-wrap justify-center gap-8">
             @forelse ($latestInformation as $information)
-                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col w-full sm:w-80">
 
                     {{-- Gambar cover --}}
                     @if ($information->cover_image)
@@ -123,7 +122,7 @@
                 </div>
 
             @empty
-                <div class="col-span-3 text-center py-12 text-white">
+                <div class="w-full text-center py-12 text-white">
                     <i data-feather="inbox" class="w-12 h-12 mx-auto mb-3"></i>
                     Belum ada informasi
                 </div>
@@ -140,8 +139,7 @@
         </div>
     </section>
 
-
-
+    <div class="py-16"></div>
 
     <!-- Footer -->
 
