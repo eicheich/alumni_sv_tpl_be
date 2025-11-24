@@ -5,7 +5,7 @@
 @section('content')
     <!-- Hero Section -->
     <section class="relative bg-cover bg-center py-32"
-        style="background-image: url('{{ Vite::asset('resources/images/hero.png') }}');">
+        style="background-image: url('{{ asset('resources/images/hero.png') }}');">
         <div class="absolute inset-0 bg-purple-900 bg-opacity-70"></div>
         <div class="container mx-auto px-4 text-center relative z-10">
             <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white">Tentang Kami</h1>
@@ -97,7 +97,7 @@
     <script>
         feather.replace();
     </script>
-</body>
+    </body>
 
     @include('components.landing-footer')
 

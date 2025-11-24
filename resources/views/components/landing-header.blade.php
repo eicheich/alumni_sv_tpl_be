@@ -5,7 +5,7 @@
 
             <!-- Logo -->
             <div class="flex items-center font-semibold text-lg">
-                <img src="{{ Vite::asset('resources/images/logo-TPL.png') }}" class="h-10 mr-2" alt="Logo TRPL SV IPB">
+                <img src="{{ asset('resources/images/logo-TPL.png') }}" class="h-10 mr-2" alt="Logo TRPL SV IPB">
                 Web Alumni TPL
             </div>
 

@@ -3,129 +3,133 @@
 @section('title', 'Alumni Berprestasi')
 
 @section('content')
-        <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-6">
 
-            <h2 class="text-2xl font-semibold">Data Alumni</h2>
+        <h2 class="text-2xl font-semibold">Data Alumni</h2>
 
-            <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3">
 
-                <button onclick="openOutstandingAlumniModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap" data-modal-target="addAlumniModal">
-                    Tambah Alumni
-                </button>
+            <button onclick="openOutstandingAlumniModal()"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap"
+                data-modal-target="addAlumniModal">
+                Tambah Alumni
+            </button>
 
-            </div>
         </div>
+    </div>
 
 
 
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 w-full">
-            <form method="GET" action="{{ route('admin.outstanding-alumni.index') }}" class="flex flex-col md:flex-row gap-2 w-full items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 w-full">
+        <form method="GET" action="{{ route('admin.outstanding-alumni.index') }}"
+            class="flex flex-col md:flex-row gap-2 w-full items-center justify-between">
 
-                <div class="relative w-full">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
-                        </svg>
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Cari nama alumni atau penghargaan..." name="search"
-                        class="w-full border border-gray-300 rounded-lg py-2 pl-9 pr-3 text-sm focus:ring-2 focus:ring-purple-300 focus:outline-none"
-                        value="{{ request('search') }}"
-                    />
+            <div class="relative w-full">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
+                    </svg>
                 </div>
+                <input type="text" placeholder="Cari nama alumni atau penghargaan..." name="search"
+                    class="w-full border border-gray-300 rounded-lg py-2 pl-9 pr-3 text-sm focus:ring-2 focus:ring-purple-300 focus:outline-none"
+                    value="{{ request('search') }}" />
+            </div>
 
 
-                <button type="submit" class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap w-full md:w-auto">
-                    <i data-feather="search" class="h-4 pr-1"></i>
-                    Filter
-                </button>
+            <button type="submit"
+                class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap w-full md:w-auto">
+                <i data-feather="search" class="h-4 pr-1"></i>
+                Filter
+            </button>
 
-                @if (request('search'))
-                    <a href="{{ route('admin.outstanding-alumni.index') }}"
+            @if (request('search'))
+                <a href="{{ route('admin.outstanding-alumni.index') }}"
                     class="flex items-center justify-center bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm whitespace-nowrap w-full md:w-auto">
-                        <i data-feather="x" class="w-4 h-4 mr-1"></i>
-                        Reset
-                    </a>
-                @endif
-            </form>
+                    <i data-feather="x" class="w-4 h-4 mr-1"></i>
+                    Reset
+                </a>
+            @endif
+        </form>
 
-            {{-- Jika Anda memiliki tombol tambah alumni di luar form filter, tambahkan di sini --}}
+        {{-- Jika Anda memiliki tombol tambah alumni di luar form filter, tambahkan di sini --}}
+
+    </div>
+
+    <!-- CONTENT CARD WRAPPER -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border max-w-5xl mx-auto">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+
+            <!-- Card 1 -->
+            @forelse ($outstandingAlumni as $key => $item)
+                <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+                    <div class="h-28 overflow-hidden">
+                        <img src="{{ asset('resources/images/wave.svg') }}" class="h-40 w-full object-cover" alt="">
+                    </div>
+                    <div class="-mt-20 flex justify-center">
+                        @if ($item->alumni->user->photo_profile)
+                            <img src="{{ asset('storage/' . $item->alumni->user->photo_profile) }}"
+                                alt="Photo of {{ $item->alumni->user->name }}"
+                                class="rounded-full border-4 border-white w-24 h-24 object-cover">
+                        @else
+                            N/A
+                        @endif
+                    </div>
+                    <div class="px-6 pb-6 pt-2">
+                        <p class="text-xs text-purple-600 font-medium">{{ $item->award_title }}</p>
+                        <h3 class="text-lg font-semibold mt-1">{{ $item->alumni->user->name }}</h3>
+                        <p class="text-sm text-gray-600 mb-2">{{ $item->alumni->major->name }}</p>
+                        {{-- <p class="text-sm font-medium text-gray-800"><i class="fa-solid me-1 fa-briefcase text-purple-600"></i>Apple Inc.</p> --}}
+                        <div class="flex justify-between gap-2">
+                            <a href="{{ route('admin.outstanding-alumni.edit', $item->id) }}"
+                                class="mt-4 bg-purple-600 text-white px-2 py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center"
+                                title="Edit">
+                                <i data-feather="edit-2" class="h-4"></i> Edit
+                            </a>
+
+
+                            <button type="button" onclick="openDeleteModal({{ $item->id }})"
+                                class="mt-4 bg-red-600 text-white px-2 py-2 rounded-md text-sm hover:bg-red-700 flex w-full items-center"
+                                title="Delete">
+                                <i data-feather="trash-2" class="text-red-300"></i>Hapus
+                            </button>
+
+                            <form id="delete-form-{{ $item->id }}"
+                                action="{{ route('admin.outstanding-alumni.destroy', $item->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="bg-white rounded-2xl flex justify-center items-center col-span-4">
+                    <i data-feather="inbox" class="h-8 me-2"></i>
+                    <p>Tidak ada alumni berprestasi ditemukan</p>
+                </div>
+            @endforelse
+
 
         </div>
 
-        <!-- CONTENT CARD WRAPPER -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border max-w-5xl mx-auto">
+        <!-- FOOTER TABLE -->
+        <div class="flex justify-between items-center text-sm text-gray-600 mt-4">
+            <p>Menampilkan 1 dari 1</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-
-                <!-- Card 1 -->
-                @forelse ($outstandingAlumni as $key => $item)
-                    <div class="bg-white rounded-2xl shadow-md overflow-hidden">
-                        <div class="h-28 overflow-hidden">
-                            <img src="{{ Vite::asset('resources/images/wave.svg') }}" class="h-40 w-full object-cover" alt="">
-                        </div>
-                        <div class="-mt-20 flex justify-center">
-                            @if ($item->alumni->user->photo_profile)
-                                <img src="{{ asset('storage/' .$item->alumni->user->photo_profile) }}"
-                                    alt="Photo of {{ $item->alumni->user->name }}" class="rounded-full border-4 border-white w-24 h-24 object-cover">
-                            @else
-                                N/A
-                            @endif
-                        </div>
-                        <div class="px-6 pb-6 pt-2">
-                            <p class="text-xs text-purple-600 font-medium">{{ $item->award_title }}</p>
-                            <h3 class="text-lg font-semibold mt-1">{{ $item->alumni->user->name }}</h3>
-                            <p class="text-sm text-gray-600 mb-2">{{ $item->alumni->major->name }}</p>
-                            {{-- <p class="text-sm font-medium text-gray-800"><i class="fa-solid me-1 fa-briefcase text-purple-600"></i>Apple Inc.</p> --}}
-                            <div class="flex justify-between gap-2">
-                                    <a href="{{ route('admin.outstanding-alumni.edit', $item->id) }}" class="mt-4 bg-purple-600 text-white px-2 py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center" title="Edit">
-                                        <i data-feather="edit-2" class="h-4"></i> Edit
-                                    </a>
-
-
-                                    <button type="button"
-                                            onclick="openDeleteModal({{ $item->id }})"
-                                            class="mt-4 bg-red-600 text-white px-2 py-2 rounded-md text-sm hover:bg-red-700 flex w-full items-center"
-                                            title="Delete">
-                                        <i data-feather="trash-2" class="text-red-300"></i>Hapus
-                                    </button>
-
-                                    <form id="delete-form-{{ $item->id }}"
-                                        action="{{ route('admin.outstanding-alumni.destroy', $item->id) }}"
-                                        method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
-
-
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="bg-white rounded-2xl flex justify-center items-center col-span-4">
-                        <i data-feather="inbox" class="h-8 me-2"></i>
-                        <p>Tidak ada alumni berprestasi ditemukan</p>
-                    </div>
-                @endforelse
-
-
-            </div>
-
-            <!-- FOOTER TABLE -->
-            <div class="flex justify-between items-center text-sm text-gray-600 mt-4">
-                <p>Menampilkan 1 dari 1</p>
-
-                <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2">
                 <button class="px-3 py-1 border border-gray-400 rounded hover:bg-gray-100">&lt;</button>
                 <button class="px-3 py-1 border border-gray-400 rounded hover:bg-gray-100">&gt;</button>
-                </div>
             </div>
-
         </div>
 
-            <!-- Tambahkan spacer bawah agar konten tidak mentok ke footer layar -->
-        <div class="h-12"></div>
+    </div>
+
+    <!-- Tambahkan spacer bawah agar konten tidak mentok ke footer layar -->
+    <div class="h-12"></div>
 
 
 
@@ -141,29 +145,31 @@
 
 
 
-        {{-- modal add alummi --}}
+    {{-- modal add alummi --}}
     <div id="addOutstandingAlumniModal"
-     class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50
             flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
 
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 transform scale-95 transition-transform duration-300">
+        <div
+            class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 transform scale-95 transition-transform duration-300">
 
             <div class="px-6 py-4 border-b flex justify-between items-center">
                 <h3 class="text-xl font-bold text-gray-900" id="addOutstandingAlumniModalLabel">
                     Tambah Alumni Berprestasi
                 </h3>
                 <button type="button" onclick="closeOutstandingAlumniModal()"
-                        class="text-gray-400 hover:text-gray-600 transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
                     </svg>
                 </button>
             </div>
 
             <div class="p-6">
                 <div class="mb-4">
-                    <input type="text" id="alumniSearch"
-                        placeholder="Cari alumni..."
+                    <input type="text" id="alumniSearch" placeholder="Cari alumni..."
                         class="w-full border border-gray-300 rounded-lg py-2 px-4 text-lg focus:ring-2 focus:ring-purple-500 focus:outline-none">
                 </div>
 
@@ -190,14 +196,15 @@
                                     @endif
 
                                     <div>
-                                        <h6 class="text-base font-semibold text-gray-900 mb-0">{{ $alumni->user->name }}</h6>
+                                        <h6 class="text-base font-semibold text-gray-900 mb-0">{{ $alumni->user->name }}
+                                        </h6>
                                         <small class="text-gray-500 block">{{ $alumni->major->name }}</small>
                                         <small class="text-gray-500 block">NIM: {{ $alumni->nim }}</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @empty
+                    @empty
                         <div class="col-span-full text-center text-gray-500 py-6">
                             <i data-feather="inbox" class="w-8 h-8 mx-auto mb-2 text-gray-400"></i>
                             <p class="mb-0">Tidak ada alumni tersedia</p>
@@ -209,7 +216,8 @@
                     @csrf
                     <input type="hidden" id="selectedAlumniId" name="alumni_id" value="{{ old('alumni_id') }}">
 
-                    <div class="p-3 bg-blue-100 text-blue-800 rounded-lg mb-4" id="selectedAlumniAlert" style="display: none;">
+                    <div class="p-3 bg-blue-100 text-blue-800 rounded-lg mb-4" id="selectedAlumniAlert"
+                        style="display: none;">
                         <strong id="selectedAlumniName"></strong> telah dipilih
                     </div>
 
@@ -228,11 +236,11 @@
 
                     <div class="flex justify-end gap-2">
                         <button type="button" onclick="closeOutstandingAlumniModal()"
-                                class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition">
+                            class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition">
                             Batal
                         </button>
                         <button type="submit" id="submitBtn" disabled
-                                class="flex items-center px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition disabled:opacity-50">
+                            class="flex items-center px-4 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition disabled:opacity-50">
                             <i data-feather="save" class="w-4 h-4 mr-2"></i>
                             Simpan
                         </button>
@@ -262,12 +270,12 @@
 
             <div class="flex justify-between space-x-4">
                 <button onclick="closeDeleteModal()"
-                        class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
+                    class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
                     Batal
                 </button>
 
                 <button onclick="submitDeleteForm()"
-                        class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+                    class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
                     Ya, Hapus!
                 </button>
             </div>
@@ -482,6 +490,5 @@
                 form.submit(); // <-- INI YANG MENJAMIN SUBMIT
             }
         }
-
     </script>
 @endpush

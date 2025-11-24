@@ -65,8 +65,7 @@
 
             <!-- Bagian Kanan: Gambar -->
             <div class="hidden lg:block lg:w-1/2 relative">
-                <img src="{{ Vite::asset('resources/images/cover.jpg') }}" alt="Kampus IPB"
-                    class="object-cover w-full h-full">
+                <img src="{{ asset('resources/images/cover.jpg') }}" alt="Kampus IPB" class="object-cover w-full h-full">
             </div>
         </div>
     </div>

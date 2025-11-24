@@ -6,8 +6,7 @@
 
 
     <section id="beranda" class="relative w-full h-[70vh] flex items-center justify-center text-center text-white">
-        <img src="{{ Vite::asset('resources/images/hero.png') }}" alt="Hero"
-            class="absolute inset-0 w-full h-full object-cover">
+        <img src="{{ asset('resources/images/hero.png') }}" alt="Hero" class="absolute inset-0 w-full h-full object-cover">
         <div class="relative z-10 px-4">
             <h1 data-aos="fade-up" data-aos-duration="1000" class="text-2xl md:text-4xl font-bold mb-3">Selamat datang di Web
                 Alumni TPL</h1>
@@ -30,7 +29,7 @@
                 @forelse($outstandingAlumni as $alumni)
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden w-full sm:w-64">
                         <div class="h-28 overflow-hidden">
-                            <img src="{{ Vite::asset('resources/images/wave.svg') }}" class="h-40 w-full object-cover"
+                            <img src="{{ asset('resources/images/wave.svg') }}" class="h-40 w-full object-cover"
                                 alt="">
                         </div>
                         <div class="-mt-20 flex justify-center">

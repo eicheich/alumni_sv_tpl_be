@@ -15,6 +15,14 @@ use App\Http\Controllers\Web\UserGuest\OutstandingAlumniController as GuestOutst
 use App\Http\Controllers\Web\UserGuest\AboutController;
 use Phiki\Phast\Root;
 
+Route::get('resources/images/{path}', function ($path) {
+    $path = resource_path('images/' . $path);
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    return response()->file($path);
+})->where('path', '.*');
+
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/tentang', [AboutController::class, 'index'])->name('about.index');
 // prefix admin
