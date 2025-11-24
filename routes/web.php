@@ -38,32 +38,32 @@ Route::prefix('admin')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard.index');
         Route::prefix('alumni')->group(function () {
             Route::get('/', [AlumniController::class, 'index'])->name('admin.alumni.index');
-            Route::get('/export-excel', [AlumniController::class, 'exportExcel'])->name('admin.alumni.exportExcel');
-            Route::get('/{id}', [AlumniController::class, 'show'])->name('admin.alumni.show');
-            Route::get('/{id}/edit', [AlumniController::class, 'edit'])->name('admin.alumni.edit');
+            Route::post('/export-excel', [AlumniController::class, 'exportExcel'])->name('admin.alumni.exportExcel');
+            Route::get('/{encrypted_id}', [AlumniController::class, 'show'])->name('admin.alumni.show');
+            Route::get('/{encrypted_id}/edit', [AlumniController::class, 'edit'])->name('admin.alumni.edit');
             Route::post('/store-alumni', [AlumniController::class, 'addAlumni'])->name('admin.alumni.store');
-            Route::put('/{id}', [AlumniController::class, 'update'])->name('admin.alumni.update');
-            Route::delete('/{id}', [AlumniController::class, 'destroy'])->name('admin.alumni.destroy');
+            Route::put('/{encrypted_id}', [AlumniController::class, 'update'])->name('admin.alumni.update');
+            Route::delete('/{encrypted_id}', [AlumniController::class, 'destroy'])->name('admin.alumni.destroy');
         });
         Route::prefix('informasi')->group(function () {
             Route::get('/', [InformationController::class, 'index'])->name('admin.information.index');
-            Route::get('/show/{id}', [InformationController::class, 'show'])->name('admin.information.show');
+            Route::get('/show/{encrypted_id}', [InformationController::class, 'show'])->name('admin.information.show');
             Route::post('/store-information', [InformationController::class, 'storeInformation'])->name('admin.information.store');
-            Route::get('/{id}/edit', [InformationController::class, 'editInformation'])->name('admin.information.edit');
-            Route::put('/{id}/update', [InformationController::class, 'updateInformation'])->name('admin.information.update');
-            Route::delete('/{id}', [InformationController::class, 'deleteInformation'])->name('admin.information.destroy');
+            Route::get('/{encrypted_id}/edit', [InformationController::class, 'editInformation'])->name('admin.information.edit');
+            Route::put('/{encrypted_id}/update', [InformationController::class, 'updateInformation'])->name('admin.information.update');
+            Route::delete('/{encrypted_id}', [InformationController::class, 'deleteInformation'])->name('admin.information.destroy');
             Route::post('/gallery', [InformationController::class, 'storeGallery'])->name('admin.information.gallery.store');
-            Route::delete('/gallery/{id}', [InformationController::class, 'deleteGallery'])->name('admin.information.gallery.destroy');
+            Route::delete('/gallery/{encrypted_id}', [InformationController::class, 'deleteGallery'])->name('admin.information.gallery.destroy');
             Route::post('category/store', [InformationCategoryController::class, 'storeCategory'])->name('admin.information.category.store');
-            Route::put('information-category/{id}/update', [InformationCategoryController::class, 'updateCategory'])->name('admin.information.category.update');
-            Route::delete('information-category/{id}/destroy', [InformationCategoryController::class, 'destroyCategory'])->name('admin.information.category.destroy');
+            Route::put('information-category/{encrypted_id}/update', [InformationCategoryController::class, 'updateCategory'])->name('admin.information.category.update');
+            Route::delete('information-category/{encrypted_id}/destroy', [InformationCategoryController::class, 'destroyCategory'])->name('admin.information.category.destroy');
         });
         Route::prefix('alumni-berprestasi')->group(function () {
             Route::get('/', [OutstandingAlumniController::class, 'index'])->name('admin.outstanding-alumni.index');
             Route::post('/store', [OutstandingAlumniController::class, 'store'])->name('admin.outstanding-alumni.store');
-            Route::get('/{id}/edit', [OutstandingAlumniController::class, 'edit'])->name('admin.outstanding-alumni.edit');
-            Route::put('/{id}', [OutstandingAlumniController::class, 'update'])->name('admin.outstanding-alumni.update');
-            Route::delete('/{id}', [OutstandingAlumniController::class, 'destroy'])->name('admin.outstanding-alumni.destroy');
+            Route::get('/{encrypted_id}/edit', [OutstandingAlumniController::class, 'edit'])->name('admin.outstanding-alumni.edit');
+            Route::put('/{encrypted_id}', [OutstandingAlumniController::class, 'update'])->name('admin.outstanding-alumni.update');
+            Route::delete('/{encrypted_id}', [OutstandingAlumniController::class, 'destroy'])->name('admin.outstanding-alumni.destroy');
         });
     });
 });
@@ -108,4 +108,5 @@ Route::get('/informasi', [GuestInformationController::class, 'index'])->name('in
 Route::get('/informasi/{id}', [GuestInformationController::class, 'show'])->name('information.show');
 
 // Outstanding Alumni pages for guest/public
+Route::get('/alumni-berprestasi', [GuestOutstandingAlumniController::class, 'index'])->name('outstanding-alumni.index');
 Route::get('/alumni-berprestasi/{id}', [GuestOutstandingAlumniController::class, 'show'])->name('outstanding-alumni.show');

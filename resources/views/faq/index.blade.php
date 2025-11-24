@@ -4,14 +4,20 @@
 
 @section('content')
 
+    <!-- Hero Section -->
+    <section class="relative bg-cover bg-center py-32"
+        style="background-image: url('{{ asset('resources/images/hero.png') }}');">
+        <div class="absolute inset-0 bg-purple-900 bg-opacity-70"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white">FAQ</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto text-white">
+                Pertanyaan yang sering ditanyakan tentang Website Alumni Teknologi Rekayasa Perangkat Lunak SV IPB
+            </p>
+        </div>
+    </section>
+
     <div class="min-h-screen bg-gray-50 py-12">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
-                <p class="text-lg text-gray-600">Temukan jawaban untuk pertanyaan yang sering ditanyakan tentang sistem
-                    alumni TRPL SV IPB</p>
-            </div>
-
             <div class="space-y-6">
                 <!-- FAQ Item 1 -->
                 <div class="bg-white rounded-lg shadow-md">

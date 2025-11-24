@@ -93,12 +93,12 @@
 
 
                                             <div class="flex gap-2">
-                                                <a href="{{ route('admin.information.show', $info->id) }}"
+                                                <a href="{{ route('admin.information.show', encrypt($info->id)) }}"
                                                     class=" bg-blue-600 text-white py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center justify-center"
                                                     title="Edit">
                                                     <i data-feather="eye" class="w-4 mr-1"></i> Lihat
                                                 </a>
-                                                <a href="{{ route('admin.information.edit', $info->id) }}"
+                                                <a href="{{ route('admin.information.edit', encrypt($info->id)) }}"
                                                     class=" bg-purple-600 text-white py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center justify-center"
                                                     title="Edit">
                                                     <i data-feather="edit-2" class="w-4 mr-1"></i> Edit
@@ -112,7 +112,7 @@
                                                 </button>
 
                                                 <form id="delete-form-{{ $info->id }}"
-                                                    action="{{ route('admin.information.destroy', $info->id) }}"
+                                                    action="{{ route('admin.information.destroy', encrypt($info->id)) }}"
                                                     method="POST">
                                                     @csrf
                                                     @method('DELETE')
@@ -133,7 +133,7 @@
 
                         @if ($informations->hasPages())
                             <div class="mt-4 flex justify-center">
-                                {{ $informations->links('vendor.pagination.tailwind') }}
+                                {{ $informations->links('components.pagination') }}
 
                             </div>
                         @endif
@@ -178,26 +178,26 @@
                                     @forelse($informationCategories ?? [] as $i => $category)
                                         <tr>
                                             <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                                                {{ $i + 1 }}</td>
+                                                {{ $informationCategories->firstItem() + $i }}</td>
                                             <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
                                                 {{ $category->name }}</td>
                                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-1">
                                                     <button type="button"
                                                         class="text-indigo-600 hover:text-indigo-900 p-1 rounded-md border border-indigo-600 hover:bg-indigo-50 text-xs transition duration-150 ease-in-out"
-                                                        onclick="openEditModal({{ $category->id }}, '{{ $category->name }}');"
+                                                        onclick="openEditModal('{{ encrypt($category->id) }}', '{{ $category->name }}');"
                                                         title="Edit Kategori">
                                                         <i data-feather="edit" class="w-4 h-4"></i>
                                                     </button>
 
                                                     <button type="button"
-                                                        onclick="openDeleteCategoryModal({{ $category->id }}, 'delete-form-category-{{ $category->id }}')"
+                                                        onclick="openDeleteCategoryModal('{{ encrypt($category->id) }}', 'delete-form-category-{{ $category->id }}')"
                                                         class="text-red-600 hover:text-red-900 p-1 rounded-md border border-red-600 hover:bg-red-50 text-xs transition duration-150 ease-in-out"
                                                         title="Hapus Kategori">
                                                         <i data-feather="trash-2" class="w-4 h-4"></i>
                                                     </button>
                                                     <form id="delete-form-category-{{ $category->id }}"
-                                                        action="{{ route('admin.information.category.destroy', $category->id) }}"
+                                                        action="{{ route('admin.information.category.destroy', encrypt($category->id)) }}"
                                                         method="POST" class="hidden">
                                                         @csrf
                                                         @method('DELETE')
@@ -213,6 +213,11 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                        </div>
+
+                        {{-- Pagination for Categories --}}
+                        <div class="mt-4 flex justify-center">
+                            {{ $informationCategories->links('components.pagination') }}
                         </div>
                     </div>
                 </div>
@@ -413,30 +418,47 @@
                         <div class="">
                             <input type="file" id="photo-upload" name="photo"
                                 class="hidden @error('photo') border-red-500 @enderror" accept="image/*"
-                                onchange="document.getElementById('photo-image-preview').src = window.URL.createObjectURL(this.files[0])">
+                                onchange="previewImage(this)">
 
-                            <label for="photo-upload"
-                                class="relative w-full h-20 overflow-hidden
-                                    border-2 border-gray-200 hover:border-indigo-500
-                                    cursor-pointer bg-gray-100 shadow-md transition duration-300 group">
+                            <div class="relative">
+                                <label for="photo-upload"
+                                    class="relative w-full h-32 overflow-hidden
+                                        border-2 border-gray-200 hover:border-purple-500
+                                        cursor-pointer bg-gray-50 shadow-md transition duration-300 group rounded-lg">
 
-                                <img id="photo-image-preview"
-                                    src="https://via.placeholder.com/150/f0f0f0?text=Unggah+Sampul"
-                                    alt="Pratinjau Sampul Foto" class="w-full h-full object-cover">
+                                    <img id="photo-image-preview"
+                                        src="https://via.placeholder.com/400x200/f0f0f0/666666?text=Klik+untuk+Unggah+Sampul"
+                                        alt="Pratinjau Sampul Foto" class="w-full h-full object-cover">
 
-                                <div
-                                    class="absolute inset-0 bg-black bg-opacity-40
-                                            flex items-center justify-center opacity-30 group-hover:opacity-50
-                                            transition duration-300">
-                                    <i data-feather="camera" class="w-8 h-8 text-white"></i>
-                                </div>
-                            </label>
+                                    <div id="upload-overlay"
+                                        class="absolute inset-0 bg-black bg-opacity-40
+                                                flex items-center justify-center opacity-0 group-hover:opacity-100
+                                                transition duration-300 pointer-events-none">
+                                        <div class="text-center text-white">
+                                            <i data-feather="camera" class="w-8 h-8 mx-auto mb-2"></i>
+                                            <p class="text-sm font-medium">Klik untuk unggah foto</p>
+                                        </div>
+                                    </div>
+                                </label>
 
-                            <label for="photo-upload"
-                                class="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium cursor-pointer flex items-center gap-2">
-                                <i data-feather="camera" class="w-4 h-4"></i>
-                                Unggah Sampul Foto
-                            </label>
+                                <!-- Remove image button (shown when image is selected) -->
+                                <button type="button" id="remove-photo-btn"
+                                    class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6
+                                           flex items-center justify-center opacity-0 transition-opacity duration-200
+                                           hover:bg-red-600 shadow-lg z-10"
+                                    onclick="removeImage()" title="Hapus foto">
+                                    <i data-feather="x" class="w-3 h-3"></i>
+                                </button>
+                            </div>
+
+                            <div class="mt-3 flex items-center justify-between">
+                                <label for="photo-upload"
+                                    class="text-purple-600 hover:text-purple-800 text-sm font-medium cursor-pointer flex items-center gap-2">
+                                    <i data-feather="camera" class="w-4 h-4"></i>
+                                    Unggah Sampul Foto
+                                </label>
+                                <span class="text-xs text-gray-500">Max: 2MB (JPG, PNG, GIF)</span>
+                            </div>
                             @error('photo')
                                 <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                             @enderror
@@ -577,14 +599,73 @@
                     closeAddInformationModal();
                 }
             });
+
+            // Form validation
+            const form = modal.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const title = form.querySelector('#title').value.trim();
+                    const category = form.querySelector('#information_category_id').value;
+                    const content = form.querySelector('#content').value.trim();
+
+                    if (!title) {
+                        e.preventDefault();
+                        alert('Judul informasi harus diisi.');
+                        return false;
+                    }
+
+                    if (!category) {
+                        e.preventDefault();
+                        alert('Kategori harus dipilih.');
+                        return false;
+                    }
+
+                    if (!content) {
+                        e.preventDefault();
+                        alert('Konten informasi harus diisi.');
+                        return false;
+                    }
+                });
+            }
         });
 
         function openAddInformationModal() {
             const modal = document.getElementById('addInformationModal');
             if (modal) {
+                // Reset form when opening modal
+                const form = modal.querySelector('form');
+                if (form) {
+                    form.reset();
+                }
+
+                // Reset image preview to placeholder
+                const previewImg = document.getElementById('photo-image-preview');
+                if (previewImg) {
+                    previewImg.src = 'https://via.placeholder.com/400x200/f0f0f0/666666?text=Klik+untuk+Unggah+Sampul';
+                }
+
+                // Reset overlay to allow hover effects
+                const overlay = document.getElementById('upload-overlay');
+                if (overlay) {
+                    overlay.style.opacity = '';
+                }
+
+                // Reset remove button
+                const removeBtn = document.getElementById('remove-photo-btn');
+                if (removeBtn) {
+                    removeBtn.style.opacity = '0';
+                }
+
                 modal.classList.remove('hidden');
                 modal.classList.add('flex'); // Gunakan 'flex' untuk menampilkan modal
                 document.body.classList.add('overflow-hidden'); // Mencegah scrolling body saat modal terbuka
+
+                // Reinitialize feather icons
+                setTimeout(() => {
+                    if (typeof feather !== 'undefined') {
+                        feather.replace();
+                    }
+                }, 100);
             }
         }
 
@@ -594,6 +675,68 @@
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
                 document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+
+
+
+        // Image preview and management functions
+        function previewImage(input) {
+            const preview = document.getElementById('photo-image-preview');
+            const overlay = document.getElementById('upload-overlay');
+            const removeBtn = document.getElementById('remove-photo-btn');
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+
+                // Validate file type
+                if (!file.type.match('image.*')) {
+                    alert('Harap pilih file gambar yang valid.');
+                    input.value = '';
+                    return;
+                }
+
+                // Validate file size (2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Ukuran file maksimal 2MB.');
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    // Hide overlay permanently when image is selected
+                    if (overlay) overlay.style.opacity = '0';
+                    if (removeBtn) {
+                        removeBtn.style.opacity = '1';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            const input = document.getElementById('photo-upload');
+            const preview = document.getElementById('photo-image-preview');
+            const overlay = document.getElementById('upload-overlay');
+            const removeBtn = document.getElementById('remove-photo-btn');
+
+            // Reset input
+            input.value = '';
+
+            // Reset preview to placeholder
+            preview.src = 'https://via.placeholder.com/400x200/f0f0f0/666666?text=Klik+untuk+Unggah+Sampul';
+
+            // Reset overlay to allow hover effects again
+            if (overlay) {
+                overlay.style.opacity = '';
+            }
+
+            // Hide remove button
+            if (removeBtn) {
+                removeBtn.style.opacity = '0';
             }
         }
 

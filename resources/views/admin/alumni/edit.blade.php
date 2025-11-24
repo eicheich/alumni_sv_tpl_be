@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="mb-4">
-        <a href="{{ route('admin.alumni.show', $alumni->id) }}"
+        <a href="{{ route('admin.alumni.show', encrypt($alumni->id)) }}"
             class="inline-flex items-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150">
 
             <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i>
@@ -19,43 +19,48 @@
             <h2 class="text-xl font-semibold mb-4 border-b">Edit Alumni</h2>
 
             <!-- FORM -->
-            <form action="{{ route('admin.alumni.update', $alumni->id) }}" method="POST" enctype="multipart/form-data"
-                class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form action="{{ route('admin.alumni.update', encrypt($alumni->id)) }}" method="POST"
+                enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @csrf
                 @method('PUT')
                 <!-- FOTO -->
                 <div class="flex flex-col col-span-2 justify-center items-center mb-4">
+                    <input type="file" id="profile-upload" name="photo_profile"
+                        class="hidden @error('photo_profile') border border-red-500 @enderror" accept="image/*"
+                        onchange="document.getElementById('profile-image-preview').src = window.URL.createObjectURL(this.files[0])">
 
-                    @if ($alumni->user->photo_profile)
-                        <input type="file" id="profile-upload" name="photo_profile"
-                            class="hidden @error('photo_profile') border border-red-500 @enderror" accept="image/*"
-                            onchange="document.getElementById('profile-image-preview').src = window.URL.createObjectURL(this.files[0])">
+                    <label for="profile-upload"
+                        class="relative w-24 h-24 rounded-full overflow-hidden
+                                border-4 border-gray-300 hover:border-indigo-500
+                                cursor-pointer bg-gray-100 shadow-md transition duration-300 group">
 
-                        <label for="profile-upload"
-                            class="relative w-24 h-24 rounded-full overflow-hidden
-                                    border-4 border-gray-300 hover:border-indigo-500
-                                    cursor-pointer bg-gray-100 shadow-md transition duration-300 group">
-
+                        @if ($alumni->user->photo_profile)
                             <img id="profile-image-preview" src="{{ asset('storage/' . $alumni->user->photo_profile) }}"
-                                alt=""{{ $alumni->user->name }}" class="w-full h-full object-cover">
+                                alt="{{ $alumni->user->name }}" class="w-full h-full object-cover">
+                        @else
+                            <img id="profile-image-preview" src="https://via.placeholder.com/150/f0f0f0?text=Pilih+Foto"
+                                alt="Pratinjau Foto Profil" class="w-full h-full object-cover">
+                        @endif
 
-                            <div
-                                class="absolute inset-0 bg-black bg-opacity-40
-                                        flex items-center justify-center opacity-0 group-hover:opacity-100
-                                        transition duration-300">
-                                <i data-feather="camera" class="w-8 h-8 text-white"></i>
-                            </div>
-                        </label>
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-40
+                                    flex items-center justify-center opacity-0 group-hover:opacity-100
+                                    transition duration-300">
+                            <i data-feather="camera" class="w-8 h-8 text-white"></i>
+                        </div>
+                    </label>
 
-                        <label for="profile-upload"
-                            class="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium cursor-pointer">
+                    <label for="profile-upload"
+                        class="mt-4 text-indigo-600 hover:text-indigo-800 text-sm font-medium cursor-pointer">
+                        @if ($alumni->user->photo_profile)
                             Ubah Foto Profil
-                        </label>
-                        @error('photo_profile')
-                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                        @enderror
-                    @endif
-
+                        @else
+                            Tambah Foto Profil
+                        @endif
+                    </label>
+                    @error('photo_profile')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div>
@@ -92,8 +97,23 @@
                     <label class="block text-sm text-gray-700 mb-1">Tahun Lulus</label>
                     <input id="graduation_year" name="graduation_year" type="number" placeholder="cth. 2024"
                         class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none @error('graduation_year') border border-red-500 @enderror"
-                        value="{{ old('graduation_year', $alumni->graduation_year) }}">
+                        value="{{ old('graduation_year', $alumni->educationalBackgrounds->first()->graduation_year ?? '') }}">
                     @error('graduation_year')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-700 mb-1">Jenis Kelamin</label>
+                    <select id="gender" name="gender"
+                        class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none @error('gender') border border-red-500 @enderror">
+                        <option value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="L" {{ old('gender', $alumni->gender) === 'L' ? 'selected' : '' }}>Laki-laki
+                        </option>
+                        <option value="P" {{ old('gender', $alumni->gender) === 'P' ? 'selected' : '' }}>Perempuan
+                        </option>
+                    </select>
+                    @error('gender')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
                 </div>
@@ -138,7 +158,7 @@
                 </div>
 
                 <!-- Tombol -->
-                <a href="{{ route('admin.alumni.show', $alumni->id) }}"
+                <a href="{{ route('admin.alumni.show', encrypt($alumni->id)) }}"
                     class="w-full py-2 bg-gray-200 text-black rounded-lg font-medium hover:opacity-90 transition text-center">Batal</a>
                 <button type="submit"
                     class="w-full py-2 bg-purple-600 text-white rounded-lg font-medium hover:opacity-90 transition">Simpan</button>

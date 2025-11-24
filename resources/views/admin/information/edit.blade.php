@@ -22,8 +22,8 @@
         <h2 class="text-xl font-semibold mb-4 border-b">Formulir Edit Informasi</h2>
 
 
-        <form action="{{ route('admin.information.update', $information->id) }}" method="POST" enctype="multipart/form-data"
-            class="space-y-6">
+        <form action="{{ route('admin.information.update', encrypt($information->id)) }}" method="POST"
+            enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
             {{-- Pastikan Anda menggunakan method PUT untuk update --}}

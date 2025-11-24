@@ -25,8 +25,9 @@ class InformationCategoryController extends Controller
         return redirect()->route('admin.information.index')->with('success', 'Category created successfully.');
     }
 
-    public function updateCategory(Request $request, $id)
+    public function updateCategory(Request $request, $encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $request->validate([
             'name' => 'required|string|max:255|unique:information_categories,name,' . $id,
         ]);
@@ -43,8 +44,9 @@ class InformationCategoryController extends Controller
         return redirect()->route('admin.information.index')->with('success', 'Category updated successfully.');
     }
 
-    public function destroyCategory($id)
+    public function destroyCategory($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $category = InformationCategory::findOrFail($id);
         try {
             $category->delete();

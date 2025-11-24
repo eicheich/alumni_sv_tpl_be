@@ -1,144 +1,140 @@
 @extends('layouts.guest')
 
 @section('content')
-
-    <section id="informasi" class="bg-gray-100 pb-28">
-        <div class="min-h-screen flex flex-col">
-
-            <!-- Header Gradasi -->
-            <div class="bg-indigo-500 h-32 flex flex-col items-center justify-end pb-6 relative">
-
-                <!-- Foto Profil -->
-                @if ($outstandingAlumni->alumni->user->photo_profile)
-                    <img src="{{ asset('storage/' . $outstandingAlumni->alumni->user->photo_profile) }}"
-                        alt="{{ $outstandingAlumni->alumni->user->name }}"
-                        class="w-28 h-28 object-cover rounded-lg border-4 border-white shadow-lg absolute -bottom-14">
-                @else
-                    <div class="w-28 h-28 bg-gray-300 rounded-lg border-4 border-white shadow-lg absolute -bottom-14
-                                flex items-center justify-center">
-                        <i data-feather="user" class="w-10 h-10 text-white"></i>
+    <div class="min-h-screen bg-gray-50">
+        <!-- Profile Header -->
+        <div class="bg-white shadow-sm">
+            <div class="max-w-4xl mx-auto px-4 py-8">
+                <div class="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
+                    <!-- Profile Photo -->
+                    <div class="relative">
+                        @if ($outstandingAlumni->alumni->user->photo_profile)
+                            <img src="{{ asset('storage/' . $outstandingAlumni->alumni->user->photo_profile) }}"
+                                alt="{{ $outstandingAlumni->alumni->user->name ?? 'Alumni' }}"
+                                class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-gray-200">
+                        @else
+                            <div
+                                class="w-24 h-24 md:w-32 md:h-32 bg-gray-200 rounded-full border-4 border-gray-200 flex items-center justify-center">
+                                <i data-feather="user" class="w-12 h-12 md:w-16 md:h-16 text-gray-400"></i>
+                            </div>
+                        @endif
                     </div>
-                @endif
 
-            </div>
-
-            <!-- Konten Profil -->
-            <div class="mt-20 flex flex-col items-center px-4 text-center">
-                <p class="text-sm text-gray-500">Nama Lengkap</p>
-                <h1 class="text-lg font-semibold text-gray-800">
-                    {{ $outstandingAlumni->alumni->user->name }}
-                </h1>
-
-                <!-- Badge Award -->
-                <span class="mt-2 px-4 py-1 rounded-full text-white text-sm
-                            bg-purple-600">
-                    {{ $outstandingAlumni->award_title }}
-                </span>
-
-                <!-- Kontak -->
-                <div class="mt-6 text-sm text-gray-600 space-y-1">
-                    <p>Prodi:
-                        <span class="font-semibold">
+                    <!-- Profile Info -->
+                    <div class="text-center md:text-left flex-1">
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+                            {{ $outstandingAlumni->alumni->user->name ?? 'Nama Alumni' }}
+                        </h1>
+                        <p class="text-gray-600 mb-3">
                             {{ $outstandingAlumni->alumni->major->name ?? 'Program Studi' }}
+                        </p>
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                            {{ $outstandingAlumni->award_title ?? 'Alumni Berprestasi' }}
                         </span>
-                    </p>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Bagian Riwayat -->
-            <div class="max-w-5xl w-full mx-auto px-6 md:px-40 mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Content -->
+        <div class="max-w-4xl mx-auto px-4 py-8">
+            <!-- Achievement Description -->
+            @if ($outstandingAlumni->description)
+                <div class="bg-white rounded-lg p-6 mb-8 shadow-sm">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-3">Tentang Penghargaan</h2>
+                    <div class="text-gray-700 leading-relaxed">{!! make_links_clickable(nl2br(e($outstandingAlumni->description))) !!}</div>
+                </div>
+            @endif
 
-                <!-- Riwayat Karir -->
-                <div>
-                    <h2 class="text-gray-500 font-medium mb-4">Riwayat Karir</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Career History -->
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <i data-feather="briefcase" class="w-5 h-5 mr-2 text-gray-500"></i>
+                        Riwayat Karir
+                    </h2>
 
                     @if ($outstandingAlumni->alumni->careers->count() > 0)
-                        @foreach ($outstandingAlumni->alumni->careers as $career)
-                            <div class="mb-6">
-                                <p class="text-sm text-gray-500">Nama pekerjaan</p>
-                                <p class="font-semibold text-gray-800">{{ $career->position }}</p>
-
-                                <p class="text-sm text-gray-500 mt-1">Nama perusahaan</p>
-                                <p class="font-semibold text-gray-800">{{ $career->company_name }}</p>
-
-                                <div class="flex items-center gap-6 mt-2 text-sm">
-
-                                    <p>
-                                        <span class="text-gray-500">Tahun masuk:</span>
-                                        <span class="font-semibold">
-                                            {{ \Carbon\Carbon::parse($career->start_date)->format('Y') }}
-                                        </span>
-                                    </p>
-
-                                    @if ($career->end_date)
-                                        <p>
-                                            <span class="text-gray-500">Tahun keluar:</span>
-                                            <span class="font-semibold">
-                                                {{ \Carbon\Carbon::parse($career->end_date)->format('Y') }}
-                                            </span>
+                        <div class="space-y-4">
+                            @foreach ($outstandingAlumni->alumni->careers as $career)
+                                <div class="pb-4 border-b border-gray-100 last:border-b-0 last:pb-0">
+                                    <div class="mb-2">
+                                        <span class="text-xs text-gray-500 uppercase tracking-wide">Posisi</span>
+                                        <h3 class="font-medium text-gray-900">{{ $career->position ?? 'Posisi' }}</h3>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="text-xs text-gray-500 uppercase tracking-wide">Perusahaan</span>
+                                        <p class="text-gray-600 text-sm">{{ $career->company_name ?? 'Perusahaan' }}</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-gray-500 uppercase tracking-wide">Periode</span>
+                                        <p class="text-gray-500 text-xs">
+                                            {{ \Carbon\Carbon::parse($career->start_date)->format('M Y') }}
+                                            @if ($career->end_date)
+                                                - {{ \Carbon\Carbon::parse($career->end_date)->format('M Y') }}
+                                            @else
+                                                - Sekarang
+                                            @endif
                                         </p>
-                                    @else
-                                        <p>
-                                            <span class="text-gray-500">Status:</span>
-                                            <span class="font-semibold text-green-600">Aktif</span>
-                                        </p>
-                                    @endif
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @else
-                        <p class="text-gray-500">Belum ada data karir</p>
+                        <p class="text-gray-500 text-sm">Belum ada data karir</p>
                     @endif
                 </div>
 
-                <!-- Riwayat Pendidikan -->
-                <div>
-                    <h2 class="text-gray-500 font-medium mb-4">Riwayat Pendidikan</h2>
+                <!-- Education History -->
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <i data-feather="book" class="w-5 h-5 mr-2 text-gray-500"></i>
+                        Riwayat Pendidikan
+                    </h2>
 
                     @if ($outstandingAlumni->alumni->educationalBackgrounds->count() > 0)
-                        @foreach ($outstandingAlumni->alumni->educationalBackgrounds as $education)
-                            <div class="mb-6">
-                                <p class="text-sm text-gray-500">Jenjang</p>
-                                <p class="font-semibold text-gray-800">{{ $education->degree }}</p>
-
-                                <p class="text-sm text-gray-500 mt-1">Instansi</p>
-                                <p class="font-semibold text-gray-800">{{ $education->institution_name }}</p>
-
-                                <div class="flex items-center gap-6 mt-2 text-sm">
-                                    <p>
-                                        <span class="text-gray-500">Tahun masuk:</span>
-                                        <span class="font-semibold">{{ $education->entry_year }}</span>
-                                    </p>
-                                    <p>
-                                        <span class="text-gray-500">Tahun lulus:</span>
-                                        <span class="font-semibold">{{ $education->graduation_year }}</span>
-                                    </p>
+                        <div class="space-y-4">
+                            @foreach ($outstandingAlumni->alumni->educationalBackgrounds as $education)
+                                <div class="pb-4 border-b border-gray-100 last:border-b-0 last:pb-0">
+                                    <div class="mb-2">
+                                        <span class="text-xs text-gray-500 uppercase tracking-wide">Jurusan</span>
+                                        <h3 class="font-medium text-gray-900">{{ $education->major ?? 'Jurusan' }}</h3>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="text-xs text-gray-500 uppercase tracking-wide">Institusi</span>
+                                        <p class="text-gray-600 text-sm">{{ $education->institution_name ?? 'Institusi' }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs text-gray-500 uppercase tracking-wide">Tahun</span>
+                                        <p class="text-gray-500 text-xs">
+                                            {{ $education->entry_year ?? '-' }} - {{ $education->graduation_year ?? '-' }}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @else
-                        <p class="text-gray-500">Belum ada data pendidikan</p>
+                        <p class="text-gray-500 text-sm">Belum ada data pendidikan</p>
                     @endif
                 </div>
             </div>
 
-            <!-- Tombol Kembali -->
-            <div class="text-center mt-10 relative z-99">
-                <a href="{{ route('index') }}#alumni-berprestasi"
-                    class="px-4 py-2 border border-gray-400 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
-                    ← Kembali ke Beranda
+            <!-- Back Button -->
+            <div class="mt-6 relative z-99">
+                <a href="{{ route('index') }}"
+                    class="inline-flex items-center px-4 py-2 border border-gray-400 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition">
+                    ← Kembali ke beranda
                 </a>
             </div>
-
         </div>
-    </section>
 
+        @include('components.landing-footer')
 
-    @include('components.landing-footer')
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            feather.replace();
-        });
-    </script>
-@endsection
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                feather.replace();
+            });
+        </script>
+    @endsection

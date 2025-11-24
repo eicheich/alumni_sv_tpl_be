@@ -4,49 +4,48 @@
 
 @section('content')
     <div class="mb-4">
-        <a href="{{ route('admin.alumni.index') }}" 
-        class="inline-flex items-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150">
-            
+        <a href="{{ route('admin.alumni.index') }}"
+            class="inline-flex items-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150">
+
             <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i>
-            
+
             Kembali
         </a>
     </div>
     <section id="informasi" class="bg-gray-100">
         <div class="lg:col-span-2 space-y-6">
-            
+
             <div class="relative p-6 bg-white rounded-lg shadow-md">
                 <div class="flex justify-between items-center mb-4">
-    
+
                     <h2 class="text-xl font-bold text-gray-800">Detail pengguna</h2>
-                    
-                    
+
+
                     <div class="flex space-x-2">
-                        
-                        <a href="{{ route('admin.alumni.edit', $alumni->id) }}" class="bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition duration-150 flex items-center">
+
+                        <a href="{{ route('admin.alumni.edit', encrypt($alumni->id)) }}"
+                            class="bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition duration-150 flex items-center">
                             <i data-feather="edit-2" class="text-gray-300 mr-1 w-4"></i>
                             Ubah data diri
                         </a>
 
-                        
-                        <button type="button"
-                                onclick="openDeleteModal({{ $alumni->id }})"
-                                class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition duration-150 flex items-center"
-                                title="Delete">
+
+                        <button type="button" onclick="openDeleteModal({{ $alumni->id }})"
+                            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition duration-150 flex items-center"
+                            title="Delete">
                             <i data-feather="trash-2" class="text-red-300 mr-1 w-4"></i> Hapus profil
                         </button>
 
                         <form id="delete-form-{{ $alumni->id }}"
-                            action="{{ route('admin.alumni.destroy', $alumni->id) }}"
-                            method="POST">
+                            action="{{ route('admin.alumni.destroy', encrypt($alumni->id)) }}" method="POST">
                             @csrf
                             @method('DELETE')
                         </form>
-                        
+
                     </div>
-                    
+
                 </div>
-                
+
                 <div class="overflow-hidden mb-4">
                     @if ($alumni->user->photo_profile)
                         <img src="{{ asset('storage/' . $alumni->user->photo_profile) }}" alt="{{ $alumni->user->name }}"
@@ -59,26 +58,28 @@
                 </div>
 
                 <p class="text-gray-600 mb-3 text-sm">
-                    <span class="inline-flex items-center 
-                                py-1 px-2 rounded-full text-xs font-medium 
-                                mr-2 
+                    <span
+                        class="inline-flex items-center
+                                py-1 px-2 rounded-full text-xs font-medium
+                                mr-2
                                 {{ $alumni->is_active ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700' }}">
-                        
+
                         {{ $alumni->is_active ? 'Sudah Aktivasi Akun' : 'Belum Aktivasi Akun' }}
-                        
+
                     </span>
-                    
-                    <span class="inline-flex items-center 
-                                py-1 px-2 rounded-full text-xs font-medium 
+
+                    <span
+                        class="inline-flex items-center
+                                py-1 px-2 rounded-full text-xs font-medium
                                 bg-blue-100 text-blue-800">
-                        
+
                         {{ $alumni->major->name }}
-                        
+
                     </span>
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-sm">
-                    
+
                     <div>
                         <p class="text-gray-500">Email</p>
                         <p class="font-medium">{{ $alumni->user->email }}</p>
@@ -92,6 +93,18 @@
                     <div>
                         <p class="text-gray-500">NIM</p>
                         <p class="font-medium">{{ $alumni->nim }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Jenis Kelamin</p>
+                        <p class="font-medium">
+                            @if ($alumni->gender === 'L')
+                                Laki-laki
+                            @elseif ($alumni->gender === 'P')
+                                Perempuan
+                            @else
+                                -
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <p class="text-gray-500">Tanggal lahir</p>
@@ -118,14 +131,16 @@
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             <div>
                                 <p class="text-gray-500">Tanggal Mulai</p>
-                                <p class="font-medium">{{ \Carbon\Carbon::parse($alumni->career->start_date)->format('d M Y') }}</p>
+                                <p class="font-medium">
+                                    {{ \Carbon\Carbon::parse($alumni->career->start_date)->format('d M Y') }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-500">Status</p>
-                                <p class="font-medium text-green-600">{{ \Carbon\Carbon::parse($alumni->career->end_date)->format('d M Y') }}</p>
+                                <p class="font-medium text-green-600">
+                                    {{ \Carbon\Carbon::parse($alumni->career->end_date)->format('d M Y') }}</p>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             @endif
@@ -137,48 +152,48 @@
                     </div>
 
                     @foreach ($alumni->educationalBackgrounds as $edu)
-                    <div class="border-t pt-4">
-                        <p class="text-lg font-semibold mb-1">{{ $edu->institution_name }}</p>
-                        <p class="text-gray-600">{{ $edu->degree }}</p>
-                        <p class="text-gray-600">{{ $edu->major }}</p>
-                        <p class="text-gray-600 mb-2">{{ $edu->faculty }}</p>
-                        
-                        <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="border-t pt-4">
+                            <p class="text-lg font-semibold mb-1">{{ $edu->institution_name }}</p>
+                            <p class="text-gray-600">{{ $edu->degree }}</p>
+                            <p class="text-gray-600">{{ $edu->major }}</p>
+                            <p class="text-gray-600 mb-2">{{ $edu->faculty }}</p>
 
-                            @if ($edu->entry_year && $edu->graduation_year)
-                                <div>
-                                    <p class="text-gray-500">Tahun masuk</p>
-                                    <p class="font-medium">{{ $edu->entry_year }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500">Tahun lulus</p>
-                                    <p class="font-medium">{{ $edu->graduation_year }}</p>
-                                </div>
-                            @elseif ($edu->entry_year)
-                                <div>
-                                    <p class="text-gray-500">Tahun masuk</p>
-                                    <p class="font-medium">{{ $edu->entry_year }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500">Tahun lulus</p>
-                                    <p class="font-medium">-</p>
-                                </div>
-                            @else
-                                <div>
-                                    <p class="text-gray-500">Tahun masuk</p>
-                                    <p class="font-medium">-</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500">Tahun lulus</p>
-                                    <p class="font-medium">-</p>
-                                </div>
-                            @endif
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+
+                                @if ($edu->entry_year && $edu->graduation_year)
+                                    <div>
+                                        <p class="text-gray-500">Tahun masuk</p>
+                                        <p class="font-medium">{{ $edu->entry_year }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500">Tahun lulus</p>
+                                        <p class="font-medium">{{ $edu->graduation_year }}</p>
+                                    </div>
+                                @elseif ($edu->entry_year)
+                                    <div>
+                                        <p class="text-gray-500">Tahun masuk</p>
+                                        <p class="font-medium">{{ $edu->entry_year }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500">Tahun lulus</p>
+                                        <p class="font-medium">-</p>
+                                    </div>
+                                @else
+                                    <div>
+                                        <p class="text-gray-500">Tahun masuk</p>
+                                        <p class="font-medium">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500">Tahun lulus</p>
+                                        <p class="font-medium">-</p>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             @endif
-            
+
         </div>
 
     </section>
@@ -195,41 +210,41 @@
 
 
     {{-- delete modal --}}
-     <div id="delete-modal"
-            class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99 
+    <div id="delete-modal"
+        class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99
                     flex items-center justify-center pointer-events transition duration-300">
-            
-            <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform scale-95 transition duration-300">
-                
-                <div class="flex flex-col items-center">
-                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <i data-feather="alert-triangle" class="w-8 h-8 text-red-600"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Apakah Anda Yakin?</h3>
-                    <p class="text-sm text-gray-600 text-center mb-6">
-                        Data yang telah dihapus tidak dapat dikembalikan!
-                    </p>
+
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform scale-95 transition duration-300">
+
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                    <i data-feather="alert-triangle" class="w-8 h-8 text-red-600"></i>
                 </div>
 
-                <div class="flex justify-between space-x-4">
-                    <button onclick="closeDeleteModal()" 
-                            class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
-                        Batal
-                    </button>
-                    
-                    <button onclick="submitDeleteForm()" 
-                            class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
-                        Ya, Hapus!
-                    </button>
-                </div>
-                
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Apakah Anda Yakin?</h3>
+                <p class="text-sm text-gray-600 text-center mb-6">
+                    Data yang telah dihapus tidak dapat dikembalikan!
+                </p>
             </div>
+
+            <div class="flex justify-between space-x-4">
+                <button onclick="closeDeleteModal()"
+                    class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
+                    Batal
+                </button>
+
+                <button onclick="submitDeleteForm()"
+                    class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+                    Ya, Hapus!
+                </button>
+            </div>
+
         </div>
+    </div>
 
 
 
-    
+
 
 
 
@@ -260,14 +275,13 @@
                 form.submit(); // <-- INI YANG MENJAMIN SUBMIT
             }
         }
-        
     </script>
 
 
 
 
 
-    
+
 
 @endsection
 
@@ -299,8 +313,8 @@
 
 
 
-    {{-- Profile Header --}}
-    {{-- <div class="card border-0 shadow-sm mb-4">
+{{-- Profile Header --}}
+{{-- <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3 text-center mb-4 mb-md-0">
@@ -362,14 +376,14 @@
                                 </div>
                             </div>
                         </div>
-                        @if ($alumni->graduation_year)
+                        @if ($alumni->educationalBackgrounds->first() && $alumni->educationalBackgrounds->first()->graduation_year)
                             <div class="col-md-6">
                                 <div class="d-flex align-items-start">
                                     <i data-feather="award"
                                         style="width: 18px; height: 18px; color: #666; margin-right: 10px; margin-top: 2px;"></i>
                                     <div>
                                         <small class="text-muted d-block">Tahun Lulus</small>
-                                        <span>{{ $alumni->graduation_year }}</span>
+                                        <span>{{ $alumni->educationalBackgrounds->first()->graduation_year }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -397,8 +411,8 @@
         </div>
     </div> --}}
 
-    {{-- Educational Background Section --}}
-    {{-- @if ($alumni->educationalBackgrounds->count() > 0)
+{{-- Educational Background Section --}}
+{{-- @if ($alumni->educationalBackgrounds->count() > 0)
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-light border-0">
                 <h5 class="mb-0">
@@ -444,8 +458,8 @@
         </div>
     @endif --}}
 
-    {{-- Career Information Section --}}
-    {{-- @if ($alumni->career)
+{{-- Career Information Section --}}
+{{-- @if ($alumni->career)
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-light border-0">
                 <h5 class="mb-0">

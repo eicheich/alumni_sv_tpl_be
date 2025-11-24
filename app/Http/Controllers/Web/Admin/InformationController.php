@@ -32,7 +32,7 @@ class InformationController extends Controller
         }
 
         $informations = $query->paginate(10);
-        $informationCategories = InformationCategory::all();
+        $informationCategories = InformationCategory::paginate(5);
         return view('admin.information.index', compact('informationCategories', 'informations'));
     }
 
@@ -88,8 +88,9 @@ class InformationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $information = Information::with(['category', 'imageContents'])->findOrFail($id);
         return view('admin.information.show', compact('information'));
     }
@@ -97,8 +98,9 @@ class InformationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function editInformation($id)
+    public function editInformation($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $information = Information::with('imageContents')->findOrFail($id);
         $informationCategories = InformationCategory::all();
         return view('admin.information.edit', compact('information', 'informationCategories'));
@@ -107,8 +109,9 @@ class InformationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function updateInformation(Request $request, $id)
+    public function updateInformation(Request $request, $encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $request->validate([
             'title' => 'required|string|max:255',
             'information_category_id' => 'required|exists:information_categories,id',
@@ -165,8 +168,9 @@ class InformationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function deleteInformation($id)
+    public function deleteInformation($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         try {
             $information = Information::with('imageContents')->findOrFail($id);
 
@@ -223,8 +227,9 @@ class InformationController extends Controller
     /**
      * Delete gallery image.
      */
-    public function deleteGallery($id)
+    public function deleteGallery($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         try {
             $image = InformationImageContent::findOrFail($id);
 

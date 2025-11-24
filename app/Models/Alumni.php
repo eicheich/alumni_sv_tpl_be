@@ -13,10 +13,10 @@ class Alumni extends Model
     protected $fillable = [
         'user_id',
         'birthdate',
+        'gender',
         'nim',
         'angkatan',
         'major_id',
-        'graduation_year',
         'is_active',
     ];
 

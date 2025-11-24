@@ -62,8 +62,9 @@ class OutstandingAlumniController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $outstandingAlumni = OutstandingAlumni::with(['alumni', 'alumni.user', 'alumni.major'])->findOrFail($id);
         return view('admin.outstanding-alumni.edit', compact('outstandingAlumni'));
     }
@@ -71,8 +72,9 @@ class OutstandingAlumniController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $outstandingAlumni = OutstandingAlumni::findOrFail($id);
 
         $validated = $request->validate([
@@ -93,8 +95,9 @@ class OutstandingAlumniController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         try {
             $outstandingAlumni = OutstandingAlumni::findOrFail($id);
             $outstandingAlumni->delete();

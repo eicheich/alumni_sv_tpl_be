@@ -83,7 +83,7 @@
                         <p class="text-sm text-gray-600 mb-2">{{ $item->alumni->major->name }}</p>
                         {{-- <p class="text-sm font-medium text-gray-800"><i class="fa-solid me-1 fa-briefcase text-purple-600"></i>Apple Inc.</p> --}}
                         <div class="flex justify-between gap-2">
-                            <a href="{{ route('admin.outstanding-alumni.edit', $item->id) }}"
+                            <a href="{{ route('admin.outstanding-alumni.edit', encrypt($item->id)) }}"
                                 class="mt-4 bg-purple-600 text-white px-2 py-2 rounded-md text-sm hover:bg-purple-700 flex w-full items-center"
                                 title="Edit">
                                 <i data-feather="edit-2" class="h-4"></i> Edit
@@ -97,7 +97,8 @@
                             </button>
 
                             <form id="delete-form-{{ $item->id }}"
-                                action="{{ route('admin.outstanding-alumni.destroy', $item->id) }}" method="POST">
+                                action="{{ route('admin.outstanding-alumni.destroy', encrypt($item->id)) }}"
+                                method="POST">
                                 @csrf
                                 @method('DELETE')
                             </form>
@@ -125,6 +126,12 @@
                 <button class="px-3 py-1 border border-gray-400 rounded hover:bg-gray-100">&gt;</button>
             </div>
         </div>
+
+        @if ($outstandingAlumni->hasPages())
+            <div class="mt-4 flex justify-center">
+                {{ $outstandingAlumni->links('components.pagination') }}
+            </div>
+        @endif
 
     </div>
 

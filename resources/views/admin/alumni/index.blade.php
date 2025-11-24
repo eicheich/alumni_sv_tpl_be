@@ -12,11 +12,12 @@
         <h2 class="text-2xl font-semibold">Data Alumni</h2>
 
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.alumni.exportExcel') }}"
-                class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap flex items-center">
+            <button
+                class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap flex items-center"
+                data-modal-target="exportModal">
                 <i data-feather="download" class="mr-2"></i>
                 Ekspor Excel
-            </a>
+            </button>
             <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap"
                 data-modal-target="addAlumniModal">
                 Tambah Alumni
@@ -134,12 +135,12 @@
                             <td class="px-4 py-3 flex gap-2">
 
                                 <!-- view -->
-                                <a href="{{ route('admin.alumni.show', $alumnus->id) }}"
+                                <a href="{{ route('admin.alumni.show', encrypt($alumnus->id)) }}"
                                     class="p-2 rounded hover:bg-blue-100 border border-blue-300" title="View">
                                     <i data-feather="eye" class="text-blue-300"></i>
                                 </a>
 
-                                <a href="{{ route('admin.alumni.edit', $alumnus->id) }}"
+                                <a href="{{ route('admin.alumni.edit', encrypt($alumnus->id)) }}"
                                     class="p-2 rounded hover:bg-gray-100 border border-gray-300" title="Edit">
                                     <i data-feather="edit-2" class="text-gray-300"></i>
                                 </a>
@@ -152,7 +153,7 @@
                                 </button>
 
                                 <form id="delete-form-{{ $alumnus->id }}"
-                                    action="{{ route('admin.alumni.destroy', $alumnus->id) }}" method="POST">
+                                    action="{{ route('admin.alumni.destroy', encrypt($alumnus->id)) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                 </form>
@@ -190,7 +191,7 @@
         </div>
 
         <div class="d-flex justify-content-center mt-4">
-            {{ $alumni->links() }}
+            {{ $alumni->links('components.pagination') }}
         </div>
 
 
@@ -253,6 +254,110 @@
     {{-- include reusable add alumni modal --}}
     @include('components.modals.admin-alumni')
 
+    {{-- export modal --}}
+    <div id="exportModal"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center opacity-0 pointer-events-none transition duration-200">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+            <button data-close-modal class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+                ✕
+            </button>
+
+            <h2 class="text-xl font-semibold mb-4 border-b">Ekspor Data Alumni</h2>
+            <p class="text-sm text-gray-600 mb-4">Pilih kolom yang ingin Anda ekspor:</p>
+
+            <div class="flex justify-between items-center mb-4">
+                <span id="selectedCount" class="text-sm text-gray-600">Dipilih: 6 kolom</span>
+                <div class="space-x-2">
+                    <button type="button" id="selectAllBtn"
+                        class="text-xs text-purple-600 hover:text-purple-800 underline">
+                        Pilih Semua
+                    </button>
+                    <button type="button" id="deselectAllBtn"
+                        class="text-xs text-gray-600 hover:text-gray-800 underline">
+                        Hapus Semua
+                    </button>
+                </div>
+            </div>
+
+            <form action="{{ route('admin.alumni.exportExcel') }}" method="POST" id="exportForm">
+                @csrf
+
+                <div class="space-y-3 mb-6 max-h-64 overflow-y-auto">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_no" name="fields[]" value="no"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500" checked>
+                        <label for="field_no" class="ml-2 text-sm text-gray-700">No</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_nama" name="fields[]" value="nama"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500" checked>
+                        <label for="field_nama" class="ml-2 text-sm text-gray-700">Nama</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_nim" name="fields[]" value="nim"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500" checked>
+                        <label for="field_nim" class="ml-2 text-sm text-gray-700">NIM</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_angkatan" name="fields[]" value="angkatan"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500" checked>
+                        <label for="field_angkatan" class="ml-2 text-sm text-gray-700">Angkatan</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_email" name="fields[]" value="email"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500" checked>
+                        <label for="field_email" class="ml-2 text-sm text-gray-700">Email</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_jurusan" name="fields[]" value="jurusan"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500" checked>
+                        <label for="field_jurusan" class="ml-2 text-sm text-gray-700">Jurusan</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_jenis_kelamin" name="fields[]" value="jenis_kelamin"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                        <label for="field_jenis_kelamin" class="ml-2 text-sm text-gray-700">Jenis Kelamin</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_tanggal_lahir" name="fields[]" value="tanggal_lahir"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                        <label for="field_tanggal_lahir" class="ml-2 text-sm text-gray-700">Tanggal Lahir</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_tahun_lulus" name="fields[]" value="tahun_lulus"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                        <label for="field_tahun_lulus" class="ml-2 text-sm text-gray-700">Tahun Lulus</label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="field_status_aktivasi" name="fields[]" value="status_aktivasi"
+                            class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                        <label for="field_status_aktivasi" class="ml-2 text-sm text-gray-700">Status Aktivasi</label>
+                    </div>
+                </div>
+
+                <div class="flex justify-between space-x-3">
+                    <button data-close-modal type="button"
+                        class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
+                        Batal
+                    </button>
+                    <button type="submit" id="exportBtn"
+                        class="flex-1 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition">
+                        Ekspor
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -291,14 +396,75 @@
             @endif
         });
 
+        // export modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const exportModal = document.getElementById('exportModal');
+            if (!exportModal) return;
 
+            const showExportModal = () => {
+                exportModal.classList.remove('opacity-0', 'pointer-events-none');
+                updateSelectedCount();
+            };
 
+            const hideExportModal = () => {
+                exportModal.classList.add('opacity-0', 'pointer-events-none');
+            };
 
+            // Trigger open export modal
+            document.querySelectorAll('[data-modal-target="exportModal"]').forEach(btn => {
+                btn.addEventListener('click', showExportModal);
+            });
 
+            // Close button for export modal
+            exportModal.querySelectorAll('[data-close-modal]').forEach(btn => {
+                btn.addEventListener('click', hideExportModal);
+            });
 
+            // Close on backdrop click for export modal
+            exportModal.addEventListener('click', function(e) {
+                if (e.target === exportModal) hideExportModal();
+            });
 
+            // Select All button
+            document.getElementById('selectAllBtn').addEventListener('click', function() {
+                const checkboxes = exportModal.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+                updateSelectedCount();
+            });
 
+            // Deselect All button
+            document.getElementById('deselectAllBtn').addEventListener('click', function() {
+                const checkboxes = exportModal.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateSelectedCount();
+            });
 
+            // Update count when checkboxes change
+            exportModal.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+
+            // Form validation
+            document.getElementById('exportForm').addEventListener('submit', function(e) {
+                const checkedBoxes = exportModal.querySelectorAll('input[type="checkbox"]:checked');
+                if (checkedBoxes.length === 0) {
+                    e.preventDefault();
+                    alert('Pilih minimal 1 kolom untuk diekspor.');
+                    return false;
+                }
+            });
+        });
+
+        function updateSelectedCount() {
+            const checkedBoxes = document.querySelectorAll('#exportModal input[type="checkbox"]:checked');
+            const countElement = document.getElementById('selectedCount');
+            const count = checkedBoxes.length;
+            countElement.textContent = `Dipilih: ${count} kolom`;
+        }
 
         // delete modal
         let deleteFormId = null;

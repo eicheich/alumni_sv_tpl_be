@@ -37,8 +37,14 @@ class InformationController extends Controller
         return view('information.index', compact('informations', 'categories'));
     }
 
-    public function show($id)
+    public function show($encryptedId)
     {
+        try {
+            $id = decrypt($encryptedId);
+        } catch (\Exception $e) {
+            abort(404);
+        }
+
         $information = Information::with(['category', 'imageContents'])
             ->where('is_archive', 0)
             ->whereHas('category', function ($q) {

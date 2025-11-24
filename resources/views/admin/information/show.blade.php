@@ -3,8 +3,8 @@
 @section('title', 'Detail Informasi')
 
 @section('content')
-    <a href="{{ route('admin.information.index') }}" 
-    class="inline-flex items-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150">
+    <a href="{{ route('admin.information.index') }}"
+        class="inline-flex items-center bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150">
         <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Kembali
     </a>
     <div class="flex justify-between items-center mb-6">
@@ -44,7 +44,7 @@
             <div class="mb-6">
                 <label class="block text-sm font-bold text-gray-500 mb-1">Isi Konten</label>
                 <div class="border rounded-lg p-4 bg-gray-50 prose max-w-none"> {{-- Menggunakan prose untuk styling konten HTML --}}
-                    {!! $information->content !!} {{-- Hapus nl2br(e(...)) karena konten biasanya sudah HTML/rich text --}}
+                    {!! make_links_clickable($information->content) !!} {{-- Hapus nl2br(e(...)) karena konten biasanya sudah HTML/rich text --}}
                 </div>
             </div>
 
@@ -64,20 +64,19 @@
             </div>
 
             <div class="flex space-x-2 mt-6 border-t pt-4">
-                <a href="{{ route('admin.information.edit', $information->id) }}" 
-                class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
+                <a href="{{ route('admin.information.edit', encrypt($information->id)) }}"
+                    class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
                     <i data-feather="edit" class="w-4 h-4 mr-1"></i> Edit
                 </a>
-                
-                <button type="button" 
-                        onclick="openDeleteModal('delete-form-info-{{ $information->id }}')" 
-                        class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
+
+                <button type="button" onclick="openDeleteModal('delete-form-info-{{ $information->id }}')"
+                    class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
                     <i data-feather="trash-2" class="w-4 h-4 mr-1"></i> Hapus
                 </button>
-                
-                <form id="delete-form-info-{{ $information->id }}" 
-                    action="{{ route('admin.information.destroy', $information->id) }}" 
-                    method="POST" class="hidden">
+
+                <form id="delete-form-info-{{ $information->id }}"
+                    action="{{ route('admin.information.destroy', encrypt($information->id)) }}" method="POST"
+                    class="hidden">
                     @csrf
                     @method('DELETE')
                 </form>
@@ -89,9 +88,9 @@
     <div class="bg-white shadow-md rounded-lg">
         <div class="p-4 bg-gray-100 border-b rounded-t-lg flex justify-between items-center">
             <h5 class="text-lg font-semibold text-gray-800">Galeri Gambar</h5>
-            <button type="button" 
-                    class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-3 rounded-lg text-sm transition duration-150"
-                    onclick="openModal('addGalleryModal')">
+            <button type="button"
+                class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white font-semibold py-1 px-3 rounded-lg text-sm transition duration-150"
+                onclick="openModal('addGalleryModal')">
                 <i data-feather="plus" class="w-4 h-4 mr-1"></i> Tambah Gambar
             </button>
         </div>
@@ -105,21 +104,22 @@
                                     class="w-full h-32 object-cover rounded-lg mb-2 shadow-sm border group-hover:shadow-md transition duration-150 cursor-pointer"
                                     onclick="openViewImageModal('{{ asset('storage/' . $image->image_path) }}')">
                                 <div class="flex justify-center space-x-1">
-                                    <button class="inline-flex items-center bg-indigo-100 text-indigo-800 hover:bg-indigo-200 py-1 px-2 rounded-lg text-xs transition duration-150"
+                                    <button
+                                        class="inline-flex items-center bg-indigo-100 text-indigo-800 hover:bg-indigo-200 py-1 px-2 rounded-lg text-xs transition duration-150"
                                         onclick="openViewImageModal('{{ asset('storage/' . $image->image_path) }}')"
                                         title="Lihat Detail">
                                         <i data-feather="eye" class="w-3 h-3 mr-1"></i> Lihat
                                     </button>
-                                    
-                                    <button type="button" 
-                                            onclick="openDeleteModal('delete-form-gallery-{{ $image->id }}')"
-                                            class="inline-flex items-center bg-red-100 text-red-800 hover:bg-red-200 py-1 px-2 rounded-lg text-xs transition duration-150"
-                                            title="Hapus Gambar">
+
+                                    <button type="button"
+                                        onclick="openDeleteModal('delete-form-gallery-{{ $image->id }}')"
+                                        class="inline-flex items-center bg-red-100 text-red-800 hover:bg-red-200 py-1 px-2 rounded-lg text-xs transition duration-150"
+                                        title="Hapus Gambar">
                                         <i data-feather="trash-2" class="w-3 h-3 mr-1"></i> Hapus
                                     </button>
-                                    
+
                                     <form id="delete-form-gallery-{{ $image->id }}"
-                                        action="{{ route('admin.information.gallery.destroy', $image->id) }}"
+                                        action="{{ route('admin.information.gallery.destroy', encrypt($image->id)) }}"
                                         method="POST" class="hidden">
                                         @csrf
                                         @method('DELETE')
@@ -150,26 +150,33 @@
             <div class="relative bg-white rounded-lg shadow-xl">
                 <div class="flex items-center justify-between p-4 border-b rounded-t">
                     <h5 class="text-xl font-semibold text-gray-900">Tambah Gambar Galeri</h5>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                         onclick="closeModal('addGalleryModal')" aria-label="Tutup">
                         <i data-feather="x" class="w-5 h-5"></i>
                     </button>
                 </div>
-                
+
                 <div class="p-6">
-                    <form action="{{ route('admin.information.gallery.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    <form action="{{ route('admin.information.gallery.store') }}" method="POST"
+                        enctype="multipart/form-data" class="space-y-4">
                         @csrf
                         <input type="hidden" name="information_id" value="{{ $information->id }}">
                         <div>
-                            <label for="gallery_images" class="block text-sm font-bold text-gray-700 mb-1">Pilih Gambar Galeri</label>
-                            <input type="file" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                            <label for="gallery_images" class="block text-sm font-bold text-gray-700 mb-1">Pilih Gambar
+                                Galeri</label>
+                            <input type="file"
+                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
                                 id="gallery_images" name="gallery_images[]" multiple required accept="image/*">
-                            <small class="text-gray-500">Pilih satu atau beberapa gambar (JPEG, PNG, JPG, GIF, maksimal 2MB)</small>
+                            <small class="text-gray-500">Pilih satu atau beberapa gambar (JPEG, PNG, JPG, GIF, maksimal
+                                2MB)</small>
                         </div>
                         <div class="flex justify-end space-x-3 pt-2">
-                            <button type="button" class="py-2 px-4 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition" 
-                                    onclick="closeModal('addGalleryModal')">Batal</button>
-                            <button type="submit" class="py-2 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Unggah</button>
+                            <button type="button"
+                                class="py-2 px-4 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                                onclick="closeModal('addGalleryModal')">Batal</button>
+                            <button type="submit"
+                                class="py-2 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">Unggah</button>
                         </div>
                     </form>
                 </div>
@@ -186,13 +193,15 @@
             <div class="relative bg-white rounded-lg shadow-xl">
                 <div class="flex items-center justify-between p-4 border-b rounded-t">
                     <h5 class="text-xl font-semibold text-gray-900">Detail Gambar</h5>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                         onclick="closeModal('viewImageModal')" aria-label="Tutup">
                         <i data-feather="x" class="w-5 h-5"></i>
                     </button>
                 </div>
                 <div class="p-6 text-center">
-                    <img id="viewImageSrc" src="" alt="Detail Gambar" class="max-w-full h-auto rounded-lg mx-auto">
+                    <img id="viewImageSrc" src="" alt="Detail Gambar"
+                        class="max-w-full h-auto rounded-lg mx-auto">
                 </div>
             </div>
         </div>
@@ -213,12 +222,12 @@
                     </p>
                 </div>
                 <div class="flex justify-between space-x-4">
-                    <button onclick="closeModal('deleteConfirmationModal')" 
-                            class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
+                    <button onclick="closeModal('deleteConfirmationModal')"
+                        class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
                         Batal
                     </button>
-                    <button id="confirm-delete-btn" 
-                            class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+                    <button id="confirm-delete-btn"
+                        class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
                         Ya, Hapus!
                     </button>
                 </div>
@@ -246,26 +255,26 @@
             if (modal) {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-                document.body.classList.remove('overflow-hidden'); 
+                document.body.classList.remove('overflow-hidden');
             }
         }
-        
+
         // --- LOGIKA VIEW GAMBAR (MENGGANTI BOOTSTRAP) ---
-        
+
         function openViewImageModal(imageSrc) {
             document.getElementById('viewImageSrc').src = imageSrc;
             openModal('viewImageModal');
         }
 
         // --- LOGIKA DELETE (MENGGANTI confirm() dan memastikan form disubmit) ---
-        
+
         // Variabel global untuk menyimpan ID form yang akan dihapus
-        let currentDeleteFormId = null; 
+        let currentDeleteFormId = null;
 
         function openDeleteModal(formId) {
             currentDeleteFormId = formId;
             const confirmBtn = document.getElementById('confirm-delete-btn');
-            
+
             // Menghubungkan tombol konfirmasi di modal dengan form yang benar
             confirmBtn.onclick = function() {
                 if (currentDeleteFormId) {
@@ -278,10 +287,10 @@
         }
 
         // --- LOGIKA PENUTUPAN MODAL DENGAN KLIK DI LUAR DAN ESC ---
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             const modalIds = ['addGalleryModal', 'viewImageModal', 'deleteConfirmationModal'];
-            
+
             modalIds.forEach(id => {
                 const modal = document.getElementById(id);
                 if (modal) {
@@ -306,6 +315,5 @@
                 }
             });
         });
-
     </script>
 @endsection

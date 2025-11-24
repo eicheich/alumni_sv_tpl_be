@@ -1,6 +1,18 @@
 @extends('layouts.guest')
 
 @section('content')
+    <!-- Hero Section -->
+    <section class="relative bg-cover bg-center py-32"
+        style="background-image: url('{{ asset('resources/images/hero.png') }}');">
+        <div class="absolute inset-0 bg-purple-900 bg-opacity-70"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white">Informasi Umum</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto text-white">
+                Berita, pengumuman, dan informasi penting untuk alumni
+            </p>
+        </div>
+    </section>
+
     <section id="informasi" class="bg-gray-100 py-16 pb-28">
         <div class="mx-12">
 
@@ -51,45 +63,51 @@
         </div>
 
         <!-- Cards -->
-        <div class="mx-12 grid sm:grid-cols-2 md:grid-cols-3 gap-8 mt-4">
+        <div class="mx-12 grid sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
 
             @forelse ($informations as $information)
-                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+                <div
+                    class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full">
 
                     {{-- Gambar cover --}}
-                    @if ($information->cover_image)
-                        <img src="{{ asset('storage/' . $information->cover_image) }}" class="w-full h-48 object-cover"
-                            alt="{{ $information->title }}">
-                    @elseif ($information->imageContents->first())
-                        <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
-                            class="w-full h-48 object-cover" alt="{{ $information->title }}">
-                    @else
-                        <div class="w-full h-48 bg-gray-300 flex items-center justify-center">
-                            <i data-feather="image" class="w-12 h-12 text-gray-500"></i>
-                        </div>
-                    @endif
+                    <div class="aspect-[16/9] overflow-hidden">
+                        @if ($information->cover_image)
+                            <img src="{{ asset('storage/' . $information->cover_image) }}"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                alt="{{ $information->title }}">
+                        @elseif ($information->imageContents->first())
+                            <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                alt="{{ $information->title }}">
+                        @else
+                            <div
+                                class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                                <i data-feather="image" class="w-16 h-16 text-gray-400"></i>
+                            </div>
+                        @endif
+                    </div>
 
-                    <div class="p-4 flex flex-col flex-grow">
-                        <span class="bg-purple-600 text-white text-xs px-3 py-1 rounded-full self-start mb-2">
+                    <div class="p-5 flex flex-col flex-grow">
+                        <span class="bg-purple-600 text-white text-xs px-3 py-1 rounded-full self-start mb-3 font-medium">
                             {{ $information->category->name ?? 'Umum' }}
                         </span>
 
-                        <h3 class="font-semibold text-sm mb-2">
+                        <h3 class="font-bold text-gray-900 text-base mb-3 line-clamp-2 leading-tight">
                             {{ Str::limit($information->title, 60) }}
                         </h3>
 
-                        <p class="text-xs text-gray-600 flex-grow">
-                            {{ Str::limit(strip_tags($information->content), 100) }}
-                        </p>
+                        <div class="text-sm text-gray-600 flex-grow mb-4 leading-relaxed">
+                            {!! Str::words(make_links_clickable(strip_tags($information->content)), 20, '...') !!}
+                        </div>
 
-                        <div class="flex justify-between items-center mt-3">
-                            <span class="text-xs text-gray-500">
+                        <div class="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
+                            <span class="text-xs text-gray-500 font-medium">
                                 {{ $information->created_at->diffForHumans() }}
                             </span>
 
-                            <a href="{{ route('information.show', $information->id) }}"
-                                class="text-purple-600 text-xs font-medium hover:underline relative z-99">
-                                Baca Selengkapnya
+                            <a href="{{ route('information.show', encrypt($information->id)) }}"
+                                class="text-purple-600 text-sm font-semibold hover:text-purple-700 hover:underline transition-colors">
+                                Baca Selengkapnya →
                             </a>
                         </div>
                     </div>
@@ -107,7 +125,7 @@
         <!-- Pagination -->
         @if ($informations->hasPages())
             <div class="mt-10 flex justify-center">
-                {{ $informations->links('pagination::tailwind') }}
+                {{ $informations->links('components.pagination') }}
             </div>
         @endif
     </section>

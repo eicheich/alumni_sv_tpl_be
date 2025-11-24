@@ -8,8 +8,25 @@ use Illuminate\Http\Request;
 
 class OutstandingAlumniController extends Controller
 {
-    public function show($id)
+    public function index()
     {
+        $outstandingAlumni = OutstandingAlumni::with([
+            'alumni.user',
+            'alumni.major',
+            'alumni.educationalBackgrounds'
+        ])->latest()->get();
+
+        return view('outstanding-alumni.index', compact('outstandingAlumni'));
+    }
+
+    public function show($encryptedId)
+    {
+        try {
+            $id = decrypt($encryptedId);
+        } catch (\Exception $e) {
+            abort(404);
+        }
+
         $outstandingAlumni = OutstandingAlumni::with([
             'alumni.user',
             'alumni.major',

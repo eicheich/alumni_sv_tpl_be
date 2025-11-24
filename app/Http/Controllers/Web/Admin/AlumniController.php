@@ -18,10 +18,22 @@ use Illuminate\Validation\Rule;
 class AlumniController extends Controller
 {
     /**
-     * Export alumni data to CSV.
+     * Export alumni data to CSV with customizable fields.
      */
     public function exportExcel(Request $request)
     {
+        // Validate selected fields
+        $request->validate([
+            'fields' => 'required|array|min:1|max:20',
+            'fields.*' => 'required|string|in:no,nama,nim,angkatan,email,jurusan,jenis_kelamin,tanggal_lahir,tahun_lulus,status_aktivasi'
+        ], [
+            'fields.required' => 'Pilih minimal 1 kolom untuk diekspor.',
+            'fields.min' => 'Pilih minimal 1 kolom untuk diekspor.',
+            'fields.*.required' => 'Kolom yang dipilih tidak boleh kosong.',
+            'fields.*.in' => 'Kolom yang dipilih tidak valid.'
+        ]);
+
+        $selectedFields = $request->fields;
         $alumni = Alumni::with('user', 'major')->get();
         $fileName = 'data_alumni_' . date('Ymd_His') . '.csv';
 
@@ -30,18 +42,73 @@ class AlumniController extends Controller
             'Content-Disposition' => "attachment; filename=$fileName",
         ];
 
-        $callback = function () use ($alumni) {
+        $callback = function () use ($alumni, $selectedFields) {
             $handle = fopen('php://output', 'w');
-            // Header
-            fputcsv($handle, ['No', 'Nama', 'NIM', 'Angkatan', 'Email']);
+
+            // Create header row based on selected fields
+            $headerRow = [];
+            $fieldLabels = [
+                'no' => 'No',
+                'nama' => 'Nama',
+                'nim' => 'NIM',
+                'angkatan' => 'Angkatan',
+                'email' => 'Email',
+                'jurusan' => 'Jurusan',
+                'jenis_kelamin' => 'Jenis Kelamin',
+                'tanggal_lahir' => 'Tanggal Lahir',
+                'tahun_lulus' => 'Tahun Lulus',
+                'status_aktivasi' => 'Status Aktivasi'
+            ];
+
+            foreach ($selectedFields as $field) {
+                $headerRow[] = $fieldLabels[$field] ?? $field;
+            }
+            fputcsv($handle, $headerRow);
+
+            // Create data rows based on selected fields
             foreach ($alumni as $key => $alumnus) {
-                fputcsv($handle, [
-                    $key + 1,
-                    $alumnus->user->name ?? '',
-                    $alumnus->nim,
-                    $alumnus->angkatan ?? '',
-                    $alumnus->user->email ?? ''
-                ]);
+                $row = [];
+                foreach ($selectedFields as $field) {
+                    switch ($field) {
+                        case 'no':
+                            $row[] = $key + 1;
+                            break;
+                        case 'nama':
+                            $row[] = $alumnus->user->name ?? '';
+                            break;
+                        case 'nim':
+                            $row[] = $alumnus->nim;
+                            break;
+                        case 'angkatan':
+                            $row[] = $alumnus->angkatan ?? '';
+                            break;
+                        case 'email':
+                            $row[] = $alumnus->user->email ?? '';
+                            break;
+                        case 'jurusan':
+                            $row[] = $alumnus->major->name ?? '';
+                            break;
+                        case 'jenis_kelamin':
+                            $row[] = match ($alumnus->gender) {
+                                'L' => 'Laki-laki',
+                                'P' => 'Perempuan',
+                                default => ''
+                            };
+                            break;
+                        case 'tanggal_lahir':
+                            $row[] = $alumnus->birthdate ? \Carbon\Carbon::parse($alumnus->birthdate)->format('d/m/Y') : '';
+                            break;
+                        case 'tahun_lulus':
+                            $row[] = $alumnus->educationalBackgrounds->first()->graduation_year ?? '';
+                            break;
+                        case 'status_aktivasi':
+                            $row[] = $alumnus->is_active ? 'Sudah Aktivasi' : 'Belum Aktivasi';
+                            break;
+                        default:
+                            $row[] = '';
+                    }
+                }
+                fputcsv($handle, $row);
             }
             fclose($handle);
         };
@@ -98,6 +165,7 @@ class AlumniController extends Controller
             'graduation_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 10),
             'photo_profile' => 'nullable|image|max:2048',
             'generation' => 'nullable|integer',
+            'gender' => 'nullable|in:L,P',
         ]);
         // entry year = angkatan + 1963
         $entry_year = (int)$request->angkatan + 1963;
@@ -122,6 +190,7 @@ class AlumniController extends Controller
                 'nim' => $request->nim,
                 'angkatan' => $request->angkatan,
                 'major_id' => $request->major_id,
+                'gender' => $request->gender,
                 'is_active' => false,
             ]);
             EducationalBackground::create([
@@ -153,8 +222,9 @@ class AlumniController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         $alumni = Alumni::with(['user', 'major', 'career', 'educationalBackgrounds'])->findOrFail($id);
         return view('admin.alumni.show', compact('alumni'));
     }
@@ -162,9 +232,10 @@ class AlumniController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($encrypted_id)
     {
-        $alumni = Alumni::with(['user', 'major'])->findOrFail($id);
+        $id = decrypt($encrypted_id);
+        $alumni = Alumni::with(['user', 'major', 'educationalBackgrounds'])->findOrFail($id);
         $majors = Major::all();
         return view('admin.alumni.edit', compact('alumni', 'majors'));
     }
@@ -172,8 +243,9 @@ class AlumniController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         // Get alumni record
         $alumni = Alumni::findOrFail($id);
 
@@ -188,6 +260,7 @@ class AlumniController extends Controller
             'angkatan' => 'required|string|max:10',
             'graduation_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 10),
             'birthdate' => 'nullable|date',
+            'gender' => 'nullable|in:L,P',
             'major_id' => 'required|exists:majors,id',
             'photo_profile' => 'nullable|image|max:2048',
         ];
@@ -241,10 +314,19 @@ class AlumniController extends Controller
 
             $alumni->nim = $request->nim;
             $alumni->angkatan = $request->angkatan;
-            $alumni->graduation_year = $request->graduation_year;
             $alumni->birthdate = $request->birthdate;
+            $alumni->gender = $request->gender;
             $alumni->major_id = $request->major_id;
             $alumni->save();
+
+            // Update graduation_year in educational background if it exists
+            if ($request->graduation_year) {
+                $educationalBackground = $alumni->educationalBackgrounds()->first();
+                if ($educationalBackground) {
+                    $educationalBackground->graduation_year = $request->graduation_year;
+                    $educationalBackground->save();
+                }
+            }
             DB::commit();
             return redirect()->route('admin.alumni.show', $alumni->id)->with('success', 'Alumni berhasil diperbarui.');
         } catch (\Exception $e) {
@@ -256,8 +338,9 @@ class AlumniController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($encrypted_id)
     {
+        $id = decrypt($encrypted_id);
         DB::beginTransaction();
         try {
             // Get alumni record
