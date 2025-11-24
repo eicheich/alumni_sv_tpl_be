@@ -35,7 +35,8 @@
                     class="{{ request()->routeIs('information.index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">Informasi
                     Umum</a>
 
-                <a href="#faq" class="hover:text-purple-600">FAQ</a>
+                <a href="{{ route('faq.index') }}"
+                    class="{{ request()->routeIs('faq.index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">FAQ</a>
             </div>
 
             <!-- Desktop Right Side -->
@@ -95,7 +96,8 @@
             class="block {{ request()->routeIs('information.index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">Informasi
             Umum</a>
 
-        <a href="#faq" class="block hover:text-purple-600">FAQ</a>
+        <a href="{{ route('faq.index') }}"
+            class="block {{ request()->routeIs('faq.index') ? 'text-purple-600 font-semibold' : 'hover:text-purple-600' }}">FAQ</a>
 
         <!-- MOBILE GUEST -->
         @if (!Auth::guard('alumni')->check() && !Auth::guard('admin')->check())
@@ -124,7 +126,7 @@
                         <i data-feather="user" class="w-5 h-5 text-purple-600"></i>
                     </div>
                 @endif
-                <span class="font-medium text-gray-700">{{ auth('alumni')->user()->name }}</span>
+                <span class="font-medium text-gray-700">{{ auth('alumni')->user()?->name ?? 'User' }}</span>
             </a>
         @endauth
 

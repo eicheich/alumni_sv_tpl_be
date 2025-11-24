@@ -46,7 +46,7 @@
 
                 <div class="text-center mt-6">
                     <p class="text-sm text-gray-600 mb-2">Sudah punya akun?</p>
-                    <a href="{{ route('alumni.login.view') }}"
+                    <a href="{{ route('login.view') }}"
                         class="text-purple-600 hover:text-purple-700 font-semibold text-sm">
                         Masuk di sini
                     </a>

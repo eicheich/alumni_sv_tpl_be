@@ -13,6 +13,7 @@ use App\Http\Controllers\Web\UserGuest\LandingController;
 use App\Http\Controllers\Web\UserGuest\InformationController as GuestInformationController;
 use App\Http\Controllers\Web\UserGuest\OutstandingAlumniController as GuestOutstandingAlumniController;
 use App\Http\Controllers\Web\UserGuest\AboutController;
+use App\Http\Controllers\Web\UserGuest\FaqController;
 use Phiki\Phast\Root;
 
 Route::get('resources/images/{path}', function ($path) {
@@ -25,6 +26,7 @@ Route::get('resources/images/{path}', function ($path) {
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
 Route::get('/tentang', [AboutController::class, 'index'])->name('about.index');
+Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 // prefix admin
 Route::prefix('admin')->group(function () {
     Route::prefix('auth')->group(function () {

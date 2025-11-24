@@ -4,7 +4,6 @@
 
 @section('content')
 
-
     <section id="beranda" class="relative w-full h-[70vh] flex items-center justify-center text-center text-white">
         <img src="{{ asset('resources/images/hero.png') }}" alt="Hero" class="absolute inset-0 w-full h-full object-cover">
         <div class="relative z-10 px-4">

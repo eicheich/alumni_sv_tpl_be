@@ -11,7 +11,11 @@ class InformationController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Information::with(['category', 'imageContents']);
+        $query = Information::with(['category', 'imageContents'])
+            ->where('is_archive', 0)
+            ->whereHas('category', function ($q) {
+                $q->where('visibility', 0); // 0 = alumni & guest
+            });
 
         // Filter by category if provided
         if ($request->has('category') && $request->category != '') {
@@ -28,7 +32,7 @@ class InformationController extends Controller
         }
 
         $informations = $query->paginate(9);
-        $categories = InformationCategory::all();
+        $categories = InformationCategory::where('visibility', 0)->get(); // Only show categories visible to guests
 
         return view('information.index', compact('informations', 'categories'));
     }
@@ -36,10 +40,18 @@ class InformationController extends Controller
     public function show($id)
     {
         $information = Information::with(['category', 'imageContents'])
+            ->where('is_archive', 0)
+            ->whereHas('category', function ($q) {
+                $q->where('visibility', 0);
+            })
             ->findOrFail($id);
 
-        $relatedInformations = Information::where('category_id', $information->information_category_id)
+        $relatedInformations = Information::where('category_id', $information->category_id)
             ->where('id', '!=', $id)
+            ->where('is_archive', 0)
+            ->whereHas('category', function ($q) {
+                $q->where('visibility', 0);
+            })
             ->take(3)
             ->get();
 

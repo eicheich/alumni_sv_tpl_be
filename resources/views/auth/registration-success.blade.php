@@ -32,7 +32,7 @@
             </div>
 
             <!-- Button -->
-            <a href="{{ route('alumni.login.view') }}"
+            <a href="{{ route('login.view') }}"
                 class="block w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg text-sm font-medium transition">
                 Masuk ke Akun Saya
             </a>

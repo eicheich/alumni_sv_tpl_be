@@ -1,6 +1,7 @@
 @php
     $user = Auth::guard('alumni')->user() ?? Auth::guard('admin')->user();
 @endphp
+@if($user)
 <header class="flex justify-end items-center p-2 bg-white border-b">
     <div class="flex items-center gap-3 pr-4">
         <div class="text-right">
@@ -31,3 +32,4 @@
         @endif
     </div>
 </header>
+@endif

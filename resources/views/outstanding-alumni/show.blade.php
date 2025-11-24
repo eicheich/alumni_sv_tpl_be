@@ -37,10 +37,7 @@
 
                 <!-- Kontak -->
                 <div class="mt-6 text-sm text-gray-600 space-y-1">
-                    <p>Email: <span class="font-semibold">{{ $outstandingAlumni->alumni->user->email ?? '-' }}</span></p>
-                    <p>Telepon: <span class="font-semibold">{{ $outstandingAlumni->alumni->user->phone ?? '-' }}</span></p>
-                    <p>NIM: <span class="font-semibold">{{ $outstandingAlumni->alumni->nim ?? '-' }}</span></p>
-                    <p>Prodi: 
+                    <p>Prodi:
                         <span class="font-semibold">
                             {{ $outstandingAlumni->alumni->major->name ?? 'Program Studi' }}
                         </span>

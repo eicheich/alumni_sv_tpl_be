@@ -90,15 +90,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <x-landing-footer />
-
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script>
-        feather.replace();
-    </script>
-    </body>
-
     @include('components.landing-footer')
 
     <script>
