@@ -40,7 +40,7 @@ Route::prefix('admin')->group(function () {
             Route::get('/show/{id}', [InformationController::class, 'show'])->name('admin.information.show');
             Route::post('/store-information', [InformationController::class, 'storeInformation'])->name('admin.information.store');
             Route::get('/{id}/edit', [InformationController::class, 'editInformation'])->name('admin.information.edit');
-            Route::post('/{id}/update', [InformationController::class, 'updateInformation'])->name('admin.information.update');
+            Route::put('/{id}/update', [InformationController::class, 'updateInformation'])->name('admin.information.update');
             Route::delete('/{id}', [InformationController::class, 'deleteInformation'])->name('admin.information.destroy');
             Route::post('/gallery', [InformationController::class, 'storeGallery'])->name('admin.information.gallery.store');
             Route::delete('/gallery/{id}', [InformationController::class, 'deleteGallery'])->name('admin.information.gallery.destroy');

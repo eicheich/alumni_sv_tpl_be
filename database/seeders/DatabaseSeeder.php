@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Teknologi Rekayasa Perangkat Lunak'],
         ]);
 
-
+        $this->call(AdminSeeder::class);
     }
 }
