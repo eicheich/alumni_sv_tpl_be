@@ -16,6 +16,7 @@ class Information extends Model
         'title',
         'content',
         'category_id',
+        'is_archive',
     ];
 
     public function category()

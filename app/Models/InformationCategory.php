@@ -12,12 +12,11 @@ class InformationCategory extends Model
 
     protected $fillable = [
         'name',
+        'visibility',
     ];
 
     public function information()
     {
         return $this->hasMany(Information::class, 'category_id');
     }
-
-
 }

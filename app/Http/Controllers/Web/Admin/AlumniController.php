@@ -10,10 +10,44 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Validation\Rule;
 
 class AlumniController extends Controller
 {
+    /**
+     * Export alumni data to CSV.
+     */
+    public function exportExcel(Request $request)
+    {
+        $alumni = Alumni::with('user', 'major')->get();
+        $fileName = 'data_alumni_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+        ];
+
+        $callback = function () use ($alumni) {
+            $handle = fopen('php://output', 'w');
+            // Header
+            fputcsv($handle, ['No', 'Nama', 'NIM', 'Angkatan', 'Email']);
+            foreach ($alumni as $key => $alumnus) {
+                fputcsv($handle, [
+                    $key + 1,
+                    $alumnus->user->name ?? '',
+                    $alumnus->nim,
+                    $alumnus->angkatan ?? '',
+                    $alumnus->user->email ?? ''
+                ]);
+            }
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -54,9 +88,13 @@ class AlumniController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'major_id' => 'required|exists:majors,id',
             'nim' => 'required|string|max:50|unique:alumnis',
+            'angkatan' => 'required|string|max:10',
+            'graduation_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 10),
             'photo_profile' => 'nullable|image|max:2048',
             'generation' => 'nullable|integer',
         ]);
+        // entry year = angkatan + 1963
+        $entry_year = (int)$request->angkatan + 1963;
         if (!$validate) {
             return back()->withErrors($validate)->withInput();
         }
@@ -76,6 +114,7 @@ class AlumniController extends Controller
             Alumni::create([
                 'user_id' => $user->id,
                 'nim' => $request->nim,
+                'angkatan' => $request->angkatan,
                 'major_id' => $request->major_id,
                 'is_active' => false,
             ]);
@@ -84,6 +123,8 @@ class AlumniController extends Controller
                 'generation' => $request->generation,
                 'institution_name' => 'IPB University',
                 'major' => 'Teknologi Rekayasa Perangkat Lunak',
+                'entry_year' => $entry_year,
+                'graduation_year' => $request->graduation_year,
                 'degree' => 'Diploma 4',
                 'faculty' => 'Sekolah Vokasi',
             ]);
@@ -138,6 +179,8 @@ class AlumniController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'nim' => 'required|string|max:50',
+            'angkatan' => 'required|string|max:10',
+            'graduation_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 10),
             'birthdate' => 'nullable|date',
             'major_id' => 'required|exists:majors,id',
             'photo_profile' => 'nullable|image|max:2048',
@@ -191,6 +234,8 @@ class AlumniController extends Controller
             $user->save();
 
             $alumni->nim = $request->nim;
+            $alumni->angkatan = $request->angkatan;
+            $alumni->graduation_year = $request->graduation_year;
             $alumni->birthdate = $request->birthdate;
             $alumni->major_id = $request->major_id;
             $alumni->save();

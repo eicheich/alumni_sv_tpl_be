@@ -14,6 +14,7 @@ class Alumni extends Model
         'user_id',
         'birthdate',
         'nim',
+        'angkatan',
         'major_id',
         'graduation_year',
         'is_active',

@@ -17,37 +17,36 @@
     {{-- Bootstrap CDN as fallback / quick styling --}}
     {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> --}}
-    
-        
+
+
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/feather-icons"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
     @stack('head')
 </head>
 
-<body class="font-sans text-gray-800">
+<body class="font-sans text-gray-800 bg-gray-100">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <div class="bg-gray-100 flex">
+    <div class="flex min-h-screen">
 
         @if (auth()->check())
             @include('layouts.sidebar')
         @endif
 
-        
-
         <!-- Content -->
-        <div class="flex-1">
+        <div class="flex-1 flex flex-col">
             <!-- Navbar -->
             @if (auth()->check())
                 @include('layouts.header')
             @endif
 
             <!-- Main Content -->
-            <main class="p-6 flex-1 overflow-y-auto">
+            <main class="p-6 flex-1">
 
                 {{-- centralized session / validation messages --}}
                 @include('layouts.session-status')
@@ -56,10 +55,13 @@
                 @yield('content')
 
             </main>
+
+            @if (auth()->check())
+                @include('layouts.footer')
+            @endif
         </div>
     </div>
-    @include('layouts.footer')
-    
+
 
 
     {{-- Optional app JS --}}
@@ -68,7 +70,8 @@
     @endif
 
     {{-- Bootstrap JS bundle --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6V9E+0U5y5L2e3z6Z6b6Y5m1Yk2Kf0b6tQZ6f5Q5m9ct" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6V9E+0U5y5L2e3z6Z6b6Y5m1Yk2Kf0b6tQZ6f5Q5m9ct" crossorigin="anonymous">
     </script>
 
     <script>
@@ -156,14 +159,26 @@
     </script>
 
     @stack('scripts')
+
+    <script>
+        // Initialize Feather icons dan AOS setelah DOM loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+            if (typeof AOS !== 'undefined') {
+                AOS.init();
+            }
+        });
+
+        // Re-initialize feather icons setelah load complete (untuk memastikan)
+        window.addEventListener('load', function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+    </script>
 </body>
-
-
-<script>
-    feather.replace();
-
-    AOS.init();
-</script>
-
 
 </html>

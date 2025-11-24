@@ -9,12 +9,44 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     public function profile()
     {
         return view('alumni.profile');
+    }
+
+    public function uploadProfilePhoto(Request $request)
+    {
+        $request->validate([
+            'photo_profile' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'photo_profile.required' => 'Foto profil wajib dipilih',
+            'photo_profile.image' => 'File harus berupa gambar',
+            'photo_profile.mimes' => 'Format gambar harus jpeg, png, atau jpg',
+            'photo_profile.max' => 'Ukuran gambar maksimal 2MB',
+        ]);
+
+        $user = auth('alumni')->user();
+
+        // Delete old photo if exists
+        if ($user->photo_profile && Storage::disk('public')->exists($user->photo_profile)) {
+            Storage::disk('public')->delete($user->photo_profile);
+        }
+
+        // Store new photo
+        $path = $request->file('photo_profile')->store('profile-photos', 'public');
+
+        // Update user photo_profile
+        DB::table('users')->where('id', $user->id)->update([
+            'photo_profile' => $path,
+        ]);
+
+        Log::info('Profile photo uploaded', ['user_id' => $user->id]);
+
+        return redirect()->route('alumni.profile')->with('success', 'Foto profil berhasil diupload');
     }
 
     public function changePasswordView()

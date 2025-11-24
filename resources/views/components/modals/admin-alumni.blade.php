@@ -74,10 +74,20 @@
 
             <div>
                 <label class="block text-sm text-gray-700 mb-1">Angkatan</label>
-                <input id="angkatan" name="angkatan" type="text" placeholder="cth. 2020"
+                <input id="angkatan" name="angkatan" type="text" placeholder="cth. 61"
                     class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none @error('angkatan') border border-red-500 @enderror"
                     value="{{ old('angkatan') }}">
                 @error('angkatan')
+                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-700 mb-1">Tahun Lulus</label>
+                <input id="graduation_year" name="graduation_year" type="number" placeholder="cth. 2024"
+                    class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none @error('graduation_year') border border-red-500 @enderror"
+                    value="{{ old('graduation_year') }}">
+                @error('graduation_year')
                     <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                 @enderror
             </div>

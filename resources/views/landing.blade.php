@@ -7,80 +7,86 @@
 
     <!-- Hero Section -->
     <section id="beranda" class="relative w-full h-[70vh] flex items-center justify-center text-center text-white">
-        <img src="{{asset('storage/asset/hero.png')}}" alt="Hero" class="absolute inset-0 w-full h-full object-cover">
+        <img src="{{ Vite::asset('resources/images/hero.png') }}" alt="Hero"
+            class="absolute inset-0 w-full h-full object-cover">
         <div class="relative z-10 px-4">
-        <h1 data-aos="fade-up" data-aos-duration="1000" class="text-2xl md:text-4xl font-bold mb-3">Selamat datang di Web Alumni TPL</h1>
-        <p data-aos="fade-up" data-aos-duration="2000" class="max-w-2xl mx-auto text-sm md:text-base">
-            Website Alumni TPL IPB dirancang sebagai pusat informasi untuk memperbarui data alumni,
-            mendukung kebutuhan akademik, dan menampilkan prestasi alumni.
-        </p>
+            <h1 data-aos="fade-up" data-aos-duration="1000" class="text-2xl md:text-4xl font-bold mb-3">Selamat datang di Web
+                Alumni TPL</h1>
+            <p data-aos="fade-up" data-aos-duration="2000" class="max-w-2xl mx-auto text-sm md:text-base">
+                Website Alumni TPL IPB dirancang sebagai pusat informasi untuk memperbarui data alumni,
+                mendukung kebutuhan akademik, dan menampilkan prestasi alumni.
+            </p>
         </div>
     </section>
 
     <!-- Alumni Berprestasi -->
-    
+
     <section id="prestasi" class="py-16 bg-white">
-        <h2 data-aos="fade-up" data-aos-duration="1000" class="text-xl mb-4 text-center mt-10 md:text-2xl font-semibold">Alumni Berprestasi</h2>
-        <div class="max-w-6xl mx-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        <h2 class="text-xl mb-4 text-center mt-10 md:text-2xl font-semibold">
+            Alumni Berprestasi</h2>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div class="flex flex-wrap justify-center gap-8">
 
-            <!-- Card-->
-            @forelse($outstandingAlumni as $alumni)
-                <div data-aos="zoom-in-up" data-aos-duration="1000" class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <div class="h-28 overflow-hidden">
-                        <img src="{{asset('storage/asset/wave.svg')}}" class="h-40 w-full object-cover" alt="">
-                    </div>
-                    <div class="-mt-20 flex justify-center">
-                        @if ($alumni->alumni->user->photo_profile)
-                            <img src="{{ asset('storage/' . $alumni->alumni->user->photo_profile) }}" alt="Alumni" class="rounded-full border-4 border-white w-24 h-24 object-cover">
-                        @else
-                            <div class="w-full h-64 bg-gray-400 flex items-center justify-center">
-                                <i data-feather="user" class="w-16 h-16 text-white/50"></i>
-                            </div>
-                        @endif
-                    </div>
-                    <div class="px-6 pb-6 pt-2">
-                        <p class="text-xs text-purple-600 font-medium">{{ $alumni->award_title }}</p>
-                        <h3 class="text-lg font-semibold mt-1">{{ $alumni->alumni->user->name ?? 'Nama Alumni' }}</h3>
-                        <p class="text-sm text-gray-600 mb-2">{{ $alumni->alumni->major->name ?? 'Program Studi' }}</p>
-                        <p class="text-sm font-medium text-gray-800 mb-4"><i class="fa-solid me-1 fa-briefcase text-purple-600"></i>
-                            @if ($alumni->alumni->educationalBackgrounds->isNotEmpty())
-                                Tahun Lulus:
-                                {{ $alumni->alumni->educationalBackgrounds->first()->graduation_year ?? '-' }}
+                <!-- Card-->
+                @forelse($outstandingAlumni as $alumni)
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden w-full sm:w-64">
+                        <div class="h-28 overflow-hidden">
+                            <img src="{{ Vite::asset('resources/images/wave.svg') }}" class="h-40 w-full object-cover"
+                                alt="">
+                        </div>
+                        <div class="-mt-20 flex justify-center">
+                            @if ($alumni->alumni->user->photo_profile)
+                                <img src="{{ asset('storage/' . $alumni->alumni->user->photo_profile) }}" alt="Alumni"
+                                    class="rounded-full border-4 border-white w-24 h-24 object-cover">
                             @else
-                                -
+                                <div class="w-full h-64 bg-gray-400 flex items-center justify-center">
+                                    <i data-feather="user" class="w-16 h-16 text-white/50"></i>
+                                </div>
                             @endif
-                        </p>
-                        <a href="{{ route('outstanding-alumni.show', $alumni->id) }}"
-                            class="bg-purple-600 text-white px-4 py-2 rounded-md text-sm hover:bg-purple-700">
-                            Lihat Profil
-                        </a>
+                        </div>
+                        <div class="px-6 pb-6 pt-2 text-center">
+                            <p class="text-xs text-purple-600 font-medium">{{ $alumni->award_title }}</p>
+                            <h3 class="text-lg font-semibold mt-1">{{ $alumni->alumni->user->name ?? 'Nama Alumni' }}</h3>
+                            <p class="text-sm text-gray-600 mb-2">{{ $alumni->alumni->major->name ?? 'Program Studi' }}</p>
+                            <p class="text-sm font-medium text-gray-800 mb-4"><i
+                                    class="fa-solid me-1 fa-briefcase text-purple-600"></i>
+                                @if ($alumni->alumni->educationalBackgrounds->isNotEmpty())
+                                    Tahun Lulus:
+                                    {{ $alumni->alumni->educationalBackgrounds->first()->graduation_year ?? '-' }}
+                                @else
+                                    -
+                                @endif
+                            </p>
+                            <a href="{{ route('outstanding-alumni.show', $alumni->id) }}"
+                                class="inline-block bg-purple-600 text-white px-4 py-2 rounded-md text-sm hover:bg-purple-700">
+                                Lihat Profil
+                            </a>
+                        </div>
                     </div>
-                </div>
-            @empty
-                <div class="flex">
-                    <p class="text-center text-muted">Belum ada alumni berprestasi</p>
-                </div>
-            @endforelse
+                @empty
+                    <div class="w-full text-center">
+                        <p class="text-muted">Belum ada alumni berprestasi</p>
+                    </div>
+                @endforelse
 
-
-
-           
+            </div>
         </div>
     </section>
 
 
     <!-- Informasi Terkini -->
     <section id="informasi" class="bg-purple-700 text-white py-16 pb-28">
-        <h2 data-aos="fade-up" data-aos-duration="1000" class="text-center text-xl md:text-2xl font-semibold mb-10">Informasi Terkini</h2>
+        <h2 class="text-center text-xl md:text-2xl font-semibold mb-10">
+            Informasi Terkini</h2>
 
         <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
             @forelse ($latestInformation as $information)
-                <div data-aos="zoom-in" data-aos-duration="1000" class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
 
                     {{-- Gambar cover --}}
                     @if ($information->cover_image)
-                        <img src="{{ asset('storage/' . $information->cover_image) }}"
-                            class="w-full h-48 object-cover" alt="{{ $information->title }}">
+                        <img src="{{ asset('storage/' . $information->cover_image) }}" class="w-full h-48 object-cover"
+                            alt="{{ $information->title }}">
                     @elseif ($information->imageContents->first())
                         <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
                             class="w-full h-48 object-cover" alt="{{ $information->title }}">
@@ -127,7 +133,7 @@
         {{-- Button --}}
         <div class="flex justify-center mt-8">
             <a href="{{ route('information.index') }}"
-            class="bg-white text-purple-700 font-medium px-5 py-2 rounded-md text-sm hover:bg-gray-100 flex items-center relatice z-99 gap-2">
+                class="bg-white text-purple-700 font-medium px-5 py-2 rounded-md text-sm hover:bg-gray-100 flex items-center relatice z-99 gap-2">
                 <i data-feather="arrow-right" class="w-4 h-4"></i>
                 Lihat Selengkapnya
             </a>
@@ -138,7 +144,7 @@
 
 
     <!-- Footer -->
-    
+
 
 
 

@@ -1,7 +1,6 @@
 @extends('layouts.guest')
 
 @section('content')
-
     <section id="informasi" class="bg-gray-100 py-16 pb-28">
         <div class="mx-12">
 
@@ -19,9 +18,8 @@
                     class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
 
                     <!-- Kategori -->
-                    <select name="category"
-                        onchange="this.form.submit()"
-                        class="w-full sm:w-56 text-sm rounded-lg border border-gray-300 px-3 py-2 
+                    <select name="category" onchange="this.form.submit()"
+                        class="w-full sm:w-56 text-sm rounded-lg border border-gray-300 px-3 py-2
                             focus:ring-2 focus:ring-purple-600 bg-white">
                         <option value="">Semua Kategori</option>
 
@@ -34,14 +32,13 @@
                     </select>
 
                     <!-- Input Search -->
-                    <input type="text" name="search" placeholder="Cari informasi umum"
-                        value="{{ request('search') }}"
-                        class="w-full sm:w-72 rounded-lg border bg-white border-gray-200 px-4 py-2 text-sm 
+                    <input type="text" name="search" placeholder="Cari informasi umum" value="{{ request('search') }}"
+                        class="w-full sm:w-72 rounded-lg border bg-white border-gray-200 px-4 py-2 text-sm
                             focus:ring-2 focus:ring-purple-600">
 
                     <!-- Button -->
                     <button type="submit"
-                        class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm w-full sm:w-auto 
+                        class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm w-full sm:w-auto
                             hover:bg-purple-700 transition flex justify-center items-center gap-2">
                         <i class="fa fa-search"></i> <span>Cari</span>
                     </button>
@@ -50,19 +47,19 @@
             </div>
 
 
-            
+
         </div>
 
         <!-- Cards -->
         <div class="mx-12 grid sm:grid-cols-2 md:grid-cols-3 gap-8 mt-4">
 
             @forelse ($informations as $information)
-                <div data-aos="zoom-in" data-aos-duration="1000" class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
+                <div class="bg-white text-gray-800 rounded-xl overflow-hidden shadow-lg flex flex-col">
 
                     {{-- Gambar cover --}}
                     @if ($information->cover_image)
-                        <img src="{{ asset('storage/' . $information->cover_image) }}"
-                            class="w-full h-48 object-cover" alt="{{ $information->title }}">
+                        <img src="{{ asset('storage/' . $information->cover_image) }}" class="w-full h-48 object-cover"
+                            alt="{{ $information->title }}">
                     @elseif ($information->imageContents->first())
                         <img src="{{ asset('storage/' . $information->imageContents->first()->image_path) }}"
                             class="w-full h-48 object-cover" alt="{{ $information->title }}">

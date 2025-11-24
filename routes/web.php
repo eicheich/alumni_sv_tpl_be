@@ -12,9 +12,11 @@ use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\UserGuest\LandingController;
 use App\Http\Controllers\Web\UserGuest\InformationController as GuestInformationController;
 use App\Http\Controllers\Web\UserGuest\OutstandingAlumniController as GuestOutstandingAlumniController;
+use App\Http\Controllers\Web\UserGuest\AboutController;
 use Phiki\Phast\Root;
 
 Route::get('/', [LandingController::class, 'index'])->name('index');
+Route::get('/tentang', [AboutController::class, 'index'])->name('about.index');
 // prefix admin
 Route::prefix('admin')->group(function () {
     Route::prefix('auth')->group(function () {
@@ -29,6 +31,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard.index');
         Route::prefix('alumni')->group(function () {
             Route::get('/', [AlumniController::class, 'index'])->name('admin.alumni.index');
+            Route::get('/export-excel', [AlumniController::class, 'exportExcel'])->name('admin.alumni.exportExcel');
             Route::get('/{id}', [AlumniController::class, 'show'])->name('admin.alumni.show');
             Route::get('/{id}/edit', [AlumniController::class, 'edit'])->name('admin.alumni.edit');
             Route::post('/store-alumni', [AlumniController::class, 'addAlumni'])->name('admin.alumni.store');
@@ -79,6 +82,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('alumni')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'profile'])->name('alumni.profile');
+        Route::post('/upload-photo', [ProfileController::class, 'uploadProfilePhoto'])->name('alumni.profile.upload-photo');
         Route::post('/educational-backgrounds', [ProfileController::class, 'storeEducationalBackground'])->name('alumni.educational-backgrounds.store');
         Route::get('/educational-backgrounds/{id}/edit', [ProfileController::class, 'editEducationalBackground'])->name('alumni.educational-backgrounds.edit');
         Route::put('/educational-backgrounds/{id}', [ProfileController::class, 'updateEducationalBackground'])->name('alumni.educational-backgrounds.update');

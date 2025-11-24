@@ -16,8 +16,12 @@
 
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    {{-- Font Awesome --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     {{-- Feather Icons --}}
     <script src="https://unpkg.com/feather-icons"></script>
 
@@ -29,12 +33,12 @@
 
 <body>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    @if(auth('alumni')->check())
+    @if (auth('alumni')->check())
         @include('components.profile-header')
     @else
         @include('components.landing-header')
     @endif
-    
+
     <main class="bg-gray-100">
         {{-- centralized session / validation messages --}}
         @include('layouts.session-status')
@@ -57,7 +61,6 @@
         feather.replace();
 
         AOS.init();
-
     </script>
 
     @stack('scripts')

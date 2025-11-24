@@ -9,8 +9,7 @@
                 <div class="overflow-hidden mb-4 flex justify-center">
                     @if (auth('alumni')->user()->photo_profile)
                         <img src="{{ asset('storage/' . auth('alumni')->user()->photo_profile) }}"
-                            alt="{{ auth('alumni')->user()->name }}"
-                            class="w-48 h-48 object-cover rounded-full" />
+                            alt="{{ auth('alumni')->user()->name }}" class="w-48 h-48 object-cover rounded-full" />
                     @else
                         <div class="w-48 h-48 rounded-full bg-gray-300 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-white opacity-70" fill="none"
@@ -22,9 +21,18 @@
                     @endif
                 </div>
 
-                <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition">
+                <h3 class="text-center text-lg font-semibold text-gray-800 mb-4">
+                    {{ auth('alumni')->user()->name }}
+                </h3>
+
+                <button type="button" id="btnUploadPhoto"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition">
                     Unggah foto profil
                 </button>
+
+                @if ($errors->has('photo_profile'))
+                    <p class="text-red-500 text-xs mt-2 text-center">{{ $errors->first('photo_profile') }}</p>
+                @endif
             </div>
 
             <div class="lg:col-span-2 space-y-6">
@@ -34,7 +42,8 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold text-gray-800">Detail pengguna</h2>
 
-                        <button id="openModalBtnDataDiri" class="absolute top-4 right-4 bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 px-4 rounded-lg text-sm">
+                        <button id="openModalBtnDataDiri"
+                            class="absolute top-4 right-4 bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 px-4 rounded-lg text-sm">
                             Ubah data diri
                         </button>
                     </div>
@@ -91,7 +100,8 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold text-gray-800">Riwayat karir</h2>
 
-                        <button id="btnAddCareerModal" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm">
+                        <button id="btnAddCareerModal"
+                            class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm">
                             Tambah riwayat karir
                         </button>
                     </div>
@@ -99,9 +109,7 @@
                     <div class="border-t pt-4">
 
                         @if (auth('alumni')->user()->alumni && auth('alumni')->user()->alumni->careers->count() > 0)
-
                             @foreach (auth('alumni')->user()->alumni->careers as $career)
-
                                 <p class="text-lg font-semibold mb-1">{{ $career->position }}</p>
                                 <p class="text-gray-600 mb-2">{{ $career->company_name }}</p>
 
@@ -121,8 +129,9 @@
                                     </div>
                                 </div>
 
-                                <button class="text-indigo-600 hover:text-indigo-800 border border-indigo-300 p-2 rounded text-xs mt-2"
-                                onclick="openEditCareerModal({
+                                <button
+                                    class="text-indigo-600 hover:text-indigo-800 border border-indigo-300 p-2 rounded text-xs mt-2"
+                                    onclick="openEditCareerModal({
                                     company_name: '{{ $career->company_name }}',
                                     position: '{{ $career->position }}',
                                     start_date: '{{ $career->start_date }}',
@@ -131,15 +140,13 @@
                                 })">
                                     Edit data
                                 </button>
-                                <button type="button"
-                                        onclick="openDeleteModalCarier({{ $career->id }})"
-                                        class="p-2 rounded hover:bg-red-100 border border-red-300 text-red-300 text-xs"
-                                        title="Delete"> Hapus
+                                <button type="button" onclick="openDeleteModalCarier({{ $career->id }})"
+                                    class="p-2 rounded hover:bg-red-100 border border-red-300 text-red-300 text-xs"
+                                    title="Delete"> Hapus
                                 </button>
 
                                 <form id="delete-form-carier-{{ $career->id }}"
-                                    action="{{ route('alumni.careers.destroy', $career->id) }}"
-                                    method="POST">
+                                    action="{{ route('alumni.careers.destroy', $career->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                 </form>
@@ -147,9 +154,7 @@
                                 @if (!$loop->last)
                                     <div class="border-t my-4"></div>
                                 @endif
-
                             @endforeach
-
                         @else
                             <p class="text-gray-500">Belum ada data karir</p>
                         @endif
@@ -162,7 +167,8 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold text-gray-800">Riwayat pendidikan</h2>
 
-                        <button id="btnAddEducationModal" class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm">
+                        <button id="btnAddEducationModal"
+                            class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm">
                             Tambah riwayat pendidikan
                         </button>
                     </div>
@@ -170,13 +176,11 @@
                     <div class="border-t pt-4">
 
                         @if (auth('alumni')->user()->alumni && auth('alumni')->user()->alumni->educationalBackgrounds->count() > 0)
-
                             @foreach (auth('alumni')->user()->alumni->educationalBackgrounds as $edu)
-
-                            <p class="text-lg font-semibold mb-1">{{ $edu->institution_name }}</p>
-                            <p class="text-gray-600 mb-1">{{ $edu->degree }}</p>
-                            <p class="text-gray-600 mb-1">{{ $edu->major }}</p>
-                            <p class="text-gray-600 mb-1">{{ $edu->faculty }}</p>
+                                <p class="text-lg font-semibold mb-1">{{ $edu->institution_name }}</p>
+                                <p class="text-gray-600 mb-1">{{ $edu->degree }}</p>
+                                <p class="text-gray-600 mb-1">{{ $edu->major }}</p>
+                                <p class="text-gray-600 mb-1">{{ $edu->faculty }}</p>
 
                                 <div class="grid grid-cols-2 gap-4 text-sm">
                                     <div>
@@ -190,8 +194,9 @@
                                     </div>
                                 </div>
 
-                                <button class="text-indigo-600 hover:text-indigo-800 border border-indigo-300 p-2 rounded text-xs mt-2"
-                                onclick="openEditEducationModal({
+                                <button
+                                    class="text-indigo-600 hover:text-indigo-800 border border-indigo-300 p-2 rounded text-xs mt-2"
+                                    onclick="openEditEducationModal({
                                     institution_name: '{{ $edu->institution_name }}',
                                     degree: '{{ $edu->degree }}',
                                     entry_year: '{{ $edu->entry_year }}',
@@ -202,10 +207,9 @@
                                 })">
                                     Edit data
                                 </button>
-                                <button type="button"
-                                        onclick="openDeleteModalEdu({{ $edu->id }})"
-                                        class="p-2 rounded hover:bg-red-100 border border-red-300 text-red-300 text-xs"
-                                        title="Delete"> Hapus
+                                <button type="button" onclick="openDeleteModalEdu({{ $edu->id }})"
+                                    class="p-2 rounded hover:bg-red-100 border border-red-300 text-red-300 text-xs"
+                                    title="Delete"> Hapus
                                 </button>
 
                                 <form id="delete-form-edu-{{ $edu->id }}"
@@ -218,9 +222,7 @@
                                 @if (!$loop->last)
                                     <div class="border-t my-4"></div>
                                 @endif
-
                             @endforeach
-
                         @else
                             <p class="text-gray-500">Belum ada riwayat pendidikan</p>
                         @endif
@@ -234,10 +236,25 @@
                     </p>
 
                     <a href="{{ route('alumni.change-password-view') }}"
-                    class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition">
+                        class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition">
                         <i data-feather="edit" class="w-4 h-4 mr-2"></i>
                         Ubah Password
                     </a>
+                </div>
+
+                <div class="p-6 bg-white rounded-lg shadow-md border-l-4 border-red-500">
+                    <p class="text-gray-500 mb-3">
+                        Keluar dari akun Anda
+                    </p>
+
+                    <form action="{{ route('alumni.logout') }}" method="POST">
+                        @csrf
+                        <button type="submit"
+                            class="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition">
+                            <i data-feather="log-out" class="w-4 h-4 mr-2"></i>
+                            Logout
+                        </button>
+                    </form>
                 </div>
 
             </div>
@@ -248,19 +265,66 @@
     @include('components.landing-footer')
 
 
+    {{-- Modal Upload Foto Profil --}}
+    <div id="uploadPhotoModal" class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
+        <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative">
+            <h2 class="text-center text-lg font-semibold text-gray-800 mb-6">
+                Unggah Foto Profil
+            </h2>
+
+            <form action="{{ route('alumni.profile.upload-photo') }}" method="POST" enctype="multipart/form-data"
+                id="uploadPhotoForm">
+                @csrf
+
+                <div class="mb-4">
+                    <label class="block text-sm text-gray-700 mb-2">Pilih Foto</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label
+                            class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                    </path>
+                                </svg>
+                                <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Klik untuk upload</span>
+                                </p>
+                                <p class="text-xs text-gray-500">PNG, JPG atau JPEG (MAX. 2MB)</p>
+                                <p class="text-xs text-gray-400 mt-2" id="fileName"></p>
+                            </div>
+                            <input type="file" name="photo_profile" id="photo_profile"
+                                accept="image/jpeg,image/png,image/jpg" class="hidden" onchange="showFileName(this)"
+                                required>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <button type="button" id="closeUploadPhotoModal"
+                        class="w-full py-2 bg-gray-200 rounded-lg font-medium hover:opacity-90 transition">
+                        Batal
+                    </button>
+
+                    <button type="submit"
+                        class="w-full py-2 bg-indigo-600 text-white rounded-lg font-medium hover:opacity-90 transition">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
+    {{-- data diri --}}
+    <div id="modalDataDiri" class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
 
-{{-- data diri --}}
-    <div id="modalDataDiri"
-        class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
-    
         <!-- Modal Box -->
         <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative">
 
             <!-- Judul -->
             <h2 class="text-center text-lg font-semibold text-gray-800 mb-6">
-            Ubah Data Diri
+                Ubah Data Diri
             </h2>
 
             <!-- Form -->
@@ -269,47 +333,43 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Nama</label>
-                        <input type="text"
-                            placeholder="Masukkan nama"
-                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 
+                        <input type="text" placeholder="Masukkan nama"
+                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                     focus:ring-purple-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">No Telepon</label>
-                        <input type="text"
-                            placeholder="cth. 08987788098"
-                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 
+                        <input type="text" placeholder="cth. 08987788098"
+                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                     focus:ring-purple-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Email</label>
-                        <input type="email"
-                            placeholder="cth. budiono67@gmail.com"
-                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 
+                        <input type="email" placeholder="cth. budiono67@gmail.com"
+                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                     focus:ring-purple-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">NIM</label>
-                        <input type="text"
-                            placeholder="cth. J0403xxxxxx"
-                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 
+                        <input type="text" placeholder="cth. J0403xxxxxx"
+                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                     focus:ring-purple-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Tanggal Lahir</label>
-                        <input type="date"
-                            placeholder="cth. 20-02-1998"
-                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 
+                        <input type="date" placeholder="cth. 20-02-1998"
+                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                     focus:ring-purple-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Jenis Kelamin</label>
-                        <select class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 
+                        <select
+                            class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                         focus:ring-purple-500 focus:outline-none appearance-none">
                             <option>laki-laki</option>
                             <option>Perempuan</option>
@@ -317,19 +377,19 @@
                     </div>
                 </div>
 
-                
+
 
                 <!-- Tombol Simpan -->
                 <div class="grid grid-cols-2 gap-4">
                     <button type="button" id="closeBtnDataDiri"
-                            class="w-full py-2 mt-4 bg-gray-200  
+                        class="w-full py-2 mt-4 bg-gray-200
                                     text-black rounded-lg font-medium hover:opacity-90 transition">
                         Batal
                     </button>
-            
+
                     <!-- Tombol Simpan -->
                     <button type="submit"
-                            class="w-full py-2 mt-4 bg-purple-600
+                        class="w-full py-2 mt-4 bg-purple-600
                                     text-white rounded-lg font-medium hover:opacity-90 transition">
                         Simpan
                     </button>
@@ -341,8 +401,7 @@
 
 
     <!-- Overlay: Tambah Pendidikan -->
-    <div id="addEducationModal"
-        class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
+    <div id="addEducationModal" class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
 
         <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative">
             <h2 class="text-center text-lg font-semibold text-gray-800 mb-6">
@@ -353,31 +412,37 @@
                 @csrf
 
                 <div>
-                    <label class="block text-sm text-gray-700 mb-1">Nama Institusi</label>
+                    <label class="block text-sm text-gray-700 mb-1">Nama Institusi <span
+                            class="text-red-500">*</span></label>
                     <input type="text" id="institution_name" name="institution_name"
+                        placeholder="Contoh: Universitas Indonesia"
                         class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500"
                         required>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-gray-700 mb-1">Program/Gelar</label>
-                    <input type="text" id="degree" name="degree"
+                    <label class="block text-sm text-gray-700 mb-1">Program/Gelar <span
+                            class="text-red-500">*</span></label>
+                    <input type="text" id="degree" name="degree" placeholder="Contoh: S1, D3, D4"
                         class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500"
                         required>
+                    <p class="text-xs text-gray-500 mt-1">Isi dengan jenjang pendidikan (S1, S2, D3, D4, dll)</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm text-gray-700 mb-1">Tahun Masuk</label>
-                        <input type="number" id="entry_year" name="entry_year"
-                            min="1900" max="{{ date('Y') }}"
+                        <label class="block text-sm text-gray-700 mb-1">Tahun Masuk <span
+                                class="text-red-500">*</span></label>
+                        <input type="number" id="entry_year" name="entry_year" placeholder="2018" min="1900"
+                            max="{{ date('Y') }}"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500"
                             required>
                     </div>
 
                     <div>
-                        <label class="block text-sm text-gray-700 mb-1">Tahun Lulus</label>
-                        <input type="number" id="graduation_year" name="graduation_year"
+                        <label class="block text-sm text-gray-700 mb-1">Tahun Lulus <span
+                                class="text-red-500">*</span></label>
+                        <input type="number" id="graduation_year" name="graduation_year" placeholder="2022"
                             min="1900" max="{{ date('Y') }}"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500"
                             required>
@@ -387,13 +452,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Jurusan</label>
-                        <input type="text" id="major" name="major"
+                        <input type="text" id="major" name="major" placeholder="Contoh: Teknik Informatika"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Fakultas</label>
-                        <input type="text" id="faculty" name="faculty"
+                        <input type="text" id="faculty" name="faculty" placeholder="Contoh: Fakultas Teknik"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500">
                     </div>
                 </div>
@@ -415,8 +480,7 @@
 
 
 
-    <div id="addCareerModal"
-        class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
+    <div id="addCareerModal" class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
 
         <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative">
             <h2 class="text-center text-lg font-semibold text-gray-800 mb-6">
@@ -427,22 +491,25 @@
                 @csrf
 
                 <div>
-                    <label class="block text-sm text-gray-700 mb-1">Nama Perusahaan</label>
+                    <label class="block text-sm text-gray-700 mb-1">Nama Perusahaan <span
+                            class="text-red-500">*</span></label>
                     <input type="text" id="company_name" name="company_name"
+                        placeholder="Contoh: PT. Teknologi Indonesia"
                         class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500"
                         required>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-gray-700 mb-1">Posisi</label>
-                    <input type="text" id="position" name="position"
+                    <label class="block text-sm text-gray-700 mb-1">Posisi <span class="text-red-500">*</span></label>
+                    <input type="text" id="position" name="position" placeholder="Contoh: Software Engineer"
                         class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500"
                         required>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm text-gray-700 mb-1">Tanggal Mulai</label>
+                        <label class="block text-sm text-gray-700 mb-1">Tanggal Mulai <span
+                                class="text-red-500">*</span></label>
                         <input type="date" id="start_date" name="start_date"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500"
                             required>
@@ -452,7 +519,7 @@
                         <label class="block text-sm text-gray-700 mb-1">Tanggal Selesai</label>
                         <input type="date" id="end_date" name="end_date"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2 focus:ring-purple-500">
-                        <p class="text-xs text-gray-500">Kosongkan jika masih bekerja</p>
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan jika masih bekerja di perusahaan ini</p>
                     </div>
                 </div>
 
@@ -473,8 +540,7 @@
 
 
 
-    <div id="editEducationModal"
-    class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
+    <div id="editEducationModal" class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
 
         <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative">
             <h2 class="text-center text-lg font-semibold text-gray-800 mb-6">
@@ -547,8 +613,7 @@
 
 
 
-    <div id="editCareerModal"
-        class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
+    <div id="editCareerModal" class="fixed inset-0 bg-black/40 flex items-center justify-center px-4 hidden">
 
         <div class="bg-white rounded-xl w-full max-w-md p-6 shadow-lg relative">
             <h2 class="text-center text-lg font-semibold text-gray-800 mb-6">
@@ -596,7 +661,7 @@
                     </button>
 
                     <button type="submit"
-                        class="w-full py-2 bg-purple-600  
+                        class="w-full py-2 bg-purple-600
                         text-white rounded-lg font-medium hover:opacity-90 transition">
                         Simpan
                     </button>
@@ -610,70 +675,70 @@
 
 
 
-        <div id="delete-modal-edu"
-            class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99
+    <div id="delete-modal-edu"
+        class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99
                     flex items-center justify-center pointer-events transition duration-300">
 
-            <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform scale-95 transition duration-300">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform scale-95 transition duration-300">
 
-                <div class="flex flex-col items-center">
-                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <i data-feather="alert-triangle" class="w-8 h-8 text-red-600"></i>
-                    </div>
-
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Apakah Anda Yakin?</h3>
-                    <p class="text-sm text-gray-600 text-center mb-6">
-                        Data yang telah dihapus tidak dapat dikembalikan!
-                    </p>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                    <i data-feather="alert-triangle" class="w-8 h-8 text-red-600"></i>
                 </div>
 
-                <div class="flex justify-between space-x-4">
-                    <button onclick="closeDeleteModalEdu()"
-                            class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
-                        Batal
-                    </button>
-
-                    <button onclick="submitDeleteFormEdu()"
-                            class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
-                        Ya, Hapus!
-                    </button>
-                </div>
-
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Apakah Anda Yakin?</h3>
+                <p class="text-sm text-gray-600 text-center mb-6">
+                    Data yang telah dihapus tidak dapat dikembalikan!
+                </p>
             </div>
+
+            <div class="flex justify-between space-x-4">
+                <button onclick="closeDeleteModalEdu()"
+                    class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
+                    Batal
+                </button>
+
+                <button onclick="submitDeleteFormEdu()"
+                    class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+                    Ya, Hapus!
+                </button>
+            </div>
+
         </div>
+    </div>
 
 
-        <div id="delete-modal-carier"
-            class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99
+    <div id="delete-modal-carier"
+        class="fixed inset-0 bg-black/50 hidden bg-black bg-opacity-50 backdrop-blur-sm z-99
                     flex items-center justify-center pointer-events transition duration-300">
 
-            <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform scale-95 transition duration-300">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm transform scale-95 transition duration-300">
 
-                <div class="flex flex-col items-center">
-                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <i data-feather="alert-triangle" class="w-8 h-8 text-red-600"></i>
-                    </div>
-
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Apakah Anda Yakin?</h3>
-                    <p class="text-sm text-gray-600 text-center mb-6">
-                        Data yang telah dihapus tidak dapat dikembalikan!
-                    </p>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                    <i data-feather="alert-triangle" class="w-8 h-8 text-red-600"></i>
                 </div>
 
-                <div class="flex justify-between space-x-4">
-                    <button onclick="closeDeleteModalCarier()"
-                            class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
-                        Batal
-                    </button>
-
-                    <button onclick="submitDeleteFormCarier()"
-                            class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
-                        Ya, Hapus!
-                    </button>
-                </div>
-
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Apakah Anda Yakin?</h3>
+                <p class="text-sm text-gray-600 text-center mb-6">
+                    Data yang telah dihapus tidak dapat dikembalikan!
+                </p>
             </div>
+
+            <div class="flex justify-between space-x-4">
+                <button onclick="closeDeleteModalCarier()"
+                    class="flex-1 py-2 text-gray-700 bg-gray-200 rounded-lg font-medium hover:bg-gray-300 transition">
+                    Batal
+                </button>
+
+                <button onclick="submitDeleteFormCarier()"
+                    class="flex-1 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+                    Ya, Hapus!
+                </button>
+            </div>
+
         </div>
+    </div>
 
 
 
@@ -922,6 +987,22 @@
             closeModal("modalDataDiri");
         });
 
+        // ==== UPLOAD PHOTO ====
+        document.getElementById("btnUploadPhoto")?.addEventListener("click", () => {
+            openModal("uploadPhotoModal");
+        });
+        document.getElementById("closeUploadPhotoModal")?.addEventListener("click", () => {
+            closeModal("uploadPhotoModal");
+        });
+
+        // Show file name when selected
+        function showFileName(input) {
+            const fileName = input.files[0]?.name;
+            if (fileName) {
+                document.getElementById("fileName").textContent = fileName;
+            }
+        }
+
         // ==== ADD EDUCATION ====
         document.getElementById("btnAddEducationModal")?.addEventListener("click", () => {
             openModal("addEducationModal");
@@ -930,7 +1011,7 @@
             closeModal("addEducationModal");
             btnAddEducationModal.classList.remove("hidden");
         });
-        
+
         // ==== ADD CAREER ====
         document.getElementById("btnAddCareerModal")?.addEventListener("click", () => {
             openModal("addCareerModal");
@@ -975,7 +1056,7 @@
 
         // ==== CLOSE MODAL KETIKA KLIK AREA HITAM ====
         document.querySelectorAll("[id$='Modal']").forEach(modal => {
-            modal.addEventListener("click", function(e){
+            modal.addEventListener("click", function(e) {
                 if (e.target === this) closeModal(this.id);
             });
         });
@@ -1032,6 +1113,4 @@
             }
         }
     </script>
-
-
 @endpush
