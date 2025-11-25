@@ -64,9 +64,15 @@ class OutstandingAlumniController extends Controller
      */
     public function edit($encrypted_id)
     {
-        $id = decrypt($encrypted_id);
-        $outstandingAlumni = OutstandingAlumni::with(['alumni', 'alumni.user', 'alumni.major'])->findOrFail($id);
-        return view('admin.outstanding-alumni.edit', compact('outstandingAlumni'));
+        try {
+            $id = decrypt($encrypted_id);
+            $outstandingAlumni = OutstandingAlumni::with(['alumni', 'alumni.user', 'alumni.major'])->findOrFail($id);
+            return view('admin.outstanding-alumni.edit', compact('outstandingAlumni'));
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            return redirect()->route('admin.outstanding-alumni.index')->withErrors(['error' => 'ID alumni berprestasi tidak valid atau telah kedaluwarsa.']);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.outstanding-alumni.index')->withErrors(['error' => 'Terjadi kesalahan saat mengakses data alumni berprestasi.']);
+        }
     }
 
     /**
@@ -74,21 +80,27 @@ class OutstandingAlumniController extends Controller
      */
     public function update(Request $request, $encrypted_id)
     {
-        $id = decrypt($encrypted_id);
-        $outstandingAlumni = OutstandingAlumni::findOrFail($id);
-
-        $validated = $request->validate([
-            'award_title' => 'required|string|max:255',
-        ]);
-
-        DB::beginTransaction();
         try {
-            $outstandingAlumni->update($validated);
-            DB::commit();
-            return redirect()->route('admin.outstanding-alumni.index')->with('success', 'Alumni berprestasi berhasil diperbarui.');
+            $id = decrypt($encrypted_id);
+            $outstandingAlumni = OutstandingAlumni::findOrFail($id);
+
+            $validated = $request->validate([
+                'award_title' => 'required|string|max:255',
+            ]);
+
+            DB::beginTransaction();
+            try {
+                $outstandingAlumni->update($validated);
+                DB::commit();
+                return redirect()->route('admin.outstanding-alumni.index')->with('success', 'Alumni berprestasi berhasil diperbarui.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return back()->withErrors(['error' => 'Gagal memperbarui alumni berprestasi: ' . $e->getMessage()])->withInput();
+            }
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            return redirect()->route('admin.outstanding-alumni.index')->withErrors(['error' => 'ID alumni berprestasi tidak valid atau telah kedaluwarsa.']);
         } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Gagal memperbarui alumni berprestasi: ' . $e->getMessage()])->withInput();
+            return redirect()->route('admin.outstanding-alumni.index')->withErrors(['error' => 'Terjadi kesalahan saat memperbarui data alumni berprestasi.']);
         }
     }
 
@@ -97,13 +109,19 @@ class OutstandingAlumniController extends Controller
      */
     public function destroy($encrypted_id)
     {
-        $id = decrypt($encrypted_id);
         try {
-            $outstandingAlumni = OutstandingAlumni::findOrFail($id);
-            $outstandingAlumni->delete();
-            return redirect()->route('admin.outstanding-alumni.index')->with('success', 'Alumni berprestasi berhasil dihapus.');
+            $id = decrypt($encrypted_id);
+            try {
+                $outstandingAlumni = OutstandingAlumni::findOrFail($id);
+                $outstandingAlumni->delete();
+                return redirect()->route('admin.outstanding-alumni.index')->with('success', 'Alumni berprestasi berhasil dihapus.');
+            } catch (\Exception $e) {
+                return back()->withErrors(['error' => 'Gagal menghapus alumni berprestasi: ' . $e->getMessage()]);
+            }
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            return redirect()->route('admin.outstanding-alumni.index')->withErrors(['error' => 'ID alumni berprestasi tidak valid atau telah kedaluwarsa.']);
         } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Gagal menghapus alumni berprestasi: ' . $e->getMessage()]);
+            return redirect()->route('admin.outstanding-alumni.index')->withErrors(['error' => 'Terjadi kesalahan saat menghapus data alumni berprestasi.']);
         }
     }
 }
