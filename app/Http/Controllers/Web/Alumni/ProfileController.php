@@ -49,6 +49,49 @@ class ProfileController extends Controller
         return redirect()->route('alumni.profile')->with('success', 'Foto profil berhasil diupload');
     }
 
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth('alumni')->user()->id,
+            'phone' => 'nullable|string|max:20',
+            'nim' => 'required|string|max:50',
+            'birthdate' => 'nullable|date',
+            'gender' => 'nullable|in:L,P',
+        ], [
+            'name.required' => 'Nama wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'nim.required' => 'NIM wajib diisi',
+            'birthdate.date' => 'Format tanggal lahir tidak valid',
+            'gender.in' => 'Jenis kelamin tidak valid',
+        ]);
+
+        $user = auth('alumni')->user();
+        $alumni = $user->alumni;
+
+        DB::transaction(function () use ($request, $user, $alumni) {
+            // Update user data
+            DB::table('users')->where('id', $user->id)->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+            ]);
+
+            // Update alumni data
+            $alumni->update([
+                'nim' => $request->nim,
+                'birthdate' => $request->birthdate,
+                'gender' => $request->gender,
+            ]);
+        });
+
+        Log::info('Profile updated', ['user_id' => $user->id]);
+
+        return redirect()->route('alumni.profile')->with('success', 'Data diri berhasil diperbarui');
+    }
+
     public function changePasswordView()
     {
         return view('alumni.change-password');

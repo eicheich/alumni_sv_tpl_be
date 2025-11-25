@@ -89,6 +89,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('alumni')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'profile'])->name('alumni.profile');
+        Route::put('/', [ProfileController::class, 'updateProfile'])->name('alumni.profile.update');
         Route::post('/upload-photo', [ProfileController::class, 'uploadProfilePhoto'])->name('alumni.profile.upload-photo');
         Route::post('/educational-backgrounds', [ProfileController::class, 'storeEducationalBackground'])->name('alumni.educational-backgrounds.store');
         Route::get('/educational-backgrounds/{id}/edit', [ProfileController::class, 'editEducationalBackground'])->name('alumni.educational-backgrounds.edit');

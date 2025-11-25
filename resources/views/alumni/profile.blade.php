@@ -26,7 +26,7 @@
                 </h3>
 
                 <button type="button" id="btnUploadPhoto"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition">
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded-lg transition">
                     Unggah foto profil
                 </button>
 
@@ -58,20 +58,13 @@
                         <div>
                             <p class="text-gray-500">Pendidikan terakhir</p>
                             <p class="font-medium">
-                                {{ auth('alumni')->user()->alumni->degree ?? '-' }}
+                                {{ auth('alumni')->user()->alumni->educationalBackgrounds->sortByDesc('graduation_year')->first()->degree ?? '-' }}
                             </p>
                         </div>
 
                         <div>
                             <p class="text-gray-500">Nama lengkap</p>
                             <p class="font-medium">{{ auth('alumni')->user()->name }}</p>
-                        </div>
-
-                        <div>
-                            <p class="text-gray-500">Pekerjaan sekarang</p>
-                            <p class="font-medium">
-                                {{ auth('alumni')->user()->alumni->careers->where('end_date', null)->first()->position ?? '-' }}
-                            </p>
                         </div>
 
                         <div>
@@ -328,51 +321,53 @@
             </h2>
 
             <!-- Form -->
-            <form class="space-y-4">
+            <form action="{{ route('alumni.profile.update') }}" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Nama</label>
-                        <input type="text" placeholder="Masukkan nama"
+                        <input type="text" id="edit_name" name="name" placeholder="Masukkan nama"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
-                                    focus:ring-purple-500 focus:outline-none">
+                                    focus:ring-purple-500 focus:outline-none" required>
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">No Telepon</label>
-                        <input type="text" placeholder="cth. 08987788098"
+                        <input type="text" id="edit_phone" name="phone" placeholder="cth. 08987788098"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                     focus:ring-purple-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Email</label>
-                        <input type="email" placeholder="cth. budiono67@gmail.com"
+                        <input type="email" id="edit_email" name="email" placeholder="cth. budiono67@gmail.com"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
-                                    focus:ring-purple-500 focus:outline-none">
+                                    focus:ring-purple-500 focus:outline-none" required>
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">NIM</label>
-                        <input type="text" placeholder="cth. J0403xxxxxx"
+                        <input type="text" id="edit_nim" name="nim" placeholder="cth. J0403xxxxxx"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
-                                    focus:ring-purple-500 focus:outline-none">
+                                    focus:ring-purple-500 focus:outline-none" required>
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Tanggal Lahir</label>
-                        <input type="date" placeholder="cth. 20-02-1998"
+                        <input type="date" id="edit_birthdate" name="birthdate" placeholder="cth. 20-02-1998"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                     focus:ring-purple-500 focus:outline-none">
                     </div>
 
                     <div>
                         <label class="block text-sm text-gray-700 mb-1">Jenis Kelamin</label>
-                        <select
+                        <select id="edit_gender" name="gender"
                             class="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm focus:ring-2
                                         focus:ring-purple-500 focus:outline-none appearance-none">
-                            <option>laki-laki</option>
-                            <option>Perempuan</option>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
                         </select>
                     </div>
                 </div>
@@ -981,6 +976,14 @@
 
         // ==== DATA DIRI ====
         document.getElementById("openModalBtnDataDiri")?.addEventListener("click", () => {
+            // Populate form with current user data
+            document.getElementById("edit_name").value = "{{ auth('alumni')->user()->name }}";
+            document.getElementById("edit_email").value = "{{ auth('alumni')->user()->email }}";
+            document.getElementById("edit_phone").value = "{{ auth('alumni')->user()->phone ?? '' }}";
+            document.getElementById("edit_nim").value = "{{ auth('alumni')->user()->alumni->nim ?? '' }}";
+            document.getElementById("edit_birthdate").value = "{{ auth('alumni')->user()->alumni->birthdate ?? '' }}";
+            document.getElementById("edit_gender").value = "{{ auth('alumni')->user()->alumni->gender ?? '' }}";
+
             openModal("modalDataDiri");
         });
         document.getElementById("closeBtnDataDiri")?.addEventListener("click", () => {
